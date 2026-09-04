@@ -1851,6 +1851,7 @@ private:
     }
 
     m_toolsetLayout = new Tree();
+    m_toolsetLayout->setColoredIcons(true);
     m_toolsetLayout->setRoot(toolsetRoot);
     toolsetView()->attachToView(m_toolsetLayout);
   }

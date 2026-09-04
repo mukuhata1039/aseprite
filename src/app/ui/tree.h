@@ -93,6 +93,9 @@ public:
   void setSelected(TreeNode* node, bool scrollToNode = false);
   TreeNode* selected() const { return m_selected; }
 
+  bool coloredIcons() const { return m_coloredIcons; }
+  void setColoredIcons(bool colored) { m_coloredIcons = colored; }
+
   obs::signal<void()> Change;
   obs::signal<void()> DoubleClickItem;
   obs::signal<void()> RightClickItem;
@@ -118,6 +121,8 @@ private:
   std::string m_findString;
 
   std::unique_ptr<AppTooltipManager> m_tooltipManager;
+
+  bool m_coloredIcons = false;
 
   struct {
     int rowHeight = 0;
