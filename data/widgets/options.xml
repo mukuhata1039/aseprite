@@ -15,6 +15,7 @@
             <listitem text="@.section_color" value="section_color" />
             <listitem text="@.section_alerts" value="section_alerts" />
             <listitem text="@.section_editor" value="section_editor" />
+            <listitem text="@.section_toolset" value="section_toolset" />
             <listitem text="@.section_selection" value="section_selection" />
             <listitem text="@.section_timeline" value="section_timeline" />
             <listitem text="@.section_cursors" value="section_cursors" />
@@ -723,6 +724,12 @@
               <button text="@.associate_file_type" id="win_associate_file_type" />
             </hbox>
           </hbox>
+        </vbox>
+
+        <!-- Toolset -->
+        <vbox id="section_toolset">
+          <separator text="@.section_toolset" horizontal="true" />
+          <view id="toolset_view" maxsize="true" expansive="true" />
         </vbox>
 
         <!-- Developer -->

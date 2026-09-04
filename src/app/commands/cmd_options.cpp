@@ -29,6 +29,7 @@
 #include "app/recent_files.h"
 #include "app/resource_finder.h"
 #include "app/tools/tool_box.h"
+#include "app/tools/tool_group.h"
 #include "app/tx.h"
 #include "app/ui/best_fit_criteria_selector.h"
 #include "app/ui/color_button.h"
@@ -38,6 +39,7 @@
 #include "app/ui/sampling_selector.h"
 #include "app/ui/separator_in_view.h"
 #include "app/ui/skin/skin_theme.h"
+#include "app/ui/tree.h"
 #include "base/convert_to.h"
 #include "base/fs.h"
 #include "base/string.h"
@@ -71,6 +73,7 @@ const char* kSectionGridId = "section_grid";
 const char* kSectionThemeId = "section_theme";
 const char* kSectionExtensionsId = "section_extensions";
 const char* kSectionTabletId = "section_tablet";
+const char* kSectionToolsetId = "section_toolset";
 const char* kSectionFileExplorerId = "section_file_explorer";
 
 const char* kInfiniteSymbol = "\xE2\x88\x9E"; // Infinite symbol (UTF-8)
@@ -1543,6 +1546,9 @@ private:
     // Load extension
     else if (item->getValue() == kSectionExtensionsId)
       loadExtensions();
+    // Load toolset tree
+    else if (item->getValue() == kSectionToolsetId)
+      loadToolsetLayout();
 
     panel()->showChild(findChild(item->getValue().c_str()));
   }
@@ -1821,6 +1827,32 @@ private:
   {
     language()->deleteAllItems();
     loadLanguages();
+  }
+
+  void loadToolsetLayout()
+  {
+    if (m_toolsetLayout)
+      return;
+
+    auto* toolbox = App::instance()->toolBox();
+    auto* toolsetRoot = new TreeNode("");
+    auto* theme = static_cast<skin::SkinTheme*>(this->theme());
+    for (auto it = toolbox->begin_group(); it != toolbox->end_group(); ++it) {
+      auto* groupIt = *it;
+      auto* toolGroup = new TreeNode(groupIt->id());
+      toolsetRoot->addChild(toolGroup);
+
+      for (auto* tool : *toolbox) {
+        if (tool->getGroup() == groupIt) {
+          SkinPartPtr icon = theme->getToolPart(tool->getId().c_str());
+          toolGroup->addChild(new TreeNode(tool->getText(), icon));
+        }
+      }
+    }
+
+    m_toolsetLayout = new Tree();
+    m_toolsetLayout->setRoot(toolsetRoot);
+    toolsetView()->attachToView(m_toolsetLayout);
   }
 
   void loadLanguages()
@@ -2560,6 +2592,7 @@ private:
   BestFitCriteriaSelector m_bestFitCriteriaSelector;
   ButtonSet* m_themeVars = nullptr;
   SamplingSelector* m_samplingSelector = nullptr;
+  Tree* m_toolsetLayout = nullptr;
   text::FontRef m_font;
   text::FontRef m_miniFont;
   std::unordered_map<Widget*, bool> m_preSearchDisabledFlag;
