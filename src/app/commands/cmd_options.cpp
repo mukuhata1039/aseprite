@@ -39,7 +39,7 @@
 #include "app/ui/sampling_selector.h"
 #include "app/ui/separator_in_view.h"
 #include "app/ui/skin/skin_theme.h"
-#include "app/ui/tree.h"
+#include "app/ui/toolset_tree.h"
 #include "base/convert_to.h"
 #include "base/fs.h"
 #include "base/string.h"
@@ -1835,22 +1835,34 @@ private:
       return;
 
     auto* toolbox = App::instance()->toolBox();
-    auto* toolsetRoot = new TreeNode("");
+    auto* toolsetRoot = new ToolsetTreeNode("");
     auto* theme = static_cast<skin::SkinTheme*>(this->theme());
     for (auto it = toolbox->begin_group(); it != toolbox->end_group(); ++it) {
       auto* groupIt = *it;
-      auto* toolGroup = new TreeNode(groupIt->id());
+      std::string groupName = groupIt->id();
+      for (auto& c : groupName) {
+        if (c == '_')
+          c = ' ';
+        else
+          c = std::toupper(c);
+      }
+      auto* toolGroup = new ToolsetTreeNode(groupName);
       toolsetRoot->addChild(toolGroup);
 
+      bool firstTool = true;
       for (auto* tool : *toolbox) {
         if (tool->getGroup() == groupIt) {
           SkinPartPtr icon = theme->getToolPart(tool->getId().c_str());
-          toolGroup->addChild(new TreeNode(tool->getText(), icon));
+          if (firstTool) {
+            toolGroup->setIcon(icon);
+            firstTool = false;
+          }
+          toolGroup->addChild(new ToolsetTreeNode(tool->getText(), icon));
         }
       }
     }
 
-    m_toolsetLayout = new Tree();
+    m_toolsetLayout = new ToolsetTree();
     m_toolsetLayout->setColoredIcons(true);
     m_toolsetLayout->setRoot(toolsetRoot);
     toolsetView()->attachToView(m_toolsetLayout);
@@ -2593,7 +2605,7 @@ private:
   BestFitCriteriaSelector m_bestFitCriteriaSelector;
   ButtonSet* m_themeVars = nullptr;
   SamplingSelector* m_samplingSelector = nullptr;
-  Tree* m_toolsetLayout = nullptr;
+  ToolsetTree* m_toolsetLayout = nullptr;
   text::FontRef m_font;
   text::FontRef m_miniFont;
   std::unordered_map<Widget*, bool> m_preSearchDisabledFlag;
