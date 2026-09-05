@@ -271,6 +271,13 @@ public:
   void stop();
   bool isPlaying() const;
 
+  // Custom playback range stored per Editor.
+  void setCustomPlaybackRange(frame_t from, frame_t to);
+  bool hasCustomPlaybackRange() const { return m_customPlaybackEnabled; }
+  frame_t customPlaybackFrom() const { return m_customPlaybackFrom; }
+  frame_t customPlaybackTo() const { return m_customPlaybackTo; }
+  void clearCustomPlaybackRange() { m_customPlaybackEnabled = false; }
+
   // Shows a popup menu to change the editor animation speed.
   void showAnimationSpeedMultiplierPopup();
   double getAnimationSpeedMultiplier() const;
@@ -434,6 +441,12 @@ private:
   Sprite* m_sprite;          // Active sprite in the editor
   Layer* m_layer;            // Active layer in the editor
   frame_t m_frame;           // Active frame in the editor
+
+  // Custom animation playback range for this Editor.
+  bool m_customPlaybackEnabled;
+  frame_t m_customPlaybackFrom;
+  frame_t m_customPlaybackTo;
+
   render::Projection m_proj; // Zoom/pixel ratio in the editor
   DocumentPreferences& m_docPref;
   // Helper functions affected by the current Tiled Mode.

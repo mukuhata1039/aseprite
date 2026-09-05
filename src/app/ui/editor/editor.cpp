@@ -149,6 +149,9 @@ Editor::Editor(Doc* document, EditorFlags flags, EditorStatePtr state)
   , m_sprite(m_document->sprite())
   , m_layer(m_sprite->root()->firstLayer())
   , m_frame(frame_t(0))
+  , m_customPlaybackEnabled(false)
+  , m_customPlaybackFrom(frame_t(0))
+  , m_customPlaybackTo(frame_t(0))
   , m_docPref(Preferences::instance().document(document))
   , m_tiledModeHelper(app::TiledModeHelper(m_docPref.tiled.mode(), m_sprite))
   , m_brushPreview(this)
@@ -3038,6 +3041,31 @@ void Editor::startZoomingState(ui::MouseMessage* msg)
   EditorStatePtr newState(new ZoomingState);
   setState(newState);
   newState->onMouseDown(this, msg);
+}
+
+void Editor::setCustomPlaybackRange(frame_t from, frame_t to)
+{
+  if (!m_sprite)
+    return;
+
+  const frame_t lastFrame = m_sprite->lastFrame();
+
+  if (from < frame_t(0))
+    from = frame_t(0);
+  else if (from > lastFrame)
+    from = lastFrame;
+
+  if (to < frame_t(0))
+    to = frame_t(0);
+  else if (to > lastFrame)
+    to = lastFrame;
+
+  if (from > to)
+    std::swap(from, to);
+
+  m_customPlaybackFrom = from;
+  m_customPlaybackTo = to;
+  m_customPlaybackEnabled = true;
 }
 
 void Editor::play(const bool playOnce, const bool playAll, const bool playSubtags)

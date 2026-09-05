@@ -65,12 +65,26 @@ void PlayAnimationCommand::onExecute(Context* ctx)
   if (!editor)
     return;
 
-  if (editor->isPlaying())
+  if (editor->isPlaying()) {
     editor->stop();
-  else
-    editor->play(Preferences::instance().editor.playOnce(),
-                 Preferences::instance().editor.playAll(),
-                 Preferences::instance().editor.playSubtags());
+    return;
+  }
+
+  // If the timeline currently has a multi-frame range selected,
+  // remember that range in this Editor. If there is no active
+  // multi-frame selection, keep the previously remembered range.
+  const auto& range = ctx->range();
+  if (range.enabled() &&
+      range.frames() > 1 &&
+      !range.selectedFrames().empty()) {
+    editor->setCustomPlaybackRange(
+      range.selectedFrames().firstFrame(),
+      range.selectedFrames().lastFrame());
+  }
+
+  editor->play(Preferences::instance().editor.playOnce(),
+               Preferences::instance().editor.playAll(),
+               Preferences::instance().editor.playSubtags());
 }
 
 //////////////////////////////////////////////////////////////////////

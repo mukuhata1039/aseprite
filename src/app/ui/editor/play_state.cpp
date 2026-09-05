@@ -32,6 +32,8 @@ using namespace ui;
 
 PlayState::PlayState(const bool playOnce, const bool playAll, const bool playSubtags)
   : m_editor(nullptr)
+  , m_customPlaybackTag(0, 0)
+  , m_playback()
   , m_playOnce(playOnce)
   , m_playAll(playAll)
   , m_playSubtags(playSubtags)
@@ -64,9 +66,11 @@ void PlayState::onEnterState(Editor* editor)
     m_refFrame = editor->frame();
   }
 
-  // Get the tag
+  // Get the normal Aseprite tag first.
   if (!m_playAll) {
-    m_tag = m_editor->getCustomizationDelegate()->getTagProvider()->getTagByFrame(m_refFrame, true);
+    m_tag = m_editor->getCustomizationDelegate()
+              ->getTagProvider()
+              ->getTagByFrame(m_refFrame, true);
 
     // Don't repeat the tag infinitely if the tag repeat field doesn't
     // say so.
@@ -78,12 +82,40 @@ void PlayState::onEnterState(Editor* editor)
     m_tag = nullptr;
   }
 
-  // Go to the first frame of the animation or active frame tag
+  // ------------------------------------------------------------
+  // CUSTOM PLAYBACK
+  //
+  // If this Editor has a remembered playback range, use that range
+  // instead of the temporary fixed 2-7 test range.
+  //
+  // The temporary tag is not added to the Sprite/document.
+  // ------------------------------------------------------------
+  if (m_editor->hasCustomPlaybackRange()) {
+    m_customPlaybackTag.setFrameRange(
+      m_editor->customPlaybackFrom(),
+      m_editor->customPlaybackTo());
+
+    m_customPlaybackTag.setAniDir(AniDir::PING_PONG);
+
+    // Use our temporary tag instead of a real document tag.
+    m_tag = &m_customPlaybackTag;
+
+    // Force Playback::PlayInLoop so our temporary tag is used
+    // continuously.
+    m_playOnce = false;
+    m_playAll = false;
+    m_playSubtags = false;
+  }
+
+  // Go to the first frame of the animation or active frame tag.
   if (m_playOnce) {
     frame_t frame = 0;
 
     if (m_tag) {
-      frame = (m_tag->aniDir() == AniDir::REVERSE ? m_tag->toFrame() : m_tag->fromFrame());
+      frame =
+        (m_tag->aniDir() == AniDir::REVERSE ?
+           m_tag->toFrame() :
+           m_tag->fromFrame());
     }
 
     m_editor->setFrame(frame);
@@ -98,14 +130,24 @@ void PlayState::onEnterState(Editor* editor)
   // with ping-pong direction: the direction was reset every time
   // the user released the mouse button after scrolling the editor).
   if (!m_playTimer.isRunning()) {
+    // When using a remembered custom range, start playback from
+    // the beginning of that range.
+    if (m_tag == &m_customPlaybackTag)
+      m_editor->setFrame(m_customPlaybackTag.fromFrame());
+
     m_playback = doc::Playback(
       m_editor->sprite(),
-      m_playSubtags ? m_editor->sprite()->tags().getInternalList() : TagsList(),
+      m_playSubtags ?
+        m_editor->sprite()->tags().getInternalList() :
+        TagsList(),
       m_editor->frame(),
-      m_playOnce ? doc::Playback::PlayOnce :
-      m_playAll  ? doc::Playback::PlayWithoutTagsInLoop :
-                   doc::Playback::PlayInLoop,
+      m_playOnce ?
+        doc::Playback::PlayOnce :
+      m_playAll ?
+        doc::Playback::PlayWithoutTagsInLoop :
+        doc::Playback::PlayInLoop,
       m_tag);
+
     m_nextFrameTime = getNextFrameTime();
     m_curFrameTick = base::current_tick();
     m_playTimer.start();
@@ -122,6 +164,7 @@ EditorState::LeaveAction PlayState::onLeaveState(Editor* editor, EditorState* ne
     if (m_playOnce || Preferences::instance().general.rewindOnStop())
       m_editor->setFrame(m_refFrame);
   }
+
   return KeepState;
 }
 
@@ -140,7 +183,7 @@ bool PlayState::onMouseDown(Editor* editor, MouseMessage* msg)
   UIContext* context = UIContext::instance();
   context->setActiveView(editor->getDocView());
 
-  // A click with right-button stops the animation
+  // A click with right-button stops the animation.
   if (msg->button() == kButtonRight) {
     editor->stop();
     return true;
@@ -154,7 +197,7 @@ bool PlayState::onMouseDown(Editor* editor, MouseMessage* msg)
   if (editor->checkForZoom(msg))
     return true;
 
-  // Start scroll loop
+  // Start scroll loop.
   editor->startScrollingState(msg);
   return true;
 }
@@ -184,13 +227,18 @@ bool PlayState::onKeyUp(Editor* editor, KeyMessage* msg)
 bool PlayState::onSetCursor(Editor* editor, const gfx::Point& mouseScreenPos)
 {
   tools::Ink* ink = editor->getCurrentEditorInk();
+
   if (ink) {
     if (ink->isZoom()) {
       auto theme = skin::SkinTheme::get(editor);
-      editor->showMouseCursor(kCustomCursor, theme->cursors.magnifier());
+      editor->showMouseCursor(
+        kCustomCursor,
+        theme->cursors.magnifier());
+
       return true;
     }
   }
+
   editor->showMouseCursor(kScrollCursor);
   return true;
 }
@@ -210,18 +258,26 @@ void PlayState::onPlaybackTick()
   if (m_nextFrameTime < 0)
     return;
 
-  m_nextFrameTime -= (base::current_tick() - m_curFrameTick);
+  m_nextFrameTime -=
+    (base::current_tick() - m_curFrameTick);
 
   while (m_nextFrameTime <= 0) {
     doc::frame_t frame = m_playback.nextFrame();
+
     if (m_playback.isStopped() ||
         // TODO invalid frame from Playback::nextFrame(), in this way
         //      we avoid any kind of crash or assert fail
-        frame < 0 || frame > m_editor->sprite()->lastFrame()) {
-      TRACEARGS("!!! PlayState: invalid frame from Playback::nextFrame() frame=", frame);
+        frame < 0 ||
+        frame > m_editor->sprite()->lastFrame()) {
+
+      TRACEARGS(
+        "!!! PlayState: invalid frame from Playback::nextFrame() frame=",
+        frame);
+
       m_editor->stop();
       break;
     }
+
     m_editor->setFrame(frame);
     m_nextFrameTime += getNextFrameTime();
   }
@@ -229,7 +285,7 @@ void PlayState::onPlaybackTick()
   m_curFrameTick = base::current_tick();
 }
 
-// Before executing any command, we stop the animation
+// Before executing any command, we stop the animation.
 void PlayState::onBeforeCommandExecution(CommandExecutionEvent& ev)
 {
   // This check just in case we stay connected to context signals when
@@ -238,6 +294,7 @@ void PlayState::onBeforeCommandExecution(CommandExecutionEvent& ev)
   ASSERT(m_editor->manager() == ui::Manager::getDefault());
 
   // If the command is for other editor, we don't stop the animation.
+  // This keeps playback in other Editors independent.
   if (!m_editor->isActive())
     return;
 
@@ -247,10 +304,12 @@ void PlayState::onBeforeCommandExecution(CommandExecutionEvent& ev)
   // (so it would be impossible to stop the animation using
   // PlayAnimation command/Enter key).
   //
-  // There are other commands that just doesn't stop the animation
-  // (zoom, scroll, etc.)
-  if (ev.command()->id() == CommandId::PlayAnimation() || ev.command()->id() == CommandId::Zoom() ||
-      ev.command()->id() == CommandId::Scroll() || ev.command()->id() == CommandId::Timeline()) {
+  // There are other commands that just don't stop the animation
+  // (zoom, scroll, etc.).
+  if (ev.command()->id() == CommandId::PlayAnimation() ||
+      ev.command()->id() == CommandId::Zoom() ||
+      ev.command()->id() == CommandId::Scroll() ||
+      ev.command()->id() == CommandId::Timeline()) {
     return;
   }
 
@@ -259,8 +318,9 @@ void PlayState::onBeforeCommandExecution(CommandExecutionEvent& ev)
 
 double PlayState::getNextFrameTime()
 {
-  return m_editor->sprite()->frameDuration(m_editor->frame()) /
-         m_editor->getAnimationSpeedMultiplier(); // The "speed multiplier" is a "duration divider"
+  return
+    m_editor->sprite()->frameDuration(m_editor->frame()) /
+    m_editor->getAnimationSpeedMultiplier();
 }
 
 } // namespace app

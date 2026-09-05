@@ -13,12 +13,9 @@
 #include "base/time.h"
 #include "doc/frame.h"
 #include "doc/playback.h"
+#include "doc/tag.h"
 #include "obs/connection.h"
 #include "ui/timer.h"
-
-namespace doc {
-class Tag;
-}
 
 namespace app {
 
@@ -50,7 +47,13 @@ private:
   double getNextFrameTime();
 
   Editor* m_editor;
+
+  // Temporary tag used only while this PlayState exists.
+  // Keep it declared before m_playback so m_playback is destroyed
+  // before this tag.
+  doc::Tag m_customPlaybackTag;
   doc::Playback m_playback;
+
   bool m_playOnce;
   bool m_playAll;
   bool m_playSubtags;
