@@ -13,6 +13,7 @@
 #include "app/ui/key.h"
 #include "os/menus.h"
 #include "os/shortcut.h"
+#include "os/surface.h"
 #include "ui/menu.h"
 
 #include <cstddef>
@@ -41,6 +42,9 @@ public:
 
   KeyPtr key() { return m_key; }
   void setKey(const KeyPtr& key);
+
+  void setIcon(const os::SurfaceRef& icon) { m_icon = icon; }
+  const os::SurfaceRef& icon() const { return m_icon; }
 
   void setIsRecentFileItem(bool state) { m_isRecentFileItem = state; }
   bool isRecentFileItem() const { return m_isRecentFileItem; }
@@ -75,6 +79,7 @@ private:
   KeyPtr m_key;
   std::string m_commandId;
   Params m_params;
+  os::SurfaceRef m_icon;
   bool m_isRecentFileItem = false;
   std::unique_ptr<Native> m_native;
 

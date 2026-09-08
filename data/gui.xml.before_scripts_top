@@ -726,6 +726,13 @@
         <menu text="@.file_import" group="file_import">
           <item command="ImportSpriteSheet" text="@.file_import_sprite_sheet" group="file_import_1" />
         </menu>
+        <separator id="scripts_menu_separator" />
+        <menu id="scripts_menu" text="@.file_scripts" group="file_scripts">
+          <item command="OpenScriptFolder" text="@.file_open_script_folder" />
+          <item command="Refresh" text="@.file_rescan_script_folder" />
+          <separator />
+          <item command="Debugger" text="@.file_debugger" />
+        </menu>
         <separator group="file_app" />
         <item command="Exit" text="@.file_exit" />
       </menu>
@@ -1096,12 +1103,6 @@
         <item command="EnterLicense" id="enter_license" text="@.help_enter_license" group="help_enter_license" />
         <separator />
         <item command="About" text="@.help_about" group="help_about" />
-      </menu>
-      <menu id="scripts_menu" text="@.file_scripts" group="file_scripts">
-        <item command="OpenScriptFolder" text="@.file_open_script_folder" />
-        <item command="Refresh" text="@.file_rescan_script_folder" />
-        <separator />
-        <item command="Debugger" text="@.file_debugger" />
       </menu>
     </menu>
 

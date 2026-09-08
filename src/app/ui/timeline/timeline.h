@@ -13,6 +13,7 @@
 #include "app/docs_observer.h"
 #include "app/loop_tag.h"
 #include "app/pref/preferences.h"
+#include "app/ui/alpha_slider.h"
 #include "app/ui/dockable.h"
 #include "app/ui/editor/editor_observer.h"
 #include "app/ui/input_chain_element.h"
@@ -284,6 +285,9 @@ private:
   bool selectedLayersBounds(const SelectedLayers& layers, layer_t* first, layer_t* last) const;
 
   void setLayer(Layer* layer);
+  void updateLayerOpacitySlider();
+  void onLayerOpacitySliderChange();
+  void onLayerOpacitySliderReleased();
   void setFrame(col_t frame, bool byUser);
   bool allLayersVisible();
   bool allLayersInvisible();
@@ -487,6 +491,9 @@ private:
   bool m_fromTimeline;
 
   AniControls m_aniControls;
+  AlphaSlider m_layerOpacitySlider;
+  int m_layerOpacityStart = 255;
+  bool m_layerOpacityEditing = false;
 
   // Data used for thumbnails.
   bool m_thumbnailsOverlayVisible;

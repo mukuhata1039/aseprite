@@ -1,0 +1,1355 @@
+# This work is licensed under the Creative Commons Attribution 4.0
+# International License. To view a copy of this license, visit
+# http://creativecommons.org/licenses/by/4.0/ or send a letter to
+# Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+[_]
+display_name = 譌･譛ｬ隱・
+[advanced_mode]
+title = 隴ｦ蜻・- 驥崎ｦ・description = 繧｢繝峨ヰ繝ｳ繧ｹ繝｢繝ｼ繝峨↓蛻・ｊ譖ｿ縺医∪縺吶・quit = 縲鶏}縲阪く繝ｼ繧呈款縺励※謌ｻ繧九％縺ｨ縺後〒縺阪∪縺吶・
+[ani_controls]
+shortcut = 繧ｷ繝ｧ繝ｼ繝医き繝・ヨ・・right_click = 蜿ｳ繧ｯ繝ｪ繝・け・壼・逕溘が繝励す繝ｧ繝ｳ繧定｡ｨ遉ｺ
+
+[anidir_combo]
+forward = 騾壼ｸｸ蜀咲函
+reverse = 騾・・逕・ping_pong = 蠕蠕ｩ蜀咲函(繝斐Φ繝昴Φ)
+ping_pong_reverse = 蠕蠕ｩ騾・・逕・繝斐Φ繝昴Φ繝ｪ繝舌・繧ｹ)
+
+[ask_for_color_profile]
+title = 繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ
+sprite_with_profile = 縺薙・繧ｹ繝励Λ繧､繝医↓縺ｯ繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ縺悟性縺ｾ繧後※縺・∪縺吶・sprite_without_profile = 縺薙・繧ｹ繝励Λ繧､繝医↓縺ｯ繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ縺悟性縺ｾ繧後※縺・∪縺帙ｓ縲・
+[statusbar_tips]
+all_layers_are_locked = 驕ｸ謚槭＆繧後※縺・ｋ繝ｬ繧､繝､繝ｼ縺ｯ縺吶∋縺ｦ繝ｭ繝・け縺輔ｌ縺ｦ縺・∪縺・layer_locked = 繝ｬ繧､繝､繝ｼ "{0}"縺ｯ繝ｭ繝・け縺輔ｌ縺ｦ縺・∪縺・disable_snap_grid = 繧ｰ繝ｪ繝・ラ繧ｹ繝翫ャ繝励ｒ辟｡蜉ｹ蛹・frame = 繝輔Ξ繝ｼ繝・・current_frame = 迴ｾ蝨ｨ縺ｮ繝輔Ξ繝ｼ繝
+zoom_level = 諡｡螟ｧ邇・new_frame = 譁ｰ隕上ヵ繝ｬ繝ｼ繝\n蜿ｳ繧ｯ繝ｪ繝・け縺ｧ繧ｪ繝励す繝ｧ繝ｳ陦ｨ遉ｺ
+locked_layers = 繝ｭ繝・け縺輔ｌ縺ｦ縺・ｋ繝ｬ繧､繝､繝ｼ縺後≠繧翫∪縺・no_active_layers = 譛牙柑縺ｪ繝ｬ繧､繝､繝ｼ縺後≠繧翫∪縺帙ｓ
+layer_x_is_hidden = 繝ｬ繧､繝､繝ｼ"{}"縺ｯ髱櫁｡ｨ遉ｺ荳ｭ
+unmodifiable_reference_layer = 繝ｬ繧､繝､繝ｼ "{}"縺ｯ繝ｪ繝輔ぃ繝ｬ繝ｳ繧ｹ繝ｬ繧､繝､繝ｼ縺ｮ縺溘ａ螟画峩縺ｧ縺阪∪縺帙ｓ
+cannot_move_bg_layer = 閭梧勹繝ｬ繧､繝､繝ｼ縺ｯ遘ｻ蜍輔〒縺阪∪縺帙ｓ
+nothing_to_move = 遘ｻ蜍輔〒縺阪ｋ繧ゅ・縺後≠繧翫∪縺帙ｓ
+recovery_task_using_sprite = 繝舌ャ繧ｯ繧｢繝・・縺九ョ繝ｼ繧ｿ繝ｪ繧ｫ繝舌Μ繧ｿ繧ｹ繧ｯ縺ｧ菴ｿ繧上ｌ縺ｦ縺・ｋ繧ｹ繝励Λ繧､繝医′縺ゅｊ縺ｾ縺・non_transformable_reference_layer = 繝ｬ繧､繝､繝ｼ"{}"縺ｯ繝ｪ繝輔ぃ繝ｬ繝ｳ繧ｹ繝ｬ繧､繝､繝ｼ縺ｮ縺溘ａ縲∝､牙ｽ｢縺ｧ縺阪∪縺帙ｓ
+sprite_locked_somewhere = 繧ｹ繝励Λ繧､繝医・蛻･縺ｮ繧ｨ繝・ぅ繧ｿ繝ｼ縺ｧ繝ｭ繝・け縺輔ｌ縺ｦ縺・∪縺・not_enough_transform_memory = 驕ｸ謚樒ｯ・峇縺ｮ螟牙ｽ｢縺ｫ蠢・ｦ√↑繝｡繝｢繝ｪ縺御ｸ崎ｶｳ縺励※縺・∪縺・not_enough_rotsprite_memory = RotSprite陬憺俣縺ｫ蠢・ｦ√↑繝｡繝｢繝ｪ縺御ｸ崎ｶｳ縺励※縺・∪縺・cannot_modify_readonly_sprite = 隱ｭ縺ｿ蜿悶ｊ蟆ら畑繧ｹ繝励Λ繧､繝医・螟画峩縺ｧ縺阪∪縺帙ｓ縲・n隧ｳ邏ｰ縺ｫ縺､縺・※縺ｯ縲√後ヵ繧｡繧､繝ｫ > 菫晏ｭ倥阪Γ繝九Η繝ｼ繧剃ｽｿ逕ｨ縺励※縺上□縺輔＞縲・
+[alerts]
+applying_filter = FX<<繧ｨ繝輔ぉ繧ｯ繝医ｒ驕ｩ逕ｨ縺励※縺・∪縺・..||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+auto_remap = 閾ｪ蜍募・蜑ｲ蠖薙※\n<<蜀榊牡蠖薙※謫堺ｽ懊・256濶ｲ莉･荳翫・繝代Ξ繝・ヨ縺ｮ蝣ｴ蜷医∝ｮ悟・縺ｫ縺ｯ蜍穂ｽ懊＠縺ｾ縺帙ｓ縲・n<<縺昴ｌ縺ｧ繧よ桃菴懊ｒ邯咏ｶ壹＠縺ｾ縺吶°・歃n||&OK||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+cannot_delete_all_layers = 繧ｨ繝ｩ繝ｼ<<蜈ｨ繝ｬ繧､繝､繝ｼ繧貞炎髯､縺吶ｋ縺薙→縺ｯ縺ｧ縺阪∪縺帙ｓ縲・|&OK
+cannot_delete_used_tileset = 繧ｨ繝ｩ繝ｼ\n<<縺薙・繧ｿ繧､繝ｫ繧ｻ繝・ヨ縺ｯ莉･荳九・繧ｿ繧､繝ｫ繝槭ャ繝励↓菴ｿ繧上ｌ縺ｦ縺・ｋ縺溘ａ蜑企勁縺ｧ縺阪∪縺帙ｓ:\n<<"{0}"\n||&OK
+deleting_tilemaps_will_delete_tilesets = 豕ｨ諢十n<<繧ｿ繧､繝ｫ繝槭ャ繝励ｒ蜑企勁縺吶ｋ縺ｨ謇螻槭・繧ｿ繧､繝ｫ繝槭ャ繝励ｂ蜑企勁縺輔ｌ縺ｾ縺・\n<<"{0}"\n<<螳溯｡後＠縺ｾ縺吶°・歃n||&OK||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+cannot_file_overwrite_on_export = 荳頑嶌縺崎ｭｦ蜻浬n<<邱ｨ髮・ｸｭ縺ｮ繝輔ぃ繧､繝ｫ繧貞酔縺伜錐蜑阪〒繧ｨ繧ｯ繧ｹ繝昴・繝医☆繧九％縺ｨ縺ｯ縺ｧ縺阪∪縺帙ｓ縲・n<<縺昴・蝣ｴ蜷医・ 繝輔ぃ繧､繝ｫ > 蜷榊燕繧剃ｻ倥￠縺ｦ菫晏ｭ・縺九ｉ菫晏ｭ倥＠縺ｦ縺上□縺輔＞縲・n||&OK
+cannot_open_file = 蝠城｡・<繝輔ぃ繧､繝ｫ縺碁幕縺代∪縺帙ｓ・・<{0}||&OK
+cannot_open_folder = 蝠城｡・<繝輔か繝ｫ繝縺碁幕縺代∪縺帙ｓ・・<{0}||&OK
+cannot_save_in_read_only_file = 蝠城｡・<驕ｸ謚槭＠縺溘ヵ繧｡繧､繝ｫ縺ｯ隱ｭ縺ｿ蜿悶ｊ蟆ら畑縺ｧ縺吶・|謌ｻ繧・&G)
+clipboard_access_locked = 繧ｨ繝ｩ繝ｼ<<繧ｯ繝ｪ繝・・繝懊・繝峨↓繧｢繧ｯ繧ｻ繧ｹ縺ｧ縺阪∪縺帙ｓ縲・<莉悶・繧｢繝励Μ繧ｱ繝ｼ繧ｷ繝ｧ繝ｳ縺ｫ菴ｿ逕ｨ縺輔ｌ縺ｦ縺・ｋ蜿ｯ閭ｽ諤ｧ縺後≠繧翫∪縺吶・|&OK
+clipboard_image_format_not_supported = 繧ｨ繝ｩ繝ｼ<<迴ｾ蝨ｨ縺ｮ繧ｯ繝ｪ繝・・繝懊・繝峨・逕ｻ蜒丞ｽ｢蠑上・繧ｵ繝昴・繝医＆繧後※縺・∪縺帙ｓ縲・|&OK
+delete_selected_backups = 隴ｦ蜻浬n<<譛ｬ蠖薙↓{0}蛟九・繝舌ャ繧ｯ繧｢繝・・繧貞炎髯､縺励∪縺吶°・歃n||縺ｯ縺・&Y)||縺・＞縺・&N)
+delete_shortcut = 隴ｦ蜻浬n<<譛ｬ蠖薙↓'{0}'縺ｮ繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ繧貞炎髯､縺励∪縺吶°・歃n||縺ｯ縺・&Y)||縺・＞縺・&N)
+empty_rect_importing_sprite_sheet = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・繧､繝ｳ繝昴・繝・n<<謖・ｮ壹＆繧後◆遏ｩ蠖｢縺ｧ縺ｯ繧ｿ繧､繝ｫ繧剃ｽ懈・縺ｧ縺阪∪縺帙ｓ縲・n<<繧ｹ繝励Λ繧､繝医・遽・峇蜀・〒遏ｩ蠖｢繧呈欠螳壹＠縺ｦ縺上□縺輔＞縲・n||&OK
+error_loading_file = 繧ｨ繝ｩ繝ｼ<<繝輔ぃ繧､繝ｫ{0}縺ｮ隱ｭ霎ｼ縺ｫ繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・|&OK
+error_saving_file = 繧ｨ繝ｩ繝ｼ<<繝輔ぃ繧､繝ｫ{0}縺ｮ菫晏ｭ倅ｸｭ縺ｫ繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・|&OK
+file_format_doesnt_support_palette = 繧ｨ繝ｩ繝ｼ<<繧ｫ繝ｩ繝ｼ繝代Ξ繝・ヨ繧畜0}蠖｢蠑上〒菫晏ｭ倥〒縺阪∪縺帙ｓ||&OK
+export_animation_in_sequence = 騾夂衍\n<<{0}譫壹・繝輔ぃ繧､繝ｫ縺ｮ繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ繧偵お繧ｯ繧ｹ繝昴・繝医＠縺ｾ縺吶°・歃n<<{1}, {2}...\n||蜷梧э(&A)||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+file_format_doesnt_support_error = 繧ｨ繝ｩ繝ｼ\n<<諡｡蠑ｵ蟄・".{0}" 縺ｯ繧ｵ繝昴・繝医＆繧後※縺・∪縺帙ｓ縲・n<<\n{1}\n<<\n<<莉悶・諡｡蠑ｵ蟄舌ｒ驕ｸ謚槭＠縺ｦ縺上□縺輔＞縲・n<<繧ｹ繝励Λ繧､繝医・蜈ｨ諠・ｱ繧剃ｿ晄戟縺吶ｋ縺ｫ縺ｯ 窶・aseprite窶・繧剃ｽｿ逕ｨ縺励※縺上□縺輔＞縲・n||&OK
+file_format_doesnt_support_warning = 豕ｨ諢十n<<諡｡蠑ｵ蟄・".{0}" 縺ｯ繧ｵ繝昴・繝医＆繧後※縺・∪縺帙ｓ縲・\n<<\n{1}\n<<\n<<縺吶∋縺ｦ縺ｮ諠・ｱ繧剃ｿ晄戟縺吶ｋ縺ｫ縺ｯ ".aseprite" 諡｡蠑ｵ蟄舌ｒ菴ｿ逕ｨ縺励※縺上□縺輔＞縲・n<<諡｡蠑ｵ蟄・".{0}" 縺ｮ縺ｾ縺ｾ邯壹￠縺ｾ縺吶°?\n||縺ｯ縺・&Y)||縺・＞縺・&N)
+file_format_alpha_channel = 荳埼乗・蠎ｦ
+file_format_tags = 繧ｿ繧ｰ
+file_format_frames = 繝輔Ξ繝ｼ繝
+file_format_grayscale_mode = 逋ｽ鮟定｡ｨ遉ｺ繝｢繝ｼ繝・file_format_indexed_mode = 繧､繝ｳ繝・ャ繧ｯ繧ｹ陦ｨ遉ｺ繝｢繝ｼ繝・file_format_layers = 繝ｬ繧､繝､繝ｼ
+file_format_palette_changes = 繝輔Ξ繝ｼ繝髢薙・繝代Ξ繝・ヨ繧貞､画峩
+file_format_rgb_mode = RGB繝｢繝ｼ繝・file_format_20ms_min_duration = 繝輔Ξ繝ｼ繝譎る俣 20ms譛ｪ貅
+file_format_10ms_duration_precision = 10ms縺ｮ蛟肴焚莉･螟悶・繝輔Ξ繝ｼ繝譎る俣
+invalid_chars_in_filename = 繧ｨ繝ｩ繝ｼ\n<<繝輔ぃ繧､繝ｫ蜷阪↓莉･荳九・譁・ｭ励ｒ蜷ｫ繧√ｋ縺薙→縺ｯ縺ｧ縺阪∪縺帙ｓ縲・n<< {0}\n||&OK
+invalid_fg_or_bg_colors = Aseprite\n<<迴ｾ蝨ｨ驕ｸ謚槭＆繧後※縺・ｋ謠冗判濶ｲ縺翫ｈ縺ｳ閭梧勹濶ｲ縺ｯ\n<<遽・峇螟悶〒縺吶ゅヱ繝ｬ繝・ヨ蜀・・濶ｲ繧帝∈謚槭＠縺ｦ縺上□縺輔＞縲・n||&OK
+job_working = {0}<<蜃ｦ逅・ｸｭ...||&繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+nothing_to_report = 繧ｯ繝ｩ繝・す繝･繝ｬ繝昴・繝・<蝣ｱ蜻翫☆繧九ｂ縺ｮ縺ｯ縺ゅｊ縺ｾ縺帙ｓ||&OK
+install_extension = Warning\n<<謖・ｮ壹＆繧後◆諡｡蠑ｵ讖溯・繧呈悽蠖薙↓繧､繝ｳ繧ｹ繝医・繝ｫ縺励∪縺吶°・歃n<<'{0}'\n||繧､繝ｳ繧ｹ繝医・繝ｫ(&I)||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+uninstall_extension_warning = 隴ｦ蜻浬n<<諡｡蠑ｵ讖溯・ "{0}"繧偵い繝ｳ繧､繝ｳ繧ｹ繝医・繝ｫ縺励∪縺吶°・歃n||縺ｯ縺・&Y)||縺・＞縺・&N)
+cannot_install_default_extension = 繧ｨ繝ｩ繝ｼ<<縺薙・諡｡蠑ｵ讖溯・縺ｯ縲√ョ繝輔か繝ｫ繝医・繝・・繝槭ｒ鄂ｮ縺肴鋤縺医ｈ縺・→縺励※縺・ｋ縺溘ａ繧､繝ｳ繧ｹ繝医・繝ｫ縺ｧ縺阪∪縺帙ｓ縲・<髢狗匱閠・↓騾｣邨｡縺励※縲√ユ繝ｼ繝・ID 縺ｾ縺溘・繝・・繝槫錐縺ｮ譁・ｭ怜・<<繧・\"default\" 縺九ｉ蛻･縺ｮ繧ゅ・縺ｫ菫ｮ豁｣縺励※繧ゅｉ縺｣縺ｦ縺上□縺輔＞縲・|&OK
+unknown_output_file_format_error = Aseprite\n<<蜃ｺ蜉帙ヵ繧｡繧､繝ｫ縺ｮ繝輔ぃ繧､繝ｫ蠖｢蠑・"{0}'"縺御ｸ肴・縺ｧ縺吶・n||&OK
+update_screen_ui_scaling_with_theme_values = UI/繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｹ繧ｱ繝ｼ繝ｫ縺ｮ譖ｴ譁ｰ\n<<譁ｰ縺励＞繝・・繝・"{0}"縺ｯ谺｡縺ｮ蛟､繧貞､画峩縺励ｈ縺・→縺励※縺・∪縺吶ゑｼ喀n<< 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｹ繧ｱ繝ｼ繝ｫ・・{1}% -> {2}%\n<< UI繧ｹ繧ｱ繝ｼ繝ｫ・・{3}% -> {4}%\n<<縺薙ｌ繧峨・螟画峩繧定ｨｱ蜿ｯ縺励∪縺吶°・歃n||繧ｹ繧ｱ繝ｼ繝ｫ繧定ｪｿ謨ｴ縺吶ｋ(&A)||繧ｹ繧ｱ繝ｼ繝ｫ繧定ｪｿ謨ｴ縺励↑縺・&D)
+update_extension = 諡｡蠑ｵ讖溯・縺ｮ繧｢繝・・繝・・繝・n<<諡｡蠑ｵ讖溯・ "{0}" 縺ｯ縺吶〒縺ｫ蟄伜惠縺励∪縺吶・n<<{1}繧致{2}縺九ｉv{3}縺ｫ繧｢繝・・繝・・繝医＠縺ｾ縺吶°・歃n|| 縺ｯ縺・&Y)||縺・＞縺・&N)
+update_extension_downgrade = 繝繧ｦ繝ｳ繧ｰ繝ｬ繝ｼ繝・update_extension_upgrade = 繧｢繝・・繧ｰ繝ｬ繝ｼ繝・recent_file_doesnt_exist = Aseprite<<驕ｸ謚槭＆繧後◆繝輔ぃ繧､繝ｫ縺悟ｭ伜惠縺励∪縺帙ｓ縲・|&OK
+recent_folder_doesnt_exist = Aseprite<<驕ｸ謚槭＆繧後◆繝輔か繝ｫ繝縺悟ｭ伜惠縺励∪縺帙ｓ縲・|&OK
+restart_by_preferences = Aseprite\n<<螟画峩繧堤｢ｺ隱阪☆繧九◆繧√↓縺ｯ繝励Ο繧ｰ繝ｩ繝繧貞・襍ｷ蜍輔☆繧句ｿ・ｦ√′縺ゅｊ縺ｾ縺吶ゑｼ嘴0}\n||&OK
+restart_by_preferences_save_recovery_data_period = X蛻・ｯ弱↓閾ｪ蜍慕噪縺ｫ繝ｪ繧ｫ繝舌Μ繝・・繧ｿ繧剃ｿ晏ｭ・restart_by_preferences_keep_edited_sprite_data_lifespan = 邱ｨ髮・＠縺溘せ繝励Λ繧､繝医ョ繝ｼ繧ｿ繧湛譌･髢謎ｿ晄戟
+restart_by_preferences_keep_closed_sprite_on_memory_for = 髢峨§縺溘せ繝励Λ繧､繝医ｒX蛻・俣繝｡繝｢繝ｪ縺ｫ菫晄戟
+restore_all_shortcuts = 隴ｦ蜻浬n<<縺吶∋縺ｦ縺ｮ繧ｷ繝ｧ繝ｼ繝医き繝・ヨ繧偵ョ繝輔か繝ｫ繝郁ｨｭ螳壹↓蠕ｩ蜈・＠縺ｾ縺吶°・歃n<<\n|| 縺ｯ縺・&Y)||縺・＞縺・&N)
+run_script = 繧ｹ繧ｯ繝ｪ繝励ヨ螳溯｡圭n<<谺｡縺ｮ繧ｹ繧ｯ繝ｪ繝励ヨ繧貞ｮ溯｡後＠縺ｾ縺吶°・歃n<<\n<< {0}\n<<\n<<隴ｦ蜻奇ｼ壹せ繧ｯ繝ｪ繝励ヨ縺ｯAseprite繧偵け繝ｩ繝・す繝･縺輔○繧句ｴ蜷医′縺ゅｊ縺ｾ縺吶・n<<繧ｹ繧ｯ繝ｪ繝励ヨ繧貞ｮ溯｡後☆繧句燕縺ｫ縲∽ｽ懈･ｭ蜀・ｮｹ繧剃ｿ晏ｭ倥＠縺ｦ縺上□縺輔＞縲・n||螳溯｡・&R)||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+save_sprite_changes = 隴ｦ蜻浬n<<{1}縺九ｉ"{0}"縺ｸ\n<<繧ｹ繝励Λ繧､繝医∈縺ｮ螟画峩繧剃ｿ晏ｭ倥＠縺ｾ縺吶°・歃n||菫晏ｭ・&S)||菫晏ｭ倥＠縺ｪ縺・&N)||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+save_sprite_changes_quitting = 邨ゆｺ・＠縺ｦ縺・∪縺・save_sprite_changes_closing = 髢峨§縺ｦ縺・∪縺・overwrite_existent_file = 隴ｦ蜻・<繝輔ぃ繧､繝ｫ縺梧里縺ｫ蟄伜惠縺励※縺・∪縺吶ゆｸ頑嶌縺阪＠縺ｾ縺吶°・・<{0}||縺ｯ縺・&Y)||縺・＞縺・&N) ||繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+overwrite_files_on_export_sprite_sheet = 繧ｹ繝励Λ繧､繝医す繝ｼ繝亥・蜉帙・隴ｦ蜻浬n<<谺｡縺ｮ繝輔ぃ繧､繝ｫ繧剃ｸ頑嶌縺阪＠縺ｾ縺吶°・歃n{0}\n||縺ｯ縺・&Y)||縺・＞縺・&N)
+overwrite_files_on_export = 蜃ｺ蜉帙・隴ｦ蜻浬n<<谺｡縺ｮ繝輔ぃ繧､繝ｫ繧剃ｸ頑嶌縺阪＠縺ｾ縺吶°・歃n<<{0}\n||縺ｯ縺・&Y)||縺・＞縺・&N)
+enter_license_disabled = 繧､繝ｳ繝輔か繝｡繝ｼ繧ｷ繝ｧ繝ｳ\n<<Aseprite 縺ｮ縺薙・繧ｳ繝斐・縺ｯ縲√Λ繧､繧ｻ繝ｳ繧ｹ繧ｭ繝ｼ縺ｮ蜈･蜉帙↓蟇ｾ蠢懊＠縺ｦ縺・∪縺帙ｓ縲・n<<繝ｩ繧､繧ｻ繝ｳ繧ｹ繧ｭ繝ｼ縺ｯ縲、seprite蜈ｬ蠑上し繧､繝医ｈ繧雁・謇九〒縺阪∪縺吶Ｉttps://aseprite.org/download\n<<Aseprite 繧偵い繧ｯ繝・ぅ繝吶・繝医☆繧九→縲∬・蜍墓峩譁ｰ繧貞茜逕ｨ縺ｧ縺阪ｋ繧医≧縺ｫ縺ｪ繧翫∪縺吶・n||&OK
+reset_default_confirm = 險ｭ螳壹ｒ繝ｪ繧ｻ繝・ヨ縺励※縺・∪縺兔n<<驕ｸ謚槭＠縺溯ｨｭ螳壹ｒ繝・ヵ繧ｩ繝ｫ繝医↓繝ｪ繧ｻ繝・ヨ縺励※繧ゅｈ繧阪＠縺・〒縺吶°?\n||縺ｯ縺・&Y)||縺・＞縺・&N)
+
+[brightness_contrast]
+title = 譏弱ｋ縺・繧ｳ繝ｳ繝医Λ繧ｹ繝・brightness_label = 譏弱ｋ縺包ｼ・contrast_label = 繧ｳ繝ｳ繝医Λ繧ｹ繝茨ｼ・
+[brush_slot_params]
+title = 繝代Λ繝｡繝ｼ繧ｿ繝ｼ
+brush = 繝悶Λ繧ｷ・・brush_type = 繧ｿ繧､繝・brush_size = 繧ｵ繧､繧ｺ
+brush_angle = 隗貞ｺｦ
+color = 濶ｲ・・foreground = 謠冗判濶ｲ
+background = 閭梧勹濶ｲ
+image_color = 繧､繝｡繝ｼ繧ｸ繧ｫ繝ｩ繝ｼ
+ink = 繧､繝ｳ繧ｯ・・ink_type = 繧ｿ繧､繝・ink_opacity = 荳埼乗・蠎ｦ
+extras = 縺昴・莉厄ｼ・shade = 繧ｷ繧ｧ繝ｼ繝・pixel_perfect = 繝斐け繧ｻ繝ｫ繝代・繝輔ぉ繧ｯ繝・save_brush = 繝悶Λ繧ｷ繧剃ｿ晏ｭ・locked = 繝ｭ繝・け
+delete = 蜑企勁
+delete_all = 蜈ｨ縺ｦ繧貞炎髯､
+
+[cel_movement_popup_menu]
+move = 遘ｻ蜍・&M)
+copy = 繧ｳ繝斐・(&C)
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+
+[cel_popup_menu]
+clear = 蜑企勁(&D)
+unlink = 邨仙粋繧定ｧ｣髯､(&U)
+link_cels = 繧ｻ繝ｫ繧堤ｵ仙粋(&L)
+
+[color_bar]
+fg = 謠冗判濶ｲ
+bg = 閭梧勹濶ｲ
+fg_warning = 謠冗判濶ｲ繧偵ヱ繝ｬ繝・ヨ縺ｫ霑ｽ蜉縺吶ｋ
+bg_warning = 閭梧勹濶ｲ繧偵ヱ繝ｬ繝・ヨ縺ｫ霑ｽ蜉縺吶ｋ
+edit_color = 濶ｲ繧堤ｷｨ髮・sort_and_gradients = 繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ繧偵た繝ｼ繝・presets = 繝励Μ繧ｻ繝・ヨ
+options = 險ｭ螳・switch_tileset = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ繧定｡ｨ遉ｺ縺吶ｋ / 蜿ｳ繧ｯ繝ｪ繝・け縺ｧ繧ｿ繧､繝ｫ繧ｻ繝・ヨ縺ｮ縺ｿ繧定｡ｨ遉ｺ縺吶ｋ
+tileset_mode_manual = 隱ｬ譏趣ｼ壽里蟄倥・繧ｿ繧､繝ｫ繧貞､画峩縺励―n譁ｰ縺励＞繧ｿ繧､繝ｫ繧定・蜍輔〒菴懈・縺励↑縺・tileset_mode_auto = 閾ｪ蜍包ｼ壽里蟄倥ち繧､繝ｫ繧貞､画峩縺ｾ縺溘・菫ｮ豁｣縺吶ｋ\n蠢・ｦ√・蜿ｯ閭ｽ縺ｪ繧峨ち繧､繝ｫ繧剃ｽ懈・/蜑企勁縺吶ｋ
+tileset_mode_stack = 繧ｹ繧ｿ繝・け・壽里蟄倥ち繧､繝ｫ繧貞､画峩縺励↑縺Ыn譁ｰ隕上ち繧､繝ｫ繧定・蜍慕噪縺ｫ逕滓・繝ｻ繧ｹ繧ｿ繝・け縺吶ｋ
+set_as_default = 繝・ヵ繧ｩ繝ｫ繝医→縺励※險ｭ螳・remap_palette = 繝代Ξ繝・ヨ蜀埼・鄂ｮ
+remap_palette_tooltip = 蜿､縺・う繝ｳ繝・ャ繧ｯ繧ｹ縺ｨ譁ｰ縺励＞繧､繝ｳ繝・ャ繧ｯ繧ｹ繧剃ｸ閾ｴ縺輔○繧・remap_tiles = 繧ｿ繧､繝ｫ蜀埼・鄂ｮ
+remap_tiles_tooltip = 譁ｰ譌ｧ繧ｿ繧､繝ｫ縺ｮ繝槭ャ繝・clear_tiles = 繧ｿ繧､繝ｫ繧偵け繝ｪ繧｢
+resize_tiles = 繧ｿ繧､繝ｫ繧偵Μ繧ｵ繧､繧ｺ
+drag_and_drop_tiles = 繧ｿ繧､繝ｫ繧偵ラ繝ｩ繝・げ繧｢繝ｳ繝峨ラ繝ｭ繝・・
+reverse_colors = 濶ｲ縺ｮ蜿崎ｻ｢
+sort_colors = 濶ｲ縺ｮ荳ｦ縺ｳ譖ｿ縺・gradient = 繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+gradient_by_hue = 濶ｲ逶ｸ縺ｫ繧医ｋ繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+sort_by_hue = 濶ｲ逶ｸ縺ｧ繧ｽ繝ｼ繝・sort_by_saturation = 蠖ｩ蠎ｦ縺ｧ繧ｽ繝ｼ繝・sort_by_brightness = 譏弱ｋ縺輔〒繧ｽ繝ｼ繝・sort_by_luminance = 霈晏ｺｦ縺ｧ繧ｽ繝ｼ繝・sort_by_red = Red蛟､縺ｧ繧ｽ繝ｼ繝・sort_by_green = Green蛟､縺ｧ繧ｽ繝ｼ繝・sort_by_blue = Blue蛟､縺ｧ繧ｽ繝ｼ繝・sort_by_alpha = 繧｢繝ｫ繝輔ぃ蛟､縺ｧ繧ｽ繝ｼ繝・ascending = 譏・・descending = 髯埼・
+[color_popup]
+transparent_color_sel = 騾乗・濶ｲ縺碁∈謚槭＆繧後※縺・ｋ
+index = 邏｢蠑・
+[color_wheel]
+discrete = 蛟句挨
+no_harmonies = 繝上・繝｢繝九・縺ｪ縺・complementary = 陬懆牡
+monochromatic = 蜊倩牡
+analogous = 鬘樔ｼｼ濶ｲ
+split_complementary = 繧ｹ繝励Μ繝・ヨ陬懆牡
+triadic = 繝医Λ繧､繧｢繝蛾・濶ｲ
+tetradic = 繝・ヨ繝ｩ繝・ぅ繝・け驟崎牡
+square = 繧ｹ繧ｯ繧ｨ繧｢驟崎牡
+
+[commands]
+About = Aseprite縺ｫ縺､縺・※
+AddColor = 繝代Ξ繝・ヨ縺ｫ濶ｲ繧定ｿｽ蜉
+AddColor_Background = 閭梧勹濶ｲ
+AddColor_Foreground = 謠冗判濶ｲ
+AddColor_Specific = 迚ｹ螳壹・濶ｲ
+AdvancedMode = 隧ｳ邏ｰ險ｭ螳壹Δ繝ｼ繝・AutocropSprite = 繧ｹ繝励Λ繧､繝医ｒ繝医Μ繝
+AutocropSprite_ByGrid = 繧ｰ繝ｪ繝・ラ豈弱↓繧ｹ繝励Λ繧､繝医ｒ繝医Μ繝
+BackgroundFromLayer = 繝ｬ繧､繝､繝ｼ縺九ｉ閭梧勹縺ｫ螟画峩
+BrightnessContrast = 譏弱ｋ縺・繧ｳ繝ｳ繝医Λ繧ｹ繝医・隱ｿ謨ｴ
+Cancel = 迴ｾ蝨ｨ縺ｮ謫堺ｽ懊ｒ蜿悶ｊ豸医＠
+CanvasSize = 繧ｭ繝｣繝ｳ繝舌せ繧ｵ繧､繧ｺ
+CelOpacity = 繧ｻ繝ｫ縺ｮ荳埼乗・蠎ｦ繧畜0}縺ｫ險ｭ螳・({1}%)
+CelProperties = 繧ｻ繝ｫ繝励Ο繝代ユ繧｣
+ChangeBrush = 繝悶Λ繧ｷ繧貞､画峩・・{0}
+ChangeBrush_CustomBrush = 繧ｫ繧ｹ繧ｿ繝繝悶Λ繧ｷ #{0}
+ChangeBrush_DecrementAngle = 隗貞ｺｦ繧堤ｸｮ蟆・ChangeBrush_DecrementSize = 繧ｵ繧､繧ｺ繧堤ｸｮ蟆・ChangeBrush_IncrementAngle = 隗貞ｺｦ繧貞｢怜刈
+ChangeBrush_IncrementSize = 繧ｵ繧､繧ｺ繧貞｢怜刈縺吶ｋ
+ChangeBrush_FlipX = 豌ｴ蟷ｳ蜿崎ｻ｢
+ChangeBrush_FlipY = 蝙ら峩蜿崎ｻ｢
+ChangeBrush_FlipD = 譁懊ａ蜿崎ｻ｢
+ChangeBrush_Rotate90CW = 90蠎ｦ譎りｨ亥屓繧雁屓霆｢
+ChangeColor = 濶ｲ縺ｮ螟画峩・嘴0}
+ChangeColor_IncrementFgIndex = 謠冗判濶ｲ繧呈ｬ｡縺ｫ遘ｻ蜍・ChangeColor_DecrementFgIndex = 謠冗判濶ｲ繧貞燕縺ｫ遘ｻ蜍・ChangeColor_IncrementBgIndex = 閭梧勹濶ｲ繧呈ｬ｡縺ｫ遘ｻ蜍・ChangeColor_DecrementBgIndex = 閭梧勹濶ｲ繧貞燕縺ｫ遘ｻ蜍・ChangePixelFormat = 繧ｫ繝ｩ繝ｼ繝｢繝ｼ繝峨ｒ螟画峩・嘴0}
+ChangePixelFormat_RGB = RGB
+ChangePixelFormat_Grayscale = 繧ｰ繝ｬ繝ｼ繧ｹ繧ｱ繝ｼ繝ｫ
+ChangePixelFormat_Indexed = 繧､繝ｳ繝・ャ繧ｯ繧ｹ
+ChangePixelFormat_Indexed_OrderedDithering = 驟榊・繝・ぅ繧ｶ繝ｪ繝ｳ繧ｰ莉倥″繧､繝ｳ繝・ャ繧ｯ繧ｹ
+ChangePixelFormat_Indexed_OldDithering = 譌ｧ繝・ぅ繧ｶ繝ｪ繝ｳ繧ｰ莉倥″繧､繝ｳ繝・ャ繧ｯ繧ｹ
+ChangePixelFormat_Indexed_ErrorDiffusion = 繝輔Ο繧､繝峨せ繧ｿ繧､繝ｳ繝舌・繧ｰ豕輔ョ繧｣繧ｶ繝ｪ繝ｳ繧ｰ莉倥″繧､繝ｳ繝・ャ繧ｯ繧ｹ
+ChangePixelFormat_MoreOptions = 縺昴・莉悶・繧ｪ繝励す繝ｧ繝ｳ
+Clear = 繧ｯ繝ｪ繧｢
+ClearCel = 繧ｻ繝ｫ繧偵け繝ｪ繧｢
+ClearRecentFiles = 譛霑代・繝輔ぃ繧､繝ｫ繧偵け繝ｪ繧｢
+CloseAllFiles = 縺吶∋縺ｦ縺ｮ繝輔ぃ繧､繝ｫ繧帝哩縺倥ｋ
+CloseFile = 繝輔ぃ繧､繝ｫ繧帝哩縺倥ｋ
+ConvertLayer = 繝ｬ繧､繝､繝ｼ螟画鋤
+ConvertLayer_Background = 閭梧勹縺ｫ螟画鋤
+ConvertLayer_Layer = 騾乗・繝ｬ繧､繝､繝ｼ縺ｫ螟画鋤
+ConvertLayer_Tilemap = 繧ｿ繧､繝ｫ繝槭ャ繝励↓螟画鋤
+ColorCurve = 繧ｫ繝ｩ繝ｼ繧ｫ繝ｼ繝・ColorQuantization = 迴ｾ蝨ｨ縺ｮ繧ｹ繝励Λ繧､繝医°繧峨ヱ繝ｬ繝・ヨ繧剃ｽ懈・(濶ｲ縺ｮ驥丞ｭ仙喧)
+ContiguousFill = 髫｣謗･縺ｮ縺ｿ蝪励ｊ縺､縺ｶ縺・Outline = 繧｢繧ｦ繝医Λ繧､繝ｳ
+ConvolutionMatrix = 逡ｳ縺ｿ霎ｼ縺ｿ蜃ｦ逅・逕ｻ蜒丞刈蟾･)
+Copy = 繧ｳ繝斐・
+CopyCel = 繧ｻ繝ｫ繧偵さ繝斐・
+CopyColors = 濶ｲ繧偵さ繝斐・
+CopyMerged = 繝ｬ繧､繝､繝ｼ繧堤ｵ仙粋縺励※繧ｳ繝斐・
+CopyPath = 繝代せ繧偵さ繝斐・
+CopyTiles = 繧ｳ繝斐・繧ｿ繧､繝ｫ
+CropSprite = 繧ｹ繝励Λ繧､繝医・繧ｯ繝ｭ繝・・
+Cut = 繧ｫ繝・ヨ
+Debugger = 繝・ヰ繝・ぎ繝ｼ
+DeselectMask = 繝槭せ繧ｯ縺ｮ驕ｸ謚槭ｒ隗｣髯､
+Despeckle = 繝弱う繧ｺ髯､蜴ｻ
+DeveloperConsole = 繝・・繝ｭ繝・ヱ繝ｼ繧ｳ繝ｳ繧ｽ繝ｼ繝ｫ
+DiscardBrush = 繝悶Λ繧ｷ繧定ｧ｣髯､
+DuplicateLayer = 繝ｬ繧､繝､繝ｼ繧定､・｣ｽ
+DuplicateSprite = 繧ｹ繝励Λ繧､繝医ｒ隍・｣ｽ
+DuplicateView = 繝薙Η繝ｼ繧定､・｣ｽ
+Exit = 邨ゆｺ・ExportSpriteSheet = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医ｒ繧ｨ繧ｯ繧ｹ繝昴・繝・ExportTileset = 繧ｨ繧ｯ繧ｹ繝昴・繝医ち繧､繝ｫ繧ｻ繝・ヨ
+Eyedropper = 繧ｹ繝昴う繝・Fill = 驕ｸ謚樒ｯ・峇繧呈緒逕ｻ濶ｲ縺ｧ蝪励ｊ縺､縺ｶ縺・FitScreen = 逕ｻ髱｢縺ｫ蜷医ｏ縺帙ｋ
+FlattenLayers = 蜈ｨ繝ｬ繧､繝､繝ｼ繧堤ｵ仙粋
+FlattenLayers_Visible = 陦ｨ遉ｺ繝ｬ繧､繝､繝ｼ繧堤ｵ仙粋
+Flip = 蜿崎ｻ｢ {0} {1}
+Flip_Canvas = 繧ｭ繝｣繝ｳ繝舌せ繧貞渚霆｢
+Flip_Horizontally = 豌ｴ蟷ｳ縺ｫ蜿崎ｻ｢
+Flip_Selection = 驕ｸ謚樒ｯ・峇繧貞渚霆｢
+Flip_Vertically = 蝙ら峩縺ｫ蜿崎ｻ｢
+FrameProperties_All = 蜈ｨ繝輔Ξ繝ｼ繝縺ｮ繝輔Ξ繝ｼ繝繝励Ο繝代ユ繧｣
+FrameProperties_Current = 驕ｸ謚樒ｯ・峇縺ｮ繝輔Ξ繝ｼ繝繝励Ο繝代ユ繧｣
+FrameProperties = 繝輔Ξ繝ｼ繝繝励Ο繝代ユ繧｣
+FrameTagProperties = 繝輔Ξ繝ｼ繝繧ｿ繧ｰ繝励Ο繝代ユ繧｣
+FullscreenMode = 繝輔Ν繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繝｢繝ｼ繝峨・蛻・ｊ譖ｿ縺・FullscreenPreview = 繝輔Ν繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繝励Ξ繝薙Η繝ｼ
+GotoFirstFrame = 譛蛻昴・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・GotoFirstFrameInTag = 繧ｿ繧ｰ縺ｮ譛蛻昴・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・GotoFrame = 繝輔Ξ繝ｼ繝繧呈欠螳壹＠縺ｦ遘ｻ蜍・GotoLastFrame = 譛蠕後・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・GotoLastFrameInTag = 繧ｿ繧ｰ縺ｮ譛蠕後・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・GotoNextFrame = 谺｡縺ｮ繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・GotoNextFrameWithSameTag = 蜷後§繧ｿ繧ｰ縺ｮ荳ｭ縺ｧ谺｡縺ｮ繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍輔＠縺ｾ縺・GotoNextLayer = 荳翫・繝ｬ繧､繝､繝ｼ縺ｫ遘ｻ蜍・GotoNextTab = 谺｡縺ｮ繧ｿ繝悶↓遘ｻ蜍・GotoPreviousFrame = 蜑阪・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・GotoPreviousFrameWithSameTag = 蜷後§繧ｿ繧ｰ縺ｮ荳ｭ縺ｧ蜑阪・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍輔＠縺ｾ縺・GotoPreviousLayer = 荳九・繝ｬ繧､繝､繝ｼ縺ｫ遘ｻ蜍・GotoPreviousTab = 蜑阪・繧ｿ繝悶↓遘ｻ蜍・GridSettings = 繧ｰ繝ｪ繝・ラ縺ｮ險ｭ螳・Home = 繝帙・繝
+HueSaturation = 濶ｲ逶ｸ縺ｨ蠖ｩ蠎ｦ繧定ｪｿ謨ｴ縺励∪縺・ImportSpriteSheet = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医ｒ繧､繝ｳ繝昴・繝・InvertColor = 濶ｲ繧貞渚霆｢
+InvertMask = 驕ｸ謚樒ｯ・峇繧貞渚霆｢
+KeyboardShortcuts = 繧ｷ繝ｧ繝ｼ繝医き繝・ヨ繧ｭ繝ｼ
+Launch = 襍ｷ蜍・LayerFromBackground = 閭梧勹繝ｬ繧､繝､繝ｼ繧偵Ξ繧､繝､繝ｼ縺ｫ縺吶ｋ
+LayerLock = 繝ｬ繧､繝､繝ｼ繧偵Ο繝・け
+LayerOpacity = 繝ｬ繧､繝､繝ｼ縺ｮ騾乗・蠎ｦ繧畜0}・・1}%・峨↓險ｭ螳壹☆繧・LayerProperties = 繝ｬ繧､繝､繝ｼ繝励Ο繝代ユ繧｣
+LayerVisibility = 繝ｬ繧､繝､繝ｼ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+LinkCels = 繧ｻ繝ｫ縺ｮ繝ｪ繝ｳ繧ｯ
+LoadMask = 驕ｸ謚樒ｯ・峇縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
+LoadPalette = 繝代Ξ繝・ヨ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ
+LoadDefaultPalette = 繝・ヵ繧ｩ繝ｫ繝医ヱ繝ｬ繝・ヨ繧定ｪｭ縺ｿ霎ｼ繧
+MaskAll = 蜈ｨ縺ｦ繧帝∈謚・MaskByColor = 濶ｲ繧呈欠螳壹＠縺ｦ驕ｸ謚・MaskContent = 謠冗判遽・峇繧帝∈謚・MergeDownLayer = 荳九・繝ｬ繧､繝､繝ｼ縺ｨ邨仙粋
+ModifySelection = {0} 驕ｸ謚樒ｯ・峇 {1}
+ModifySelection_Border = 蠅・阜邱・ModifySelection_Expand = 諡｡蠑ｵ
+ModifySelection_Contract = 邵ｮ蟆・ModifySelection_Modify = 菫ｮ豁｣
+ModifySelection_Quantity = {0} 繝斐け繧ｻ繝ｫ
+Move_Thing = {0} {1} {2}
+Move_Pixel = 繝斐け繧ｻ繝ｫ
+Move_TileWidth = 繧ｿ繧､繝ｫ縺ｮ蟷・Move_TileHeight = 繧ｿ繧､繝ｫ縺ｮ鬮倥＆
+Move_ZoomedPixel = 繧ｺ繝ｼ繝繝斐け繧ｻ繝ｫ
+Move_ZoomedTileWidth = 繧ｺ繝ｼ繝繧ｿ繧､繝ｫ縺ｮ蟷・Move_ZoomedTileHeight = 繧ｺ繝ｼ繝繧ｿ繧､繝ｫ縺ｮ鬮倥＆
+Move_ViewportWidth = 繝薙Η繝ｼ繝昴・繝医・蟷・Move_ViewportHeight = 繝薙Η繝ｼ繝昴・繝医・鬮倥＆
+Move_Left = 蟾ｦ
+Move_Right = 蜿ｳ
+Move_Up = 荳・Move_Down = 荳・MoveCel = 繧ｻ繝ｫ縺ｮ遘ｻ蜍・MoveColors = 濶ｲ縺ｮ遘ｻ蜍・MoveMask = 遘ｻ蜍府0}{1}
+MoveMask_Boundaries = 驕ｸ謚樒ｯ・峇縺ｮ蠅・阜
+MoveMask_Content = 驕ｸ謚槫・螳ｹ
+MoveTiles = 繧ｿ繧､繝ｫ繧堤ｧｻ蜍・NewBrush = 譁ｰ隕上ヶ繝ｩ繧ｷ
+NewFile = 譁ｰ隕上ヵ繧｡繧､繝ｫ
+NewFile_FromClipboard = 繧ｯ繝ｪ繝・・繝懊・繝峨°繧画眠隕上ヵ繧｡繧､繝ｫ
+NewFile_Sprite = 繧ｹ繝励Λ繧､繝・NewFile_BackgroundLayer = 閭梧勹
+NewFrame = 譁ｰ隕上ヵ繝ｬ繝ｼ繝
+NewFrame_NewEmptyFrame = 譁ｰ隕冗ｩｺ縺阪ヵ繝ｬ繝ｼ繝
+NewFrame_DuplicateCels = 邨仙粋縺励◆繧ｻ繝ｫ縺ｮ隍・｣ｽ
+NewFrame_DuplicateCelsCopies = 繧ｻ繝ｫ縺ｮ隍・｣ｽ
+NewFrame_DuplicateCelsLinked = 邨仙粋繧ｻ繝ｫ縺ｮ隍・｣ｽ
+NewFrame_tooltip = 譁ｰ隕上ヵ繝ｬ繝ｼ繝 {}/{}
+NewFrameTag = 譁ｰ隕上ヵ繝ｬ繝ｼ繝繧ｿ繧ｰ
+NewLayer = 譁ｰ隕上Ξ繧､繝､繝ｼ
+NewLayer_BeforeActiveLayer = 荳九↓譁ｰ隕・繝ｬ繧､繝､繝ｼ
+NewLayer_Layer = 繝ｬ繧､繝､繝ｼ
+NewLayer_Group = 繧ｰ繝ｫ繝ｼ繝・NewLayer_ReferenceLayer = 蜿ら・繝ｬ繧､繝､繝ｼ
+NewLayer_TilemapLayer = 譁ｰ隕上ち繧､繝ｫ繝槭ャ繝・NewLayer_FromClipboard = 繧ｯ繝ｪ繝・・繝懊・繝峨°繧画眠隕上Ξ繧､繝､繝ｼ
+NewLayer_ViaCopy = 繧ｳ繝斐・縺九ｉ譁ｰ隕上Ξ繧､繝､繝ｼ
+NewLayer_ViaCut = 繧ｫ繝・ヨ縺九ｉ譁ｰ隕上Ξ繧､繝､繝ｼ
+NewLayer_WithDialog = 繝繧､繧｢繝ｭ繧ｰ繧帝幕縺・※譁ｰ隕上Ξ繧､繝､繝ｼ{}
+NewSpriteFromSelection = 驕ｸ謚樒ｯ・峇縺九ｉ譁ｰ隕上せ繝励Λ繧､繝医ｒ逕滓・
+OpenBrowser = 繝悶Λ繧ｦ繧ｶ繧帝幕縺・OpenFile = 繧ｹ繝励Λ繧､繝医ｒ髢九￥
+OpenGroup = 繧ｰ繝ｫ繝ｼ繝励ｒ螻暮幕/謚倥ｊ縺溘◆繧
+OpenInFolder = 繝輔か繝ｫ繝繧帝幕縺・OpenScriptFolder = 繧ｹ繧ｯ繝ｪ繝励ヨ繝輔か繝ｫ繝繧帝幕縺・OpenWithApp = 髢｢騾｣縺吶ｋ繧｢繝励Μ繧ｱ繝ｼ繧ｷ繝ｧ繝ｳ縺ｧ髢九￥
+Options = 迺ｰ蠅・ｨｭ螳・PaletteEditor = 蛻・ｊ譖ｿ縺・{0} {1} {2}
+PaletteEditor_Edit = 繝代Ξ繝・ヨ繝｢繝ｼ繝峨ｒ邱ｨ髮・PaletteEditor_And = 縺昴＠縺ｦ縲・PaletteEditor_FgPopup = 謠冗判濶ｲ繝昴ャ繝励い繝・・
+PaletteEditor_BgPopup = 閭梧勹濶ｲ繝昴ャ繝励い繝・・
+PaletteSize = 繝代Ξ繝・ヨ繧ｵ繧､繧ｺ
+Paste = 繝壹・繧ｹ繝・PasteText = 繝・く繧ｹ繝医ｒ謖ｿ蜈･
+PixelPerfectMode = 繝斐け繧ｻ繝ｫ繝代・繝輔ぉ繧ｯ繝医Δ繝ｼ繝峨・繧ｪ繝ｳ/繧ｪ繝・PlayAnimation = 繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ蜀咲函
+PlayPreviewAnimation = 繝励Ξ繝薙Η繝ｼ繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ蜀咲函
+Redo = 繧・ｊ逶ｴ縺・Refresh = 譖ｴ譁ｰ
+EnterLicense = 繝ｩ繧､繧ｻ繝ｳ繧ｹ蜈･蜉・RemoveFrame = 繝ｪ繝繝ｼ繝悶ヵ繝ｬ繝ｼ繝
+RemoveFrameTag = 繧ｿ繧ｰ繧貞炎髯､
+RemoveLayer = 繝ｬ繧､繝､繝ｼ繧貞炎髯､
+RemoveSlice = 繧ｹ繝ｩ繧､繧ｹ繧貞炎髯､
+ReopenClosedFile = 髢峨§縺溘ヵ繧｡繧､繝ｫ繧貞・蠎ｦ髢九￥
+RepeatLastExport = 蜑榊屓縺ｮ繧ｨ繧ｯ繧ｹ繝昴・繝医ｒ蜀榊ｮ溯｡・ReplaceColor = 濶ｲ繧堤ｽｮ縺肴鋤縺医ｋ
+ReselectMask = 繝槭せ繧ｯ繧貞・驕ｸ謚・ReverseFrames = 繝輔Ξ繝ｼ繝縺ｮ蜿崎ｻ｢
+Rotate = 蝗櫁ｻ｢{0}{1}
+Rotate_Selection = 驕ｸ謚樒ｯ・峇縺ｮ蝗櫁ｻ｢
+Rotate_Sprite = 繧ｹ繝励Λ繧､繝医・蝗櫁ｻ｢
+RunScript = 繧ｹ繧ｯ繝ｪ繝励ヨ繧貞ｮ溯｡・SaveFile = 繝輔ぃ繧､繝ｫ繧剃ｸ頑嶌縺堺ｿ晏ｭ・SaveFileAs = 繝輔ぃ繧､繝ｫ繧貞挨蜷堺ｿ晏ｭ・SaveFileCopyAs = 繧ｨ繧ｯ繧ｹ繝昴・繝・SaveMask = 遽・峇驕ｸ謚槭ｒ菫晏ｭ・SavePalette = 繝代Ξ繝・ヨ繧剃ｿ晏ｭ・SavePaletteAsDefault = 繝・ヵ繧ｩ繝ｫ繝医ヱ繝ｬ繝・ヨ縺ｨ縺励※菫晏ｭ・SavePaletteAsPreset = 繝代Ξ繝・ヨ繧偵・繝ｪ繧ｻ繝・ヨ縺ｨ縺励※菫晏ｭ・Screenshot = 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｷ繝ｧ繝・ヨ
+Screenshot_Open = 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｷ繝ｧ繝・ヨ繧呈聴縺｣縺ｦ髢九￥
+Screenshot_Save = 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｷ繝ｧ繝・ヨ繧呈聴縺｣縺ｦ菫晏ｭ・Screenshot_Steam = 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｷ繝ｧ繝・ヨ繧呈聴縺｣縺ｦSteam縺ｫ霑ｽ蜉
+Screenshot_sRGB = (sRGB繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ)
+Screenshot_DisplayCS = (繝・ぅ繧ｹ繝励Ξ繧､縺ｮ繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ)
+Scroll = 繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ{0}
+ScrollCenter = 繧ｭ繝｣繝ｳ繝舌せ縺ｮ荳ｭ螟ｮ縺ｫ
+SelectPaletteColors = 菴ｿ逕ｨ濶ｲ繧帝∈謚・SelectPaletteColors_UnusedColors = 譛ｪ菴ｿ逕ｨ濶ｲ繧帝∈謚・SelectPaletteColors_UsedTiles = 菴ｿ逕ｨ繧ｿ繧､繝ｫ繧帝∈謚・SelectPaletteColors_UnusedTiles = 譛ｪ菴ｿ逕ｨ繧ｿ繧､繝ｫ繧帝∈謚・SelectTile = 繧ｿ繧､繝ｫ繧帝∈謚・SelectTile_Add = 繧ｿ繧､繝ｫ繧帝∈謚橸ｼ亥刈縺医ｋ・・SelectTile_Subtract = 繧ｿ繧､繝ｫ繧帝∈謚橸ｼ亥炎繧具ｼ・SelectTile_Intersect = 繧ｿ繧､繝ｫ繧帝∈謚橸ｼ井ｺ､蟾ｮ・・SelectionAsGrid = 驕ｸ謚樒ｯ・峇繧偵げ繝ｪ繝・ラ縺ｫ縺吶ｋ
+SetColorSelector = 繧ｫ繝ｩ繝ｼ繧ｻ繝ｬ繧ｯ繧ｿ縺ｮ險ｭ螳・SetColorSelector_Spectrum = 繧ｫ繝ｩ繝ｼ繧ｹ繝壹け繝医Ν
+SetColorSelector_TintShadeTone = 濶ｲ逶ｸ/蠖ｩ蠎ｦ/譏主ｺｦ
+SetColorSelector_RGBWheel = RGB繧ｫ繝ｩ繝ｼ繝帙う繝ｼ繝ｫ
+SetColorSelector_RYBWheel = RYB繧ｫ繝ｩ繝ｼ繝帙う繝ｼ繝ｫ
+SetColorSelector_NormalMapWheel = 豕慕ｷ壹・繝・・繧ｫ繝ｩ繝ｼ繝帙う繝ｼ繝ｫ
+SetInkType = 繧､繝ｳ繧ｯ繧ｻ繝・ヨ繧定ｨｭ螳夲ｼ嘴0}
+SetLoopSection = 繝ｫ繝ｼ繝励そ繧ｯ繧ｷ繝ｧ繝ｳ繧定ｨｭ螳・SetPalette = 繝代Ξ繝・ヨ繧定ｨｭ螳・SetPaletteEntrySize = 繝代Ξ繝・ヨ繧ｨ繝ｳ繝医Μ縺ｮ繧ｵ繧､繧ｺ繧定ｨｭ螳・SetPlaybackSpeed = 蜀咲函騾溷ｺｦ {0}x
+SetSameInk = 蜈ｨ縺ｦ縺ｮ繝・・繝ｫ縺ｫ迴ｾ蝨ｨ縺ｮ繧､繝ｳ繧ｯ繧帝←逕ｨ
+ShowAutoGuides = 繧ｪ繝ｼ繝医ぎ繧､繝峨・陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowBrushPreview = 繝悶Λ繧ｷ縺ｮ繝励Ξ繝薙Η繝ｼ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowBrushPreviewInPreview = 繝励Ξ繝薙Η繝ｼ縺ｧ繝悶Λ繧ｷ繝励Ξ繝薙Η繝ｼ繧定｡ｨ遉ｺ
+ShowBrushes = 繝悶Λ繧ｷ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowDynamics = 繝繧､繝翫Α繧ｯ繧ｹ繧定｡ｨ遉ｺ
+ShowExtras = 繧ｬ繧､繝峨・陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowGrid = 繧ｰ繝ｪ繝・ラ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowLayerEdges = 繝ｬ繧､繝､繝ｼ縺ｮ蠅・阜邱壹・陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowMenu = 繝｡繝九Η繝ｼ陦ｨ遉ｺ: {0}
+ShowOnionSkin = 繧ｪ繝九が繝ｳ繧ｹ繧ｭ繝ｳ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowPaletteOptions = 陦ｨ遉ｺ繝代Ξ繝・ヨ縺ｮ繧ｪ繝励す繝ｧ繝ｳ
+ShowPalettePresets = 陦ｨ遉ｺ繝代Ξ繝・ヨ縺ｮ繝励Μ繧ｻ繝・ヨ
+ShowPaletteSortOptions = 陦ｨ遉ｺ繝代Ξ繝・ヨ縺ｮ荳ｦ縺ｳ譖ｿ縺医が繝励す繝ｧ繝ｳ
+ShowPixelGrid = 繝斐け繧ｻ繝ｫ繧ｰ繝ｪ繝・ラ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowSelectionEdges = 驕ｸ謚樒ｯ・峇縺ｮ蠅・阜邱壹・陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowSlices = 繧ｹ繝ｩ繧､繧ｹ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ShowTileNumbers = 繧ｿ繧､繝ｫ逡ｪ蜿ｷ繧定｡ｨ遉ｺ
+SliceProperties = 繧ｹ繝ｩ繧､繧ｹ縺ｮ繝励Ο繝代ユ繧｣
+SnapToGrid = 繧ｰ繝ｪ繝・ラ縺ｫ繧ｹ繝翫ャ繝・SpriteProperties = 繧ｹ繝励Λ繧､繝医・繝励Ο繝代ユ繧｣
+SpriteSize = 繧ｹ繝励Λ繧､繝医・繧ｵ繧､繧ｺ
+Stroke = 驕ｸ謚樒ｯ・峇縺ｮ蠅・阜邱壹ｒ謠冗判濶ｲ縺ｧ謠上￥
+SwitchColors = 謠冗判濶ｲ/閭梧勹濶ｲ縺ｮ蜈･繧梧崛縺・SwapCheckerboardColors = 繝√ぉ繝・け讓｡讒倥・閭梧勹濶ｲ繧貞・繧梧崛縺・SwitchNonactiveLayersOpacity = 髱槭い繧ｯ繝・ぅ繝悶↑繝ｬ繧､繝､繝ｼ縺ｮ荳埼乗・蠎ｦ繧貞・繧頑崛縺・SymmetryMode = 繧ｷ繝ｳ繝｡繝医Μ繝ｼ繝｢繝ｼ繝・TiledMode = 繧ｿ繧､繝ｫ繝｢繝ｼ繝会ｼ嘴}
+TiledMode_None = 縺ｪ縺・TiledMode_Both = 荳｡霆ｸ(XY霆ｸ)
+TiledMode_X = X霆ｸ
+TiledMode_Y = Y霆ｸ
+Timeline = 繧ｿ繧､繝繝ｩ繧､繝ｳ縺ｮ陦ｨ遉ｺ/髱櫁｡ｨ遉ｺ
+ToggleOtherLayersOpacity = 莉悶Ξ繧､繝､繝ｼ縺ｮ荳埼乗・蠎ｦ繧偵ヨ繧ｰ繝ｫ
+ToggleOtherLayersOpacity_PreviewEditor = 繝励Ξ繝薙Η繝ｼ縺ｧ縺ｮ莉悶Ξ繧､繝､繝ｼ縺ｮ荳埼乗・蠎ｦ繧偵ヨ繧ｰ繝ｫ
+TogglePlayAll = 繧ｿ繧ｰ繧堤┌隕悶＠縺ｦ蜈ｨ繝輔Ξ繝ｼ繝繧貞・逕・TogglePlayOnce = 荳蠎ｦ縺縺大・逕・TogglePlaySubtags = 繧ｿ繧ｰ縺ｮ郢ｰ繧願ｿ斐＠謨ｰ繧貞渚譏縺励※蜀咲函
+TogglePreview = 繝励Ξ繝薙Η繝ｼ縺ｮ蛻・ｊ譖ｿ縺・ToggleRewindOnStop = 蛛懈ｭ｢蠕悟ｷｻ縺肴綾縺・ToggleTilesMode = 繧ｿ繧､繝ｫ繝｢繝ｼ繝牙・繧頑崛縺・ToggleTimelineThumbnails = 繧ｿ繧､繝繝ｩ繧､繝ｳ縺ｮ繧ｵ繝繝阪う繝ｫ繧貞・繧頑崛縺・TilesetMode = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ繝｢繝ｼ繝会ｼ嘴}
+TilesetMode_Manual = 繝槭ル繝･繧｢繝ｫ
+TilesetMode_Auto = 繧ｪ繝ｼ繝・TilesetMode_Stack = 繧ｹ繧ｿ繝・け
+TilesetDelete = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ縺ｮ蜑企勁
+TilesetDuplicate = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ縺ｮ隍・｣ｽ
+Undo = 蜈・↓謌ｻ縺・UndoHistory = 謫堺ｽ懷ｱ･豁ｴ
+UnlinkCel = 繧ｻ繝ｫ縺ｮ邨仙粋繧定ｧ｣髯､
+Zoom = 繧ｺ繝ｼ繝
+Zoom_In = 諡｡螟ｧ
+Zoom_Out = 邵ｮ蟆・Zoom_Set = 諡｡螟ｧ邇・0}%
+Apply = 驕ｩ逕ｨ
+DuplicateSlice = 繧ｹ繝ｩ繧､繧ｹ繧定､・｣ｽ
+RunCommand = 繧ｳ繝槭Φ繝峨ｒ螳溯｡・SoloLayer = 繝ｬ繧､繝､繝ｼ繧偵た繝ｭ
+ToggleWorkspaceLayout = 繝ｯ繝ｼ繧ｯ繧ｹ繝壹・繧ｹ繝ｬ繧､繧｢繧ｦ繝医ｒ蛻・ｊ譖ｿ縺・
+[debugger]
+title = 繝・ヰ繝・ぎ繝ｼ
+continue = 繝・ヰ繝・げ縺ｮ髢句ｧ九∪縺溘・邯咏ｶ・step_into = 繧ｹ繝・ャ繝励う繝ｳ
+step_over = 繧ｹ繝・ャ繝励が繝ｼ繝舌・
+step_out = 繧ｹ繝・ャ繝励い繧ｦ繝・toggle_breakpoint = 繝悶Ξ繝ｼ繧ｯ繝昴う繝ｳ繝医・蛻・ｊ譖ｿ縺・stacktrace = 繧ｹ繧ｿ繝・け繝医Ξ繝ｼ繧ｹ
+console = 繧ｳ繝ｳ繧ｽ繝ｼ繝ｫ
+locals = 繝ｭ繝ｼ繧ｫ繝ｫ
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+
+[document_tab_popup_menu]
+duplicate_view = 繝薙Η繝ｼ縺ｮ隍・｣ｽ(&V)
+open_with_os = OS縺ｮ繧ｦ繧｣繝ｳ繝峨え縺ｧ髢九￥(&O)
+open_in_folder = 繝輔か繝ｫ繝繧帝幕縺・&F)
+copy_path = 繝輔ぃ繧､繝ｫ繝代せ繧偵さ繝斐・
+
+[dithering_selector]
+no_dithering = 繝・ぅ繧ｶ繝ｪ繝ｳ繧ｰ縺ｪ縺・old_dithering = 蜿､縺・ョ繧｣繧ｶ繝ｪ繝ｳ繧ｰ +\s
+ordered_dithering = 驟榊・繝・ぅ繧ｶ繝ｪ繝ｳ繧ｰ +\s
+floyd_steinberg = 繝輔Ο繧､繝峨せ繧ｿ繧､繝ｳ繝舌・繧ｰ隱､蟾ｮ諡｡謨｣繝・ぅ繧ｶ繝ｪ繝ｳ繧ｰ
+
+[canvas_size]
+title = 繧ｭ繝｣繝ｳ繝舌せ繧ｵ繧､繧ｺ
+size = 繧ｵ繧､繧ｺ・・width = 蟷・ｼ・height = 鬮倥＆・・borders = 蠅・阜邱夲ｼ・left = 蟾ｦ・・left_tooltip = 蛻励・蟾ｦ蛛ｴ繧帝勁蜴ｻ/霑ｽ蜉縺励∪縺吶・n蛻励ｒ髯､蜴ｻ縺吶ｋ縺ｫ縺ｯ雋縺ｮ謨ｰ繧剃ｽｿ逕ｨ縺励∪縺・top = 荳奇ｼ・top_tooltip = 陦後・荳企擇蛛ｴ繧帝勁蜴ｻ/霑ｽ蜉縺励∪縺吶・n陦後ｒ髯､蜴ｻ縺吶ｋ縺ｫ縺ｯ雋縺ｮ謨ｰ繧剃ｽｿ逕ｨ縺励∪縺・right = 蜿ｳ・・right_tooltip = 蛻励・蜿ｳ蛛ｴ繧帝勁蜴ｻ/霑ｽ蜉縺励∪縺吶・n蛻励ｒ髯､蜴ｻ縺吶ｋ縺ｫ縺ｯ雋縺ｮ謨ｰ繧剃ｽｿ逕ｨ縺励∪縺・bottom = 荳具ｼ・bottom_tooltip = 陦後・荳句・繧帝勁蜴ｻ縺励∪縺吶・n陦後ｒ髯､蜴ｻ縺吶ｋ縺ｫ縺ｯ雋縺ｮ謨ｰ繧剃ｽｿ逕ｨ縺励∪縺・trim = 繧ｭ繝｣繝ｳ繝舌せ縺ｮ螟門・縺ｮ隕∫ｴ繧帝勁蜴ｻ(&T)
+trim_tooltip = 譁ｰ隕上く繝｣繝ｳ繝舌せ繧ｵ繧､繧ｺ縺ｮ螟門・縺ｫ谿九ｋ逕ｻ蜒上そ繝ｫ縺九ｉ\n繝斐け繧ｻ繝ｫ繧貞炎髯､縺励∪縺・
+[cel_properties]
+title = 繧ｻ繝ｫ縺ｮ繝励Ο繝代ユ繧｣
+opacity = 荳埼乗・蠎ｦ・・zindex = Z繧､繝ｳ繝・ャ繧ｯ繧ｹ・・user_data_tooltip = 繝ｦ繝ｼ繧ｶ繝ｼ繝・・繧ｿ
+
+[color_curve_point]
+title = 繝励Ο繝代ユ繧｣
+x = X・・y = Y・・ok = &OK
+cancel = &繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+delete = 蜑企勁(&D)
+
+[color_mode]
+title = 繧ｫ繝ｩ繝ｼ繝｢繝ｼ繝・amount = 驥擾ｼ・flatten = 繝ｬ繧､繝､繝ｼ繧堤ｵ仙粋
+
+[context_bar]
+center = 荳ｭ蠢・fit_screen = 逕ｻ髱｢縺ｫ蜷医ｏ縺帙ｋ
+back = 謌ｻ繧・pattern_aligned_to_src = 蜈・・菴咲ｽｮ縺ｫ豐ｿ縺｣縺ｦ繝代ち繝ｼ繝ｳ蛹・pattern_aligned_to_dest = 繧ｫ繝ｼ繧ｽ繝ｫ菴咲ｽｮ繧定ｵｷ轤ｹ縺ｫ繝代ち繝ｼ繝ｳ蛹・paint_brush = 縺昴・縺ｾ縺ｾ繝悶Λ繧ｷ縺ｨ縺励※謠上￥
+contiguous = 騾｣邯夂噪
+stop_at_grid = 繧ｰ繝ｪ繝・ラ縺ｧ豁｢繧√ｋ
+refer_active_layer = 繧｢繧ｯ繝・ぅ繝悶Ξ繧､繝､繝ｼ繧貞盾辣ｧ
+refer_visible_layer = 蜿ｯ隕悶Ξ繧､繝､繝ｼ繧貞盾辣ｧ
+pixel_connectivity = 繝斐け繧ｻ繝ｫ謗･邯壹・讀懃衍・・pixel_connectivity_4 = 4譁ｹ蜷・pixel_connectivity_8 = 8譁ｹ蜷・select_palette_color = 繝代Ξ繝・ヨ縺九ｉ濶ｲ繧帝∈謚・reverse_shade = 髯ｰ蠖ｱ縺ｮ蜿崎ｻ｢
+save_shade = 髯ｰ蠖ｱ縺ｮ菫晏ｭ・transparent_color = 騾乗・濶ｲ
+transparent_color_options = 騾乗・濶ｲ繧ｪ繝励す繝ｧ繝ｳ
+opaque = 荳埼乗・蠎ｦ
+transparent = 騾乗・
+auto_adjust_layer = 繝ｬ繧､繝､繝ｼ繧ｿ繧､繝励↓蠢懊§縺ｦ閾ｪ蜍戊ｪｿ謨ｴ
+default_display_pivot = 繝・ヵ繧ｩ繝ｫ繝医〒霆ｸ繧定｡ｨ遉ｺ
+fast_rotation = 鬮倬溷屓霆｢
+rotsprite = RotSprite陬憺俣
+pixel_perfect = 繝斐け繧ｻ繝ｫ繝代・繝輔ぉ繧ｯ繝・linear_gradient = 邱壼ｽ｢繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+radial_gradient = 謾ｾ蟆・憾繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+drop_pixel = 螟牙ｽ｢繧帝←逕ｨ縺励※驕ｸ謚樒ｯ・峇繧剃ｿ晄戟縺吶ｋ
+cancel_drag = 螟牙ｽ｢繧偵く繝｣繝ｳ繧ｻ繝ｫ/蜈・↓謌ｻ縺・auto_select_layer = 閾ｪ蜍輔〒繝ｬ繧､繝､繝ｼ繧帝∈謚・all = 蜈ｨ縺ｦ
+none = 隗｣髯､
+select_slices = 蜈ｨ繧ｹ繝ｩ繧､繧ｹ繧帝∈謚・deselect_slices = 繧ｹ繝ｩ繧､繧ｹ縺ｮ驕ｸ謚槭ｒ隗｣髯､
+slice_transform = 螟牙ｽ｢
+slice_props = 繧ｹ繝ｩ繧､繧ｹ縺ｮ繝励Ο繝代ユ繧｣
+delete_slice = 繧ｹ繝ｩ繧､繧ｹ繧貞炎髯､
+discard_brush = 繝悶Λ繧ｷ繧堤ｴ譽・(Esc)
+brush_type = 繝悶Λ繧ｷ繧ｿ繧､繝・brush_size = 繝悶Λ繧ｷ繧ｵ繧､繧ｺ (px)
+brush_angle = 繝悶Λ繧ｷ隗貞ｺｦ (蠎ｦ)
+ink = 繧､繝ｳ繧ｯ
+opacity = 荳埼乗・蠎ｦ (蝪励ｊ縺ｮ蠑ｷ縺・
+shades = 髯ｰ蠖ｱ
+spray = 繧ｹ繝励Ξ繝ｼ・・spray_width = 繧ｹ繝励Ξ繝ｼ縺ｮ螟ｧ縺阪＆
+spray_speed = 繧ｹ繝励Ξ繝ｼ縺ｮ騾溘＆
+rotation_pivot = 蝗櫁ｻ｢霆ｸ
+rotation_algorithm = 蝗櫁ｻ｢繧｢繝ｫ繧ｴ繝ｪ繧ｺ繝
+dynamics = 繝繧､繝翫Α繧ｯ繧ｹ
+freehand_trace_algorithm = 繝輔Μ繝ｼ繝上Φ繝峨ヨ繝ｬ繝ｼ繧ｹ繧｢繝ｫ繧ｴ繝ｪ繧ｺ繝
+contiguous_fill = 騾｣邯夐Κ蛻・・濶ｲ繧貞｡励ｊ縺､縺ｶ縺・paint_bucket_option = 霑ｽ蜉蝪励ｊ縺､縺ｶ縺励が繝励す繝ｧ繝ｳ
+eyedropper_combined = {0} + {1}
+eyedropper_color = 濶ｲ
+eyedropper_alpha = 繧｢繝ｫ繝輔ぃ蛟､
+eyedropper_rgb = RGB
+eyedropper_hsv = HSV
+eyedropper_hsl = HSL
+eyedropper_gray = 繧ｰ繝ｬ繝ｼ
+best_fit_index = 譛驕ｩ繧､繝ｳ繝・ャ繧ｯ繧ｹ
+all_layers = 蜈ｨ繝ｬ繧､繝､繝ｼ
+current_layer = 迴ｾ蝨ｨ縺ｮ繝ｬ繧､繝､繝ｼ
+first_ref_layer = 譛蛻昴↓蜿ら・縺吶ｋ繝ｬ繧､繝､繝ｼ
+pick = 蜿門ｾ暦ｼ・sample = 繧ｵ繝ｳ繝励Ν・・drop_pixel_and_deselect = 螟牙ｽ｢繧帝←逕ｨ縺励※遽・峇驕ｸ謚槭ｒ隗｣髯､
+slice_transform_tip = 繧ｹ繝ｩ繧､繧ｹ縺ｮ螟牙ｽ｢縺ｫ蜷医ｏ縺帙※繝斐け繧ｻ繝ｫ繧ょ､牙ｽ｢縺吶ｋ
+size_width = 蟷・size_height = 鬮倥＆
+rotation_angle = 隗貞ｺｦ
+rotation_skew = 蛯ｾ譁・position_label = P:
+rotation_label = R:
+position_x = X霆ｸ
+position_y = Y霆ｸ
+corner_radius = 隗偵・蜊雁ｾ・(繝斐け繧ｻ繝ｫ)
+
+[convolution_matrix]
+reload_stock = 繝ｪ繝ｭ繝ｼ繝峨せ繝医ャ繧ｯ
+
+[despeckle]
+width = 蟷・ｼ・height = 鬮倥＆・・
+[downsampling]
+label = 繝繧ｦ繝ｳ繧ｵ繝ｳ繝励Μ繝ｳ繧ｰ・・nearest = 繝九い繝ｬ繧ｹ繝医ロ繧､繝舌・豕・bilinear = 繝舌う繝ｪ繝九い豕・bilinear_mipmap = 繝舌う繝ｪ繝九い繝溘ャ繝励・繝・ヴ繝ｳ繧ｰ
+trilinear_mipmap = 繝医Μ繝ｪ繝九い繝溘ャ繝励・繝・ヴ繝ｳ繧ｰ
+
+[duplicate_sprite]
+title = 繧ｹ繝励Λ繧､繝医・隍・｣ｽ
+duplicate = 隍・｣ｽ蟇ｾ雎｡・・as = 隍・｣ｽ蠕後・蜷榊燕・・merged_layers = 繝ｬ繧､繝､繝ｼ繧堤ｵ仙粋縺励※隍・｣ｽ縺吶ｋ
+
+[dynamics]
+stabilizer = 謇九ヶ繝ｬ陬懈ｭ｣
+stabilizer_tooltip = 謇九ヶ繝ｬ陬懈ｭ｣縺ｮ蜊雁ｾ・pressure = 遲・悸
+pressure_tooltip = 遲・悸繧ｻ繝ｳ繧ｵ繝ｼ縺ｧ蛻ｶ蠕｡
+velocity = 騾溷ｺｦ
+velocity_tooltip = 繝槭え繧ｹ騾溷ｺｦ縺ｧ蛻ｶ蠕｡
+size = 繧ｵ繧､繧ｺ
+size_tooltip = 繧ｻ繝ｳ繧ｵ繝ｼ蛟､繧箪n繝悶Λ繧ｷ縺ｫ蜿肴丐
+angle = 隗貞ｺｦ
+angle_tooltip = 繧ｻ繝ｳ繧ｵ繝ｼ縺ｮ蛟､繧箪n繝悶Λ繧ｷ縺ｮ隗貞ｺｦ縺ｫ蜿肴丐
+min_size_tooltip = 繧ｻ繝ｳ繧ｵ繝ｼ縺ｮ蛟､縺梧怙蟆上・縺ｨ縺阪・繝悶Λ繧ｷ繧ｵ繧､繧ｺ
+max_size_tooltip = 繧ｻ繝ｳ繧ｵ繝ｼ縺ｮ蛟､縺梧怙螟ｧ縺ｮ縺ｨ縺阪・繝悶Λ繧ｷ繧ｵ繧､繧ｺ
+min_angle_tooltip = 繧ｻ繝ｳ繧ｵ繝ｼ縺ｮ蛟､縺梧怙蟆上・縺ｨ縺阪・繝悶Λ繧ｷ隗貞ｺｦ
+max_angle_tooltip = 繧ｻ繝ｳ繧ｵ繝ｼ縺ｮ蛟､縺梧怙螟ｧ縺ｮ縺ｨ縺阪・繝悶Λ繧ｷ隗貞ｺｦ
+gradient = 繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+gradient_tooltip = 謠冗判濶ｲ縺ｨ\n閭梧勹濶ｲ縺ｮ繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+max_point_value = 譛蟆・譛螟ｧ蛟､
+sensors_tweaks = 繧ｻ繝ｳ繧ｵ繝ｼ縺励″縺・､
+
+[export_file]
+title = 繝輔ぃ繧､繝ｫ縺ｮ繧ｨ繧ｯ繧ｹ繝昴・繝・output_file = 蜃ｺ蜉帙ヵ繧｡繧､繝ｫ・・resize = 繧ｵ繧､繧ｺ螟画峩・・area = 鬆伜沺・・layers = 繝ｬ繧､繝､繝ｼ・・frames = 繝輔Ξ繝ｼ繝・・anidir = 繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ譁ｹ蜷托ｼ・play_subtags = 繧ｿ繧ｰ縺ｮ郢ｰ繧願ｿ斐＠謨ｰ繧貞渚譏縺励※蜀咲函
+pixel_ratio = 繝斐け繧ｻ繝ｫ豈皮紫繧帝←逕ｨ縺吶ｋ
+for_twitter = Twitter逕ｨ縺ｫ繧ｨ繧ｯ繧ｹ繝昴・繝・for_twitter_tooltip = Twitter縺ｧ豁｣縺励￥繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ繧貞・逕溘☆繧九◆繧√↓縲―n譛蠕後・繝輔Ξ繝ｼ繝縺ｮ髟ｷ縺輔ｒ1/4縺ｫ縺励∪縺吶ゑｼ・witter荳翫〒縺ｯ豁｣縺励￥陦ｨ遉ｺ縺輔ｌ縺ｾ縺呻ｼ・adjust_resize = 繧ｵ繧､繧ｺ繧畜0}%縺ｸ隱ｿ謨ｴ
+export = 繧ｨ繧ｯ繧ｹ繝昴・繝・&E)
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+ignore_empty = 遨ｺ繝輔Ξ繝ｼ繝繧堤┌隕悶☆繧・
+[export_sprite_sheet]
+title = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・繧ｨ繧ｯ繧ｹ繝昴・繝・save_title = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医ｒ菫晏ｭ・save_json_title = JSON繝・・繧ｿ繧剃ｿ晏ｭ・sprite = 繧ｹ繝励Λ繧､繝・sprite_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医↓繧ｨ繧ｯ繧ｹ繝昴・繝医☆繧九せ繝励Λ繧､繝医し繝ｳ繝励Ν縺ｮ繧ｽ繝ｼ繧ｹ
+borders = 蠅・阜
+borders_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・蜷・せ繝励Λ繧､繝医°繧牙｢・阜邱壹ｒ霑ｽ蜉縺ｾ縺溘・繝医Μ繝溘Φ繧ｰ縺励∪縺・expand_all_sections_tooltip = 縺吶∋縺ｦ縺ｮ繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧定｡ｨ遉ｺ\n\nCtrl繧ｭ繝ｼ繧呈款縺励↑縺後ｉ繧ｯ繝ｪ繝・け縺励※縲∬､・焚縺ｮ繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ繧貞酔譎ゅ↓陦ｨ遉ｺ縺励∪縺・layout = 繝ｬ繧､繧｢繧ｦ繝・layout_tooltip = 譛邨らｵ先棡縺ｧ縺ｮ繧ｹ繝励Λ繧､繝医・驟咲ｽｮ
+output = 蜃ｺ蜉・output_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・菫晉ｮ｡蝣ｴ謇
+sheet_type = 繧ｷ繝ｼ繝医・遞ｮ鬘橸ｼ・sheet_type_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医↓繧ｹ繝励Λ繧､繝医ｒ繝ｬ繧､繧｢繧ｦ繝医☆繧狗音螳壹・譁ｹ豕輔ｒ遉ｺ縺励∪縺吶・n*豌ｴ蟷ｳ・壼推繝輔Ξ繝ｼ繝繧剃ｸｦ縺ｹ縺ｦ陦ｨ遉ｺ縺励∪縺吶・n*蝙ら峩・壼推繝輔Ξ繝ｼ繝縺御ｸ贋ｸ九↓荳ｦ繧薙〒縺・∪縺吶・n*陦梧ｯ趣ｼ壹Ξ繧､繝､繝ｼ縺ｾ縺溘・繧ｿ繧ｰ縺斐→縺ｫ1縺､縺ｮ陦後ｒ菴懈・縺励∪縺吶・n*蛻玲ｯ趣ｼ壹Ξ繧､繝､繝ｼ縺ｾ縺溘・繧ｿ繧ｰ縺斐→縺ｫ1縺､縺ｮ蛻励ｒ菴懈・縺励∪縺吶・n*繝代ャ繧ｯ・壹☆縺ｹ縺ｦ縺ｮ繝輔Ξ繝ｼ繝繧貞庄閭ｽ縺ｪ髯舌ｊ譛濶ｯ縺ｮ譁ｹ豕輔〒繝輔ぅ繝・ヨ縺輔○繧九ｈ縺・↓縺励※縺上□縺輔＞
+type_horz = 豌ｴ蟷ｳ荳ｦ縺ｳ
+type_vert = 蝙ら峩荳ｦ縺ｳ
+type_rows = 陦梧ｯ・type_cols = 蛻玲ｯ・type_pack = 繝代ャ繧ｯ
+constraints = 蛻ｶ髯撰ｼ・constraints_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・迚ｹ蛻･縺ｪ蛻ｶ髯申n萓九∴縺ｰ・・陦・蛻励・蝗ｺ螳壽焚\n縺ｾ縺溘・繝斐け繧ｻ繝ｫ縺ｮ蝗ｺ螳壽焚・亥ｹ・鬮倥＆・・constraint_fixed_none = 縺ｪ縺・constraint_fixed_cols = 蛻玲焚繧貞崋螳・constraint_fixed_rows = 陦梧焚繧貞崋螳・constraint_fixed_width = 蟷・ｒ蝗ｺ螳・constraint_fixed_height = 鬮倥＆繧貞崋螳・constraint_fixed_size = 繧ｵ繧､繧ｺ繧貞崋螳・border = 霈ｪ驛ｭ邱夲ｼ・border_tooltip = 蜷・ヵ繝ｬ繝ｼ繝縺ｨ繧ｹ繝励Λ繧､繝医す繝ｼ繝医・遶ｯ縺ｮ繧ｹ繝壹・繧ｹ髢馴囈
+shape = 蠖｢迥ｶ・・shape_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・蜷・ヵ繝ｬ繝ｼ繝髢薙・繧ｹ繝壹・繧ｹ\n・亥挨蜷阪後す繧ｧ繧､繝励ヱ繝・ぅ繝ｳ繧ｰ縲搾ｼ・inner = 蜀・・・・inner_tooltip = 繝輔Ξ繝ｼ繝繧ｨ繝・ず縺ｮ蜀・・縺ｫ菴吝・縺ｪ繧ｹ繝壹・繧ｹ
+trim_sprite = 繧ｹ繝励Λ繧､繝医ｒ繝医Μ繝
+trim_sprite_tooltip = 繝輔Ξ繝ｼ繝縺後せ繝励Λ繧､繝医す繝ｼ繝医↓蜷ｫ縺ｾ繧後ｋ蜑阪↓縲√せ繝励Λ繧､繝亥・菴薙ｒ繝医Μ繝縺励∪縺・trim = 繝医Μ繝
+trim_tooltip = 蜷・ヵ繝ｬ繝ｼ繝繧貞句挨縺ｫ繝医Μ繝縺励∪縺・trim_by_grid = 繧ｰ繝ｪ繝・ラ豈・trim_by_grid_tooltip = 繝斐け繧ｻ繝ｫ縺斐→縺ｧ縺ｯ縺ｪ縺上√げ繝ｪ繝・ラ蠅・阜縺斐→縺ｫ繝医Μ繝縺励∪縺・extrude = 謚ｼ縺怜・縺・extrude_tooltip = 蜷・ヵ繝ｬ繝ｼ繝縺ｫ蠅・阜邱壹ｒ霑ｽ蜉縺励※縺昴・繧ｨ繝・ず縺ｮ繝斐け繧ｻ繝ｫ繧定､・｣ｽ縺励∪縺・merge_dups = 驥崎､・ｒ繝槭・繧ｸ
+merge_dups_tooltip = 蜷梧ｧ倥・繝輔Ξ繝ｼ繝縺ｧ蜷後§繧ｹ繝励Λ繧､繝医す繝ｼ繝医・髟ｷ譁ｹ蠖｢縺ｮ鬆伜沺繧剃ｽｿ逕ｨ縺ｧ縺阪∪縺・ignore_empty = 遨ｺ繧堤┌隕・ignore_empty_tooltip = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医↓遨ｺ/騾乗・縺ｪ繝輔Ξ繝ｼ繝繧貞性繧√↑縺・ｈ縺・↓縺励∪縺・source = 逕滓・蜈・ｼ・layers = 繝ｬ繧､繝､繝ｼ・・split_layers = 繝ｬ繧､繝､繝ｼ蛻・牡
+split_layers_tooltip = 繝ｬ繧､繝､繝ｼ縺斐→縺ｫ1縺､縺ｮ繧ｹ繝励Λ繧､繝医ｒ逕滓・縺吶ｋ
+split_tags = 繧ｿ繧ｰ蛻・牡
+split_tags_tooltip = 繧ｿ繧ｰ縺斐→縺ｫ1縺､縺ｮ繧ｹ繝励Λ繧､繝医ｒ逕滓・縺吶ｋ
+frames = 繝輔Ξ繝ｼ繝・・output_file = 蜃ｺ蜉帙ヵ繧｡繧､繝ｫ
+json_data = JSON繝・・繧ｿ
+json_data_hash = 繝上ャ繧ｷ繝･繝槭ャ繝・json_data_array = 驟榊・
+meta = 繝｡繧ｿ・・meta_layers = 繝ｬ繧､繝､繝ｼ
+meta_tags = 繧ｿ繧ｰ
+meta_slices = 繧ｹ繝ｩ繧､繧ｹ
+data_filename_format = 繧｢繧､繝・Β繝輔ぃ繧､繝ｫ蜷搾ｼ・data_filename_format_tooltip = JSON繝・・繧ｿ縺ｮ蜷・ヵ繝ｬ繝ｼ繝縺ｫ縺ｯ繝輔ぃ繧､繝ｫ蜷搾ｼ医◎繧後ｉ繧定ｭ伜挨縺吶ｋ譁・ｭ怜・・峨′蜷ｫ縺ｾ繧後∪縺吶・n縺薙・繝輔ぅ繝ｼ繝ｫ繝峨↓縺ｯ縲∝推繝輔Ξ繝ｼ繝縺ｮ菴懈・譁ｹ豕輔′隱ｬ譏弱＆繧後※縺・∪縺吶ゆｾ九∴縺ｰ縲―n{layer}縲＋frame}縲＋tag}縲＋tagframe}縺ｪ縺ｩ縺ｮ迚ｹ蛻･縺ｪ繝槭・繧ｯ繧剃ｽｿ逕ｨ縺ｧ縺阪∪縺吶・data_tagname_format = 繧ｿ繧ｰ蜷搾ｼ・data_tagname_format_tooltip = JSON蜀・・蜷・ち繧ｰ縺ｯname繝輔ぅ繝ｼ繝ｫ繝峨ｒ\n謖√■縺ｾ縺吶・filename}, {title}, {path}, {tag}縺ｪ縺ｩ縺ｮ\n迚ｹ谿翫・繝ｼ繧ｯ繧堤畑縺・※螟画峩蜿ｯ閭ｽ縺ｧ縺吶・preview = 繝励Ξ繝薙Η繝ｼ
+open_sprite_sheet = 繧ｹ繝励Λ繧､繝医ｒ逕滓・縺励※髢九￥
+export = 繧ｨ繧ｯ繧ｹ繝昴・繝・&E)
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+generating = 逕滓・荳ｭ...
+generated = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医′逕滓・縺輔ｌ縺ｾ縺励◆
+
+[file_selector]
+go_back_button_tooltip = 1縺､蜑阪・繝輔か繝ｫ繝縺ｫ謌ｻ繧・go_forward_button_tooltip = 1縺､蜈医・繝輔か繝ｫ繝縺ｫ騾ｲ繧
+go_up_button_tooltip = 荳翫・繝輔か繝ｫ繝縺ｸ遘ｻ蜍・refresh_button_tooltip = 繝輔か繝ｫ繝繝ｼ陦ｨ遉ｺ繧呈峩譁ｰ縺吶ｋ
+new_folder_button_tooltip = 譁ｰ隕上ヵ繧ｩ繝ｫ繝縺ｮ菴懈・
+list_view_button_tooltip = 繝ｪ繧ｹ繝医ン繝･繝ｼ
+small_icon_view_button_tooltip = 蟆上い繧､繧ｳ繝ｳ繝薙Η繝ｼ
+big_icon_view_button_tooltip = 螟ｧ繧｢繧､繧ｳ繝ｳ繝薙Η繝ｼ
+file_name = 繝輔ぃ繧､繝ｫ蜷搾ｼ・file_type = 繝輔ぃ繧､繝ｫ縺ｮ遞ｮ鬘橸ｼ・pinned_folders = 繝斐Φ逡吶ａ繝輔か繝ｫ繝
+recent_folders = 譛霑代・繝輔か繝ｫ繝
+all_formats = 蜈ｨ縺ｦ縺ｮ繝輔か繝ｼ繝槭ャ繝・all_files = 蜈ｨ縺ｦ縺ｮ繝輔ぃ繧､繝ｫ
+show_hidden = 髱櫁｡ｨ遉ｺ繝輔ぃ繧､繝ｫ繧定｡ｨ遉ｺ
+
+[filters]
+selected_cels = 驕ｸ謚・selected_cels_tooltip = 繧ｿ繧､繝繝ｩ繧､繝ｳ荳翫〒驕ｸ謚槭＆繧後※縺・ｋ繧ｻ繝ｫ縺ｫ驕ｩ逕ｨ
+all_cels = 縺吶∋縺ｦ
+all_cels_tooltip = 繧ｹ繝励Λ繧､繝亥・縺ｮ縺吶∋縺ｦ縺ｮ繧ｻ繝ｫ縺ｫ驕ｩ逕ｨ
+ok = &OK
+apply = 驕ｩ逕ｨ(&A)
+cancel = &繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+preview = &繝励Ξ繝薙Η繝ｼ
+tiled = &繧ｿ繧､繝ｫ蛹・
+[font_popup]
+pinned_fonts = 繝斐Φ逡吶ａ繝輔か繝ｳ繝・theme_fonts = 繝・・繝槭ヵ繧ｩ繝ｳ繝・system_fonts = 繧ｷ繧ｹ繝・Β繝輔か繝ｳ繝・load = 螟夜Κ繝輔か繝ｳ繝医ｒ隱ｭ縺ｿ霎ｼ縺ｿ
+select_truetype_fonts = 繝輔か繝ｳ繝医ヵ繧｡繧､繝ｫ繧帝∈謚・empty_fonts = 繧ｷ繧ｹ繝・Β繝輔か繝ｳ繝医′隕九▽縺九ｊ縺ｾ縺帙ｓ縺ｧ縺励◆
+
+[font_style]
+antialias = 繧｢繝ｳ繝√お繧､繝ｪ繧｢繧ｹ
+hinting = 繝輔か繝ｳ繝医ヲ繝ｳ繝・ぅ繝ｳ繧ｰ
+ligatures = 蜷亥ｭ・hinting_none = No Hinting
+hinting_slight = Slight Hinting
+hinting_full = Full Hinting
+font_weight = 繧ｦ繧ｨ繧､繝・italic = 繧､繧ｿ繝ｪ繝・け
+font_weight_100 = Thin
+font_weight_200 = Extra Light
+font_weight_300 = Light
+font_weight_400 = Normal
+font_weight_500 = Medium
+font_weight_600 = Semi Bold
+font_weight_700 = Bold
+font_weight_800 = Extra Bold
+font_weight_900 = Black
+font_weight_1000 = Extra Black
+
+[frame_combo]
+all_frames = 蜈ｨ縺ｦ縺ｮ繝輔Ξ繝ｼ繝
+selected_frames = 驕ｸ謚槭＆繧後◆繝輔Ξ繝ｼ繝
+tag = 繧ｿ繧ｰ・・
+[frame_properties]
+title = 繝輔Ξ繝ｼ繝縺ｮ繝励Ο繝代ユ繧｣
+frame_number = 繝輔Ξ繝ｼ繝逡ｪ蜿ｷ・・duration = 譎る俣・医Α繝ｪ遘抵ｼ会ｼ・
+[general]
+ok = &OK
+close = 髢峨§繧・&C)
+yes = 縺ｯ縺・&Y)
+no = 縺・＞縺・&N)
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+user_data = 繝ｦ繝ｼ繧ｶ繝ｼ繝・・繧ｿ
+dont_show = 谺｡蝗槭°繧峨％縺ｮ繝繧､繧｢繝ｭ繧ｰ繧定｡ｨ遉ｺ縺励↑縺・dont_show_tooltip = 謖・ｮ壹＠縺溘が繝励す繝ｧ繝ｳ繧偵ョ繝輔か繝ｫ繝医・繧ｪ繝励す繝ｧ繝ｳ縺ｨ縺励※\n險ｭ螳壹☆繧句ｴ蜷医・縲√メ繧ｧ繝・け縺励∪縺・reset = 繝ｪ繧ｻ繝・ヨ
+advanced_options = 鬮伜ｺｦ縺ｪ險ｭ螳・unknown = 荳肴・
+same_in_all_tools = 蜈ｨ縺ｦ縺ｮ繝・・繝ｫ縺ｧ蜷後§
+opacity = 荳埼乗・蠎ｦ・・tolerance = 險ｱ螳ｹ蛟､・・show_more = 縺輔ｉ縺ｫ陦ｨ遉ｺ...
+copy_of = {} 繧ｳ繝斐・
+search = 讀懃ｴ｢
+
+[general_text]
+copy = 繧ｳ繝斐・(&C)
+cut = 蛻・ｊ蜿悶ｊ(&T)
+paste = 雋ｼ繧贋ｻ倥￠(&P)
+select_all = 縺吶∋縺ｦ驕ｸ謚・&A)
+
+[gif_options]
+title = GIF繧ｪ繝励す繝ｧ繝ｳ
+general_options = 荳闊ｬ繧ｪ繝励す繝ｧ繝ｳ・・interlaced = 繧､繝ｳ繧ｿ繝ｼ繝ｬ繝ｼ繧ｹ(&I)
+animation_loop = 繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ繝ｫ繝ｼ繝・&L)
+preserve_palette_order = &繝代Ξ繝・ヨ縺ｮ鬆・分繧剃ｿ昴▽
+ok = &OK
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+
+[goto_frame]
+title = 謖・ｮ壹・繝輔Ξ繝ｼ繝縺ｫ遘ｻ蜍・frame_or_tags = 繝輔Ξ繝ｼ繝逡ｪ蜿ｷ縺ｾ縺溘・繧ｿ繧ｰ蜷搾ｼ・
+[grid_settings]
+title = 繧ｰ繝ｪ繝・ラ縺ｮ險ｭ螳・x = X・・y = Y・・width = 蟷・ｼ・height = 鬮倥＆・・
+[home_view]
+title = 繝帙・繝
+new_file = 譁ｰ隕・..
+open_file = 髢九￥...
+recover_files = 繝ｪ繧ｫ繝舌Μ繝ｼ繝輔ぃ繧､繝ｫ...
+recover_files_tooltip = 莉･蜑阪・繧ｻ繝・す繝ｧ繝ｳ縺ｧ菫晏ｭ倥＆繧後↑縺九▲縺歃n繧ｯ繝ｩ繝・す繝･縺励◆繧ｻ繝・す繝ｧ繝ｳ縺ｾ縺溘・\n髢峨§縺溘せ繝励Λ繧､繝医°繧峨ヵ繧｡繧､繝ｫ繧貞屓蠕ｩ縺励∪縺・share_crashdb = Aseprite縺ｮ髢狗匱閠・→繧ｯ繝ｩ繝・す繝･繝・・繧ｿ繧貞・譛峨☆繧・share_crashdb_tooltip = 繝√ぉ繝・け縺吶ｋ縺ｨ繧ｯ繝ｩ繝・す繝･繝・・繧ｿ繧但seprite縺ｮ髢狗匱閠・→閾ｪ蜍慕噪縺ｫ蜈ｱ譛峨＠縺ｾ縺吶・n縺薙ｌ縺ｫ繧医ｊ縲∵眠縺励＞繝舌げ繧定ｦ九▽縺代∝・縺ｦ縺ｮ繝ｦ繝ｼ繧ｶ繝ｼ縺ｮ縺溘ａ縺ｫAseprite縺ｮ螳牙ｮ壽ｧ繧箪n蜷台ｸ翫＆縺帙ｋ縺薙→縺後〒縺阪∪縺・recent_files = 譛霑台ｽｿ縺｣縺溘ヵ繧｡繧､繝ｫ・・recent_folders = 譛霑台ｽｿ縺｣縺溘ヵ繧ｩ繝ｫ繝・・news = 繝九Η繝ｼ繧ｹ・・checking_updates = 譖ｴ譁ｰ繧堤｢ｺ隱阪＠縺ｦ縺・∪縺・..
+new_version_available = {0} v{1}縺悟茜逕ｨ蜿ｯ閭ｽ縺ｧ縺呻ｼ・
+[import_sprite_sheet]
+title = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・繧､繝ｳ繝昴・繝・type = 繧ｿ繧､繝暦ｼ・type_horz = 豌ｴ蟷ｳ縺ｫ荳ｦ縺ｹ繧・type_vert = 蝙ら峩縺ｫ荳ｦ縺ｹ繧・type_rows = 陦後＃縺ｨ
+type_cols = 蛻励＃縺ｨ
+tiles = 繧ｿ繧､繝ｫ・・x = X・・y = Y・・width = 蟷・ｼ・height = 鬮倥＆・・columns = 蛻・
+rows = 陦・
+padding = 菴咏區
+horizontal_padding = 豌ｴ蟷ｳ・・vertical_padding = 蝙ら峩・・partial_tiles = 荳狗ｫｯ/蜿ｳ遶ｯ縺ｮ菴吶ｊ繧偵ち繧､繝ｫ縺ｫ蜷ｫ繧√ｋ
+context_bar_help = 繧ｹ繝励Λ繧､繝医ヵ繝ｬ繝ｼ繝繧定ｭ伜挨縺吶ｋ蠅・阜繧帝∈謚・layer_name = 繧ｹ繝励Λ繧､繝医す繝ｼ繝・import = 繧､繝ｳ繝昴・繝・&I)
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+
+[incompat_file]
+title = 莠呈鋤諤ｧ縺ｮ縺ｪ縺・ヵ繧｡繧､繝ｫ
+message = 縺薙・繝輔ぃ繧､繝ｫ縺ｯ譁ｰ縺励＞繝舌・繧ｸ繝ｧ繝ｳ縺ｮAseprite縺ｧ菴懈・縺輔ｌ縺ｦ縺翫ｊ縲∫樟繝舌・繧ｸ繝ｧ繝ｳ縺ｧ縺ｯ隱ｭ縺ｿ霎ｼ繧√↑縺・ュ蝣ｱ縺悟性縺ｾ繧後※縺・∪縺吶・n\n菫晏ｭ・荳頑嶌縺阪↓繧医▲縺ｦ縺昴ｌ繧峨・諠・ｱ縺悟､ｱ繧上ｌ繧九％縺ｨ繧帝亟縺舌◆繧∬ｪｭ縺ｿ霎ｼ縺ｿ蟆ら畑縺ｫ險ｭ螳壹＆繧後※縺・∪縺吶・n\n縺薙・迥ｶ豕√ｒ隗｣豎ｺ縺吶ｋ縺溘ａ縺ｫ\nAseprite繧呈怙譁ｰ迚医↓譖ｴ譁ｰ縺励◆縺・∴縺ｧ繝輔ぃ繧､繝ｫ繧定ｪｭ縺ｿ霎ｼ繧・域耳螂ｨ・峨―n縺ゅｋ縺・・"繝輔ぃ繧､繝ｫ竊貞挨蜷阪〒菫晏ｭ・繧帝∈謚槭＠縺ｦ繝輔ぃ繧､繝ｫ繧貞挨蜷阪〒菫晏ｭ倥＠縺ｦ縺上□縺輔＞・医◎縺ｮ蝣ｴ蜷医∝・縺ｮ繝輔ぃ繧､繝ｫ縺ｫ蜷ｫ縺ｾ繧後※縺・◆諠・ｱ縺悟､ｱ繧上ｌ縺ｾ縺呻ｼ・incompatibilities = 髱樔ｺ呈鋤諤ｧ・・update_link = Aseprite繧呈峩譁ｰ縺吶ｋ
+
+[inks]
+simple_ink = 繧ｷ繝ｳ繝励Ν繧､繝ｳ繧ｯ
+alpha_compositing = 繧｢繝ｫ繝輔ぃ縺ｮ蜷域・
+copy_color = 繧｢繝ｫ繝輔ぃ縺ｨ濶ｲ繧偵さ繝斐・
+lock_alpha = 繧｢繝ｫ繝輔ぃ繧偵Ο繝・け
+shading = 繧ｷ繧ｧ繝ｼ繝・ぅ繝ｳ繧ｰ
+
+[jpeg_options]
+title = JPEG繧ｪ繝励す繝ｧ繝ｳ
+quality = 蜩∬ｳｪ・・
+[keyboard_shortcuts]
+title = 繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ
+import = 繧､繝ｳ繝昴・繝・&I)
+export = 繧ｨ繧ｯ繧ｹ繝昴・繝・&E)
+reset = 繝ｪ繧ｻ繝・ヨ(&R)
+import_keyboard_sc = 繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ縺ｮ繧､繝ｳ繝昴・繝・export_keyboard_sc = 繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ縺ｮ繧ｨ繧ｯ繧ｹ繝昴・繝・section_menus = 繝｡繝九Η繝ｼ
+section_commands = 繧ｳ繝槭Φ繝・section_tools = 繝・・繝ｫ
+section_action_modifiers = 繧｢繧ｯ繧ｷ繝ｧ繝ｳ菫ｮ鬟ｾ
+section_mouse_wheel = 繝槭え繧ｹ繝帙う繝ｼ繝ｫ
+section_drag_value = 繝峨Λ繝・げ驥・default_wheel_behavior = 繝・ヵ繧ｩ繝ｫ繝・custom_wheel_behavior = 繧ｫ繧ｹ繧ｿ繝
+slide_as_wheel = 繝医Λ繝・け繝代ャ繝我ｸ翫・2譛ｬ謖・せ繝ｩ繧､繝峨ｒ繝槭え繧ｹ繝帙う繝ｼ繝ｫ縺ｨ縺励※隗｣驥医☆繧・invert_brush_size_wheel = 繝悶Λ繧ｷ繧ｵ繧､繧ｺ繧貞､ｧ縺阪￥縺吶ｋ髫帙↓縲√・繧ｦ繧ｹ繝帙う繝ｼ繝ｫ縺ｮ譁ｹ蜷代ｒ蜿崎ｻ｢縺輔○繧・drag_angle = 隗貞ｺｦ・・drag_angle_tooltip = 蛟､縺ｮ蠅怜刈繧堤､ｺ縺吶・繧ｦ繧ｹ縺ｮ譁ｹ蜷・drag_distance = 霍晞屬・・drag_distance_tooltip = 1繝ｦ繝九ャ繝亥｢怜刈/貂帛ｰ代＆縺帙ｋ縺ｮ縺ｫ蠢・ｦ√↑繝槭え繧ｹ縺ｮ蜍穂ｽ憺㍼ (px)
+header_action = 繧｢繧ｯ繧ｷ繝ｧ繝ｳ
+header_key = 繧ｭ繝ｼ
+header_context = 繧ｳ繝ｳ繝・く繧ｹ繝・zoom = 繧ｺ繝ｼ繝
+add = 霑ｽ蜉
+default_action = ・医ョ繝輔か繝ｫ繝医・繧｢繧ｯ繧ｷ繝ｧ繝ｳ・・scroll_vertically = 邵ｦ繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ
+scroll_horizontally = 讓ｪ繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ
+fg_color = 濶ｲ・壼燕譎ｯ繝代Ξ繝・ヨ縺ｮ繧ｨ繝ｳ繝医Μ繝ｼ
+bg_color = 濶ｲ・夊レ譎ｯ繝代Ξ繝・ヨ縺ｮ繧ｨ繝ｳ繝医Μ繝ｼ
+fg_tile = 繧ｿ繧､繝ｫ・壼燕譎ｯ繧ｿ繧､繝ｫ縺ｮ繧ｨ繝ｳ繝医Μ繝ｼ
+bg_tile = 繧ｿ繧､繝ｫ・夊レ譎ｯ繧ｿ繧､繝ｫ縺ｮ繧ｨ繝ｳ繝医Μ繝ｼ
+change_frame = 繝輔Ξ繝ｼ繝螟画峩
+change_brush_size = 繝悶Λ繧ｷ繧ｵ繧､繧ｺ螟画峩
+change_brush_angle = 繝悶Λ繧ｷ隗貞ｺｦ螟画峩
+change_tool = 繝・・繝ｫ螟画峩
+change_tool_same_group = 繝・・繝ｫ螟画峩・亥酔繧ｰ繝ｫ繝ｼ繝暦ｼ・change_layer = 繝ｬ繧､繝､繝ｼ螟画峩
+change_ink_type = 繧､繝ｳ繧ｯ遞ｮ鬘槫､画峩
+change_ink_opacity = 繧､繝ｳ繧ｯ荳埼乗・蠎ｦ螟画峩
+change_layer_opacity = 繝ｬ繧､繝､繝ｼ荳埼乗・蠎ｦ螟画峩
+change_cel_opacity = 繧ｻ繝ｫ荳埼乗・蠎ｦ螟画峩
+color_alpha = 濶ｲ・壹い繝ｫ繝輔ぃ蛟､
+color_hsl_hue = 濶ｲ・唏SL濶ｲ逶ｸ
+color_hsl_saturation = 濶ｲ・唏SL蠖ｩ蠎ｦ
+color_hsl_lightness = 濶ｲ・唏SL譏主ｺｦ
+color_hsv_hue = 濶ｲ・唏SV濶ｲ逶ｸ
+color_hsv_saturation = 濶ｲ・唏SV蠖ｩ蠎ｦ
+color_hsv_value = 濶ｲ・唏SV譏主ｺｦ
+key_context_normal = 騾壼ｸｸ
+key_context_selection = 驕ｸ謚・key_context_translating_selection = 驕ｸ謚樣Κ蛻・・遘ｻ蜍・key_context_scaling_selection = 驕ｸ謚樣Κ蛻・・諡｡螟ｧ/邵ｮ蟆・key_context_rotating_selection = 驕ｸ謚樣Κ蛻・・蝗櫁ｻ｢
+key_context_move_tool = 遘ｻ蜍輔ヤ繝ｼ繝ｫ
+key_context_freehand_tool = 繝輔Μ繝ｼ繝上Φ繝峨ヤ繝ｼ繝ｫ
+key_context_shape_tool = 蝗ｳ蠖｢繝・・繝ｫ
+key_context_frames_selection = 繝輔Ξ繝ｼ繝驕ｸ謚・copy_selection = 驕ｸ謚樒ｯ・峇縺ｮ繧ｳ繝斐・
+snap_to_grid = 繧ｰ繝ｪ繝・ラ縺ｫ繧ｹ繝翫ャ繝・lock_axis = 霆ｸ縺ｮ蝗ｺ螳・fine_translating = 邊ｾ蟇・↑遘ｻ蜍・maintain_aspect_ratio = 繧｢繧ｹ繝壹け繝域ｯ斐・菫晄戟
+scale_from_center = 荳ｭ蠢・°繧画僑螟ｧ/邵ｮ蟆・fine_scaling = 邊ｾ蟇・↑諡｡螟ｧ/邵ｮ蟆・angle_snap = 隗貞ｺｦ繧偵せ繝翫ャ繝・add_selection = 驕ｸ謚樒ｯ・峇繧定ｿｽ蜉
+subtract_selection = 驕ｸ謚樒ｯ・峇縺九ｉ蜑企勁
+intersect_selection = 莠､蟾ｮ縺励◆驕ｸ謚樒ｯ・峇繧帝∈謚・auto_select_layer = 繝ｬ繧､繝､繝ｼ繧定・蜍慕噪縺ｫ驕ｸ謚槭☆繧・line_from_last_point = 繧ｯ繝ｪ繝・け縺励◆縺ｨ縺薙ｍ縺ｾ縺ｧ逶ｴ邱壹ｒ蠑輔￥
+angle_from_last_point = 繧ｯ繝ｪ繝・け縺励◆縺ｨ縺薙ｍ縺九ｉ隗貞ｺｦ繧偵せ繝翫ャ繝・move_origin = 菴懈・菴咲ｽｮ繧堤ｧｻ蜍・square_aspect = 邵ｦ讓ｪ豈斐ｒ蜷医ｏ縺帙ｋ
+draw_from_center = 荳ｭ蠢・°繧画緒逕ｻ
+rotate_shape = 蝗ｳ蠖｢繧貞屓霆｢
+trigger_left_mouse_button = 蟾ｦ繧ｯ繝ｪ繝・け縺ｮ蜍穂ｽ・trigger_right_mouse_button = 蜿ｳ繧ｯ繝ｪ繝・け縺ｮ蜍穂ｽ・ok = &OK
+cancel = &繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+key_context_transformation = 螟牙ｽ｢
+corner_radius = 隗偵・蜊雁ｾ・
+[layer_combo]
+group = 繧ｰ繝ｫ繝ｼ繝暦ｼ・layer = 繝ｬ繧､繝､繝ｼ・・selected_layers = 驕ｸ謚槭＆繧後◆繝ｬ繧､繝､繝ｼ
+visible_layers = 蜿ｯ隕悶Ξ繧､繝､繝ｼ
+
+[layer_properties]
+title = 繝ｬ繧､繝､繝ｼ縺ｮ繝励Ο繝代ユ繧｣
+name = 蜷榊燕・・uuid = UUID:
+mode = 繝｢繝ｼ繝会ｼ・opacity = 荳埼乗・蠎ｦ・・tileset_tooltip = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ
+normal = 騾壼ｸｸ
+darken = 豈碑ｼ・ｼ域囓・・multiply = 荵礼ｮ・color_burn = 辟ｼ縺崎ｾｼ縺ｿ繧ｫ繝ｩ繝ｼ
+lighten = 豈碑ｼ・ｼ域・・・screen = 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ
+color_dodge = 隕・＞辟ｼ縺阪き繝ｩ繝ｼ
+addition = 蜉邂・overlay = 繧ｪ繝ｼ繝舌・繝ｬ繧､
+soft_light = 繧ｽ繝輔ヨ繝ｩ繧､繝・hard_light = 繝上・繝峨Λ繧､繝・difference = 蟾ｮ
+exclusion = 髯､螟・subtract = 貂帷ｮ・divide = 蛻・牡
+hue = 濶ｲ逶ｸ
+saturation = 蠖ｩ蠎ｦ
+color = 繧ｫ繝ｩ繝ｼ
+luminosity = 霈晏ｺｦ
+no_layer = 繝ｬ繧､繝､繝ｼ縺ｪ縺・flattened = 邨ｱ蜷医＆繧後◆繝ｬ繧､繝､繝ｼ
+
+[load_palette]
+title = 繝代Ξ繝・ヨ隱ｭ縺ｿ霎ｼ縺ｿ
+
+[load_selection]
+title = 驕ｸ謚樒ｯ・峇縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ・・msk繝輔ぃ繧､繝ｫ・・
+[main_menu]
+file = 繝輔ぃ繧､繝ｫ(&F)
+file_new = 譁ｰ隕・&N)...
+file_open = 髢九￥(&O)...
+file_open_recent = 譛霑台ｽｿ縺｣縺溘ヵ繧｡繧､繝ｫ(&R)
+file_reopen_closed = 髢峨§縺溘ヵ繧｡繧､繝ｫ繧貞・蠎ｦ髢九￥(&R)
+file_no_recent_file = 譛霑代・繝輔ぃ繧､繝ｫ縺ｯ縺ゅｊ縺ｾ縺帙ｓ
+file_clear_recent_files = 譛霑代・繝輔ぃ繧､繝ｫ繧偵け繝ｪ繧｢(&C)
+file_save = 荳頑嶌縺堺ｿ晏ｭ・&S)
+file_save_as = 蜷榊燕繧偵▽縺代※菫晏ｭ・&A)窶ｦ
+file_close = 髢峨§繧・&C)
+file_close_all = 縺吶∋縺ｦ髢峨§繧・file_export = 繧ｨ繧ｯ繧ｹ繝昴・繝・&T)
+file_export_as = 繧ｨ繧ｯ繧ｹ繝昴・繝・&E)...
+file_export_sprite_sheet = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・繧ｨ繧ｯ繧ｹ繝昴・繝・&E)
+file_export_tileset = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ縺ｮ繧ｨ繧ｯ繧ｹ繝昴・繝・file_repeat_last_export = 蜑榊屓縺ｮ繧ｨ繧ｯ繧ｹ繝昴・繝医ｒ蜀榊ｮ溯｡・&L)
+file_import = 繧､繝ｳ繝昴・繝・file_import_sprite_sheet = 繧ｹ繝励Λ繧､繝医す繝ｼ繝医・繧､繝ｳ繝昴・繝・&I)
+file_scripts = 繧ｹ繧ｯ繝ｪ繝励ヨ(&P)
+file_open_script_folder = 繧ｹ繧ｯ繝ｪ繝励ヨ繝輔か繝ｫ繝繧帝幕縺・&O)
+file_rescan_script_folder = 繧ｹ繧ｯ繝ｪ繝励ヨ繝輔か繝ｫ繝繧貞・繧ｹ繧ｭ繝｣繝ｳ(&R)
+file_debugger = 繝・ヰ繝・ぎ繝ｼ(&D)
+file_exit = 繧｢繝励Μ繧ｱ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ邨ゆｺ・&E)
+edit = 邱ｨ髮・&E)
+edit_undo = 蜈・↓謌ｻ縺・&U)
+edit_redo = 繧・ｊ逶ｴ縺・&R)
+edit_undo_history = 謫堺ｽ懷ｱ･豁ｴ縺九ｉ謌ｻ縺・&G)
+edit_cut = 蛻・ｊ蜿悶ｊ(&T)
+edit_copy = 繧ｳ繝斐・(&C)
+edit_copy_merged = 繧ｳ繝斐・縺励※邨仙粋(&G)
+edit_paste = 雋ｼ繧贋ｻ倥￠(&P)
+edit_paste_special = 迚ｹ谿翫・繝ｼ繧ｹ繝・&L)
+edit_paste_special_new_sprite = 譁ｰ隕上せ繝励Λ繧､繝医→縺励※雋ｼ繧贋ｻ倥￠(&S)
+edit_paste_special_new_layer = 譁ｰ隕上Ξ繧､繝､繝ｼ縺ｨ縺励※雋ｼ繧贋ｻ倥￠(&L)
+edit_paste_special_new_ref_layer = 譁ｰ隕丞盾辣ｧ繝ｬ繧､繝､繝ｼ縺ｨ縺励※雋ｼ繧贋ｻ倥￠(&R)
+edit_clear = 蜑企勁(&D)
+edit_fill = 蝪励ｊ縺､縺ｶ縺・&F)
+edit_stroke = 蠅・阜邱壹ｒ謠上￥
+edit_rotate = 蝗櫁ｻ｢(&R)
+edit_rotate_180 = 180蠎ｦ(&1)
+edit_rotate_90cw = 90蠎ｦ・域凾險亥屓繧奇ｼ・&9)
+edit_rotate_90ccw = 90蠎ｦ・亥渚險亥屓繧奇ｼ・&C)
+edit_flip_horizontal = 蟾ｦ蜿ｳ蜿崎ｻ｢(&H)
+edit_flip_vertical = 荳贋ｸ句渚霆｢(&V)
+edit_transform = 螟牙ｽ｢(&M)
+edit_shift = 繧ｷ繝輔ヨ(&S)
+edit_shift_left = 蟾ｦ(&L)
+edit_shift_right = 蜿ｳ(&R)
+edit_shift_up = 荳・&U)
+edit_shift_down = 荳・&D)
+edit_new_brush = 譁ｰ隕上ヶ繝ｩ繧ｷ(&B)
+edit_new_sprite_from_selection = 驕ｸ謚樒ｯ・峇縺九ｉ譁ｰ隕上せ繝励Λ繧､繝医ｒ菴懈・(&N)
+edit_replace_color = 濶ｲ縺ｮ鄂ｮ謠・&R)...
+edit_invert_color = 濶ｲ縺ｮ蜿崎ｻ｢(&I)...
+edit_adjustments = 濶ｲ縺ｮ隱ｿ謨ｴ(&J)
+edit_adjustments_brightness_contrast = 譏弱ｋ縺・繧ｳ繝ｳ繝医Λ繧ｹ繝・&B)...
+edit_adjustments_hue_saturation = 濶ｲ逶ｸ/蠖ｩ蠎ｦ(&H)...
+edit_adjustments_color_curve = 繧ｫ繝ｩ繝ｼ繧ｫ繝ｼ繝・&C)...
+edit_fx = 繝輔ぅ繝ｫ繧ｿ(&F)
+edit_fx_outline = 繧｢繧ｦ繝医Λ繧､繝ｳ(&O)
+edit_fx_convolution_matrix = 逡ｳ縺ｿ霎ｼ縺ｿ蜃ｦ逅・&M)...
+edit_fx_despeckle = 繝弱う繧ｺ縺ｮ髯､蜴ｻ・医Γ繝・ぅ繧｢繝ｳ繝輔ぅ繝ｫ繧ｿ・俄ｦ
+edit_insert_text = 繝・く繧ｹ繝医ｒ謖ｿ蜈･
+edit_keyboard_shortcuts = 繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ(&K)...
+edit_preferences = 迺ｰ蠅・ｨｭ螳・&F)...
+sprite = 繧ｹ繝励Λ繧､繝・&S)
+sprite_properties = 繝励Ο繝代ユ繧｣(&P)...
+sprite_color_mode = 繧ｫ繝ｩ繝ｼ繝｢繝ｼ繝・&M)
+sprite_color_mode_rgb = RGB繧ｫ繝ｩ繝ｼ(&R)
+sprite_color_mode_grayscale = 繧ｰ繝ｬ繝ｼ繧ｹ繧ｱ繝ｼ繝ｫ(&G)
+sprite_color_mode_indexed = 繧､繝ｳ繝・ャ繧ｯ繧ｹ繧ｫ繝ｩ繝ｼ(&I)
+sprite_color_mode_more_options = 縺昴・莉悶・繧ｪ繝励す繝ｧ繝ｳ(&M)
+sprite_duplicate = 繧ｹ繝励Λ繧､繝医ｒ隍・｣ｽ(&D)...
+sprite_sprite_size = 繧ｹ繝励Λ繧､繝医・繧ｵ繧､繧ｺ(&S)...
+sprite_canvas_size = 繧ｭ繝｣繝ｳ繝舌せ縺ｮ繧ｵ繧､繧ｺ(&C)...
+sprite_rotate_canvas = 繧ｭ繝｣繝ｳ繝舌せ縺ｮ蝗櫁ｻ｢(&R)
+sprite_rotate = 蝗櫁ｻ｢(&R)
+sprite_rotate_180 = 180蠎ｦ(&1)
+sprite_rotate_90cw = 90蠎ｦ・域凾險亥屓繧奇ｼ・&9)
+sprite_rotate_90ccw = 90蠎ｦ・亥渚險亥屓繧奇ｼ・&C)
+sprite_flip_canvas_horizontal = 繧ｭ繝｣繝ｳ繝舌せ縺ｮ蟾ｦ蜿ｳ蜿崎ｻ｢(&H)
+sprite_flip_canvas_vertical = 繧ｭ繝｣繝ｳ繝舌せ縺ｮ荳贋ｸ句渚霆｢(&V)
+sprite_crop = 繧ｯ繝ｭ繝・・(&O)
+sprite_trim = 繝医Μ繝(&T)
+layer = 繝ｬ繧､繝､繝ｼ(&L)
+layer_properties = 繝励Ο繝代ユ繧｣(&P)...
+layer_visible = 蜿ｯ隕門喧(&V)
+layer_lock_layers = 繝ｬ繧､繝､繝ｼ縺ｮ繝ｭ繝・け(&k)
+layer_open_group = 繧ｰ繝ｫ繝ｼ繝励・螻暮幕(&O)
+layer_new = 譁ｰ隕・&N)...
+layer_new_layer = 譁ｰ隕上Ξ繧､繝､繝ｼ(&N)
+layer_new_group = 譁ｰ隕上Ξ繧､繝､繝ｼ繧ｰ繝ｫ繝ｼ繝・&G)
+layer_new_layer_via_copy = 繧ｳ繝斐・縺九ｉ譁ｰ隕上Ξ繧､繝､繝ｼ(&C)
+layer_new_layer_via_cut = 蛻・ｊ蜿悶ｊ縺九ｉ譁ｰ隕上Ξ繧､繝､繝ｼ(&t)
+layer_new_reference_layer_from_file = 繝輔ぃ繧､繝ｫ縺九ｉ譁ｰ隕丞盾辣ｧ繝ｬ繧､繝､繝ｼ(&R)
+layer_new_tilemap_layer = 譁ｰ隕上ち繧､繝ｫ繝槭ャ繝励Ξ繧､繝､繝ｼ
+layer_delete_layer = 繝ｬ繧､繝､繝ｼ縺ｮ蜑企勁(&R)
+layer_convert_to = 繝ｬ繧､繝､繝ｼ繧貞､画鋤窶ｦ
+layer_convert_to_background = 閭梧勹繝ｬ繧､繝､繝ｼ(&B)
+layer_convert_to_layer = 繝ｬ繧､繝､繝ｼ(&L)
+layer_convert_to_tilemap = 繧ｿ繧､繝ｫ繝槭ャ繝・&T)
+layer_duplicate = 繝ｬ繧､繝､繝ｼ繧定､・｣ｽ(&D)
+layer_merge_down = 荳九・繝ｬ繧､繝､繝ｼ縺ｨ邨仙粋(&M)
+layer_flatten = 蜈ｨ縺ｦ縺ｮ繝ｬ繧､繝､繝ｼ繧堤ｵ仙粋(&F)
+layer_flatten_visible = 陦ｨ遉ｺ繝ｬ繧､繝､繝ｼ縺ｮ縺ｿ邨仙粋(&S)
+frame = 繝輔Ξ繝ｼ繝(&R)
+frame_properties = 繝輔Ξ繝ｼ繝縺ｮ繝励Ο繝代ユ繧｣(&P)...
+frame_cel_properties = 繧ｻ繝ｫ縺ｮ繝励Ο繝代ユ繧｣(&C)...
+frame_new_frame = 譁ｰ隕上ヵ繝ｬ繝ｼ繝(&N)
+frame_new_empty_frame = 譁ｰ隕上・遨ｺ繝輔Ξ繝ｼ繝(&N)
+frame_duplicate_cels = 繧ｻ繝ｫ縺ｮ隍・｣ｽ(&D)
+frame_duplicate_linked_cels = 邨仙粋繧ｻ繝ｫ縺ｮ隍・｣ｽ(&D)
+frame_delete_frame = 繝輔Ξ繝ｼ繝縺ｮ蜑企勁(&F)
+frame_playback = 繝励Ξ繧､繝舌ャ繧ｯ
+frame_tags = 繧ｿ繧ｰ(&T)
+frame_tags_tag_properties = 繧ｿ繧ｰ縺ｮ繝励Ο繝代ユ繧｣(&P)窶ｦ
+frame_tags_new_tag = 譁ｰ隕上ち繧ｰ(&T)
+frame_tags_delete_tag = 繧ｿ繧ｰ縺ｮ蜑企勁(&D)
+frame_jump_to = 繝輔Ξ繝ｼ繝縺ｮ遘ｻ蜍・frame_jump_to_first_frame = 譛蛻昴・繝輔Ξ繝ｼ繝(&F)
+frame_jump_to_previous_frame = 蜑阪・繝輔Ξ繝ｼ繝(&P)
+frame_jump_to_next_frame = 谺｡縺ｮ繝輔Ξ繝ｼ繝(&N)
+frame_jump_to_last_frame = 譛蠕後・繝輔Ξ繝ｼ繝(&L)
+frame_jump_to_first_frame_in_tag = 繧ｿ繧ｰ縺ｮ譛蛻昴・繝輔Ξ繝ｼ繝
+frame_jump_to_last_frame_in_tag = 繧ｿ繧ｰ縺ｮ譛蠕後・繝輔Ξ繝ｼ繝
+frame_go_to_frame = 謖・ｮ壹・繝輔Ξ繝ｼ繝(&G)
+frame_constant_frame_rate = 繝輔Ξ繝ｼ繝繝ｬ繝ｼ繝・frame_reverse_frames = 繝輔Ξ繝ｼ繝縺ｮ蜿崎ｻ｢(&V)
+select = 驕ｸ謚・&T)
+select_all = 蜈ｨ縺ｦ繧帝∈謚・&A)
+select_deselect = 驕ｸ謚樒ｯ・峇縺ｮ隗｣髯､(&D)
+select_reselect = 蜀埼∈謚・&R)
+select_inverse = 驕ｸ謚樒ｯ・峇縺ｮ蜿崎ｻ｢(&I)
+select_color_range = 濶ｲ縺ｮ驕ｸ謚・&C)
+select_modify = 驕ｸ謚樒ｯ・峇縺ｮ螟画峩(&M)
+select_modify_border = 霈ｪ驛ｭ邱・&B)
+select_modify_expand = 諡｡蠑ｵ(&E)
+select_modify_contract = 邵ｮ蟆・&C)
+select_load_from_file = MSK繝輔ぃ繧､繝ｫ縺九ｉ隱ｭ縺ｿ蜿悶ｊ(&L)
+select_save_to_file = MSK繝輔ぃ繧､繝ｫ縺ｸ菫晏ｭ・&S)
+view = 陦ｨ遉ｺ(&V)
+view_duplicate_view = 繝薙Η繝ｼ縺ｮ隍・｣ｽ(&V)
+view_show_extras = 繧ｬ繧､繝峨・陦ｨ遉ｺ(&E)
+view_show = 繧ｬ繧､繝峨・蜀・ｮｹ(&S)
+view_show_layer_edges = 繝ｬ繧､繝､繝ｼ縺ｮ蠅・阜邱・&L)
+view_show_selection_edges = 驕ｸ謚樒ｯ・峇縺ｮ蠅・阜邱・&S)
+view_show_grid = 繧ｰ繝ｪ繝・ラ(&G)
+view_show_auto_guides = 繧ｪ繝ｼ繝医ぎ繧､繝・&A)
+view_show_slices = 繧ｹ繝ｩ繧､繧ｹ(&I)
+view_show_pixel_grid = 繝斐け繧ｻ繝ｫ繧ｰ繝ｪ繝・ラ(&P)
+view_show_brush_preview = 繝悶Λ繧ｷ縺ｮ繝励Ξ繝薙Η繝ｼ(&B)
+view_show_tile_numbers = 繧ｿ繧､繝ｫ逡ｪ蜿ｷ
+view_grid = 繧ｰ繝ｪ繝・ラ(&G)
+view_grid_settings = 繧ｰ繝ｪ繝・ラ縺ｮ險ｭ螳・&D)
+view_grid_selection_as_grid = 驕ｸ謚樒ｯ・峇繧偵げ繝ｪ繝・ラ蛹・&I)
+view_grid_snap_to_grid = 繧ｰ繝ｪ繝・ラ縺ｫ繧ｹ繝翫ャ繝励☆繧・&S)
+view_tiled_mode = 繧ｿ繧､繝ｫ繝｢繝ｼ繝・&M)
+view_tiled_mode_none = 縺ｪ縺・&N)
+view_tiled_mode_both = 荳｡譁ｹ・・Y霆ｸ・・&B)
+view_tiled_mode_x = X霆ｸ(&X)
+view_tiled_mode_y = Y霆ｸ(&Y)
+view_symmetry_options = 繧ｷ繝ｳ繝｡繝医Μ繝ｼ繧ｪ繝励す繝ｧ繝ｳ(&y)
+view_set_loop_section = 繝ｫ繝ｼ繝励そ繧ｯ繧ｷ繝ｧ繝ｳ縺ｮ險ｭ螳・&L)
+view_show_onion_skin = 繧ｪ繝九が繝ｳ繧ｹ繧ｭ繝ｳ縺ｮ陦ｨ遉ｺ(&O)
+view_timeline = 繧ｿ繧､繝繝ｩ繧､繝ｳ(&T)
+view_preview = 繝励Ξ繝薙Η繝ｼ(&w)
+view_preview_hide_other_layers = 莉悶・繝ｬ繧､繝､繝ｼ繧帝國縺・&H)
+view_preview_brush_preview = 繝悶Λ繧ｷ縺ｮ繝励Ξ繝薙Η繝ｼ(&B)
+view_advanced_mode = 繧｢繝峨ヰ繝ｳ繧ｹ繝｢繝ｼ繝・&A)
+view_full_screen_mode = 繝輔Ν繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繝｢繝ｼ繝・&F)
+view_full_screen_preview = 繝輔Ν繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繝励Ξ繝薙Η繝ｼ(&U)
+view_home = 繝帙・繝(&H)
+view_refresh = 蜀崎｡ｨ遉ｺ・・ユ繝ｼ繝槭・蜀崎ｪｭ縺ｿ霎ｼ縺ｿ(&R)
+help = 繝倥Ν繝・&H)
+help_readme = Readme
+help_quick_reference = 繧ｯ繧､繝・け繝ｪ繝輔ぃ繝ｬ繝ｳ繧ｹ(&R)
+help_documentation = 繝峨く繝･繝｡繝ｳ繝・・繧ｷ繝ｧ繝ｳ
+help_tutorial = 繝√Η繝ｼ繝医Μ繧｢繝ｫ
+help_release_notes = 繝ｪ繝ｪ繝ｼ繧ｹ繝弱・繝・help_twitter = Twitter
+help_enter_license = 繝ｩ繧､繧ｻ繝ｳ繧ｹ蜈･蜉・&L)
+help_about = Aseprite縺ｫ縺､縺・※(&A)
+view_workspace_layout = 繝ｯ繝ｼ繧ｯ繧ｹ繝壹・繧ｹ繝ｬ繧､繧｢繧ｦ繝・(&L)
+view_run_command = 繧ｳ繝槭Φ繝峨ｒ螳溯｡・
+[mask_by_color]
+title = 濶ｲ縺ｮ驕ｸ謚・label_color = 濶ｲ・・tolerance = 險ｱ螳ｹ蛟､・・preview = 繝励Ξ繝薙Η繝ｼ(&P)
+ok = &OK
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+
+[modify_selection]
+title = 驕ｸ謚樒ｯ・峇縺ｮ螟画峩
+circle = 蜀・ｽ｢繝悶Λ繧ｷ
+square = 遏ｩ蠖｢繝悶Λ繧ｷ
+
+[new_brush]
+shortcut = 繧ｷ繝ｧ繝ｼ繝医き繝・ヨ・・context_bar_help = 繝悶Λ繧ｷ蠅・阜縺ｮ驕ｸ謚橸ｽ懷承繧ｯ繝ｪ繝・け縺ｧ繧ｫ繝・ヨ
+
+[new_folder]
+title = 譁ｰ隕上ヵ繧ｩ繝ｫ繝
+folder_name = 繝輔か繝ｫ繝蜷搾ｼ・default_new_folder_name = 譁ｰ隕上ヵ繧ｩ繝ｫ繝
+
+[new_layer]
+title = 譁ｰ隕上Ξ繧､繝､繝ｼ
+name = 蜷榊燕・・tileset = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ・・default_new_layer_name = 譁ｰ隕上Ξ繧､繝､繝ｼ
+
+[news_listbox]
+more = 莉問ｦ
+problem_loading = 繝九Η繝ｼ繧ｹ隱ｭ縺ｿ霎ｼ縺ｿ譎ゅ↓蝠城｡後′逋ｺ逕溘＠縺ｾ縺励◆縲ょ・隧ｦ陦後＠縺ｦ縺上□縺輔＞縲・
+[enter_license]
+title = 繝ｩ繧､繧ｻ繝ｳ繧ｹ蜈･蜉・default_message = 繝ｩ繧､繧ｻ繝ｳ繧ｹ繧ｭ繝ｼ縺ｮ蜈･謇九・縺薙％縺九ｉ
+license_key = 繝ｩ繧､繧ｻ繝ｳ繧ｹ繧ｭ繝ｼ
+activating_message = 繧｢繧ｯ繝・ぅ繝吶・繝井ｸｭ窶ｦ
+activated_message = Aseprite縺ｮ繧｢繧ｯ繝・ぅ繝吶・繝医′螳御ｺ・＠縺ｾ縺励◆・・
+[aseprite_update]
+title = Aseprite縺ｮ譖ｴ譁ｰ
+
+[tileset_selector]
+new_tileset = 譁ｰ隕上ち繧､繝ｫ繧ｻ繝・ヨ
+grid_width = 繧ｰ繝ｪ繝・ラ蟷・ｼ・grid_height = 繧ｰ繝ｪ繝・ラ鬮倥＆・・name = 蜷咲ｧｰ・・default_name = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ
+base_index = 繝吶・繧ｹ繧､繝ｳ繝・ャ繧ｯ繧ｹ・・base_tooltip = 縺薙・謨ｰ蛟､縺ｯ縲∵怙蛻昴・繧ｿ繧､繝ｫ縺ｮ謨ｰ蛟､繧､繝ｳ繝・ャ繧ｯ繧ｹ繧呈ｱｺ螳壹＠縺ｾ縺吶・n繝・ヵ繧ｩ繝ｫ繝医〒縺ｯ 1 縺ｧ縺吶′縲・ 繧剃ｽｿ逕ｨ縺吶ｋ縺ｨ0縺九ｉ蟋九∪繧九う繝ｳ繝・ャ繧ｯ繧ｹ縺ｫ縺ｪ繧翫∪縺・allowed_flips = 險ｱ螳ｹ縺吶ｋ蜿崎ｻ｢・・allowed_flips_tooltip = Aseprite縺窟uto/Stack繝｢繝ｼ繝峨〒蜀榊茜逕ｨ縺吶ｋ繧ｿ繧､繝ｫ繧定・蜍慕噪縺ｫ繝槭ャ繝√Φ繧ｰ縺吶ｋ髫媾n縺ｩ縺ｮ譁ｹ蜷代↓蜿崎ｻ｢縺輔○縺ｦ繧医＞縺具ｼ・霆ｸ縲〆霆ｸ縲∵万繧∬ｻｸ・・
+[tileset_selector_window]
+title = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ
+
+[new_sprite]
+title = 譁ｰ隕上せ繝励Λ繧､繝・size = 繧ｵ繧､繧ｺ・・width = 蟷・ｼ・height = 鬮倥＆・・color_mode = 繧ｫ繝ｩ繝ｼ繝｢繝ｼ繝会ｼ・rgba = &RGBA
+grayscale = 繧ｰ繝ｬ繝ｼ繧ｹ繧ｱ繝ｼ繝ｫ(&G)
+indexed = 繧､繝ｳ繝・ャ繧ｯ繧ｹ繧ｫ繝ｩ繝ｼ(&I)
+rgba_tooltip = 蜷・ヴ繧ｯ繧ｻ繝ｫ縺ｯ襍､縲∫ｷ代・搨縲√い繝ｫ繝輔ぃ謌仙・繧呈戟縺｡縺ｾ縺吶・n・・2bit/pixel・・grayscale_tooltip = 蜷・ヴ繧ｯ繧ｻ繝ｫ縺ｯ繧ｰ繝ｬ繝ｼ蛟､縺ｨ繧｢繝ｫ繝輔ぃ蛟､繧呈戟縺｡縺ｾ縺吶・n・・6bit/pixel・・indexed_tooltip = 蜷・ヴ繧ｯ繧ｻ繝ｫ縺ｯ繝代Ξ繝・ヨ繧貞盾辣ｧ縺励∪縺吶・n・・bit/pixel・・background = 閭梧勹濶ｲ・・transparent = 騾乗・(&T)
+white = 逋ｽ(&W)
+black = 鮟・&B)
+pixel_ratio = 繝斐け繧ｻ繝ｫ縺ｮ繧｢繧ｹ繝壹け繝域ｯ費ｼ・square_pixels = 豁｣譁ｹ蠖｢・・・・・・double_wide = 繝繝悶Ν繝ｯ繧､繝会ｼ・・・・・double_high = 繝繝悶Ν繝上う・・・・・・
+[rgbmap_algorithm_selector]
+label = RGB縺九ｉ繝代Ξ繝・ヨ逡ｪ蜿ｷ縺ｸ縺ｮ繝槭ャ繝斐Φ繧ｰ・・default = 繝・ヵ繧ｩ繝ｫ繝茨ｼ・ctree・・rgb5a3 = 繝・・繝悶Ν RGB 5繝薙ャ繝・+ 繧｢繝ｫ繝輔ぃ蛟､3繝薙ャ繝・octree = 蜈ｫ蛻・惠濶ｲ驥丞ｭ仙喧(Octree)
+
+[best_fit_criteria_selector]
+label = 濶ｲ遨ｺ髢難ｼ・default = 繝・ヵ繧ｩ繝ｫ繝・繝ｦ繝ｼ繧ｯ繝ｪ繝・ラ)
+rgb = RGB
+linearized_rgb = 繝ｪ繝九いRGB
+cie_xyz = CIEXYZ
+cie_lab = CIELAB
+
+[open_file]
+title = 髢九￥
+loading = 隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ
+
+[open_sequence]
+title = 騾夂衍
+description = 縺薙・繝輔ぃ繧､繝ｫ繧偵い繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｨ縺励※隱ｭ縺ｿ霎ｼ縺ｿ縺ｾ縺吶°・・repeat = 莉悶・繝輔ぃ繧､繝ｫ縺ｫ蟇ｾ縺励※繧ょ酔讒倥↓蜃ｦ逅・duration = 繝輔Ξ繝ｼ繝譎る俣
+agree = 蜷梧э(&A)
+skip = 繧ｹ繧ｭ繝・・(&S)
+
+[options]
+title = 迺ｰ蠅・ｨｭ螳・section_general = 荳闊ｬ
+section_files = 繝輔ぃ繧､繝ｫ
+section_tablet = 繧ｿ繝悶Ξ繝・ヨ
+section_alerts = 繧｢繝ｩ繝ｼ繝・section_color = 繧ｫ繝ｩ繝ｼ
+section_editor = 繧ｨ繝・ぅ繧ｿ繝ｼ
+section_selection = 驕ｸ謚・section_timeline = 繧ｿ繧､繝繝ｩ繧､繝ｳ
+section_cursors = 繧ｫ繝ｼ繧ｽ繝ｫ
+section_background = 閭梧勹
+section_grid = 繧ｰ繝ｪ繝・ラ
+section_guides_and_slices = 繧ｬ繧､繝会ｼ・せ繝ｩ繧､繧ｹ
+section_undo = 蜈・↓謌ｻ縺・section_theme = 繝・・繝・section_extensions = 諡｡蠑ｵ讖溯・
+section_experimental = 縺昴・莉・general = 荳闊ｬ
+ui_windows = 繝ｦ繝ｼ繧ｶ繝ｼ繧､繝ｳ繧ｿ繝輔ぉ繝ｼ繧ｹ・・one_win = 繝ｦ繝ｼ繧ｶ繝ｼ繧､繝ｳ繧ｿ繝輔ぉ繝ｼ繧ｹ繧貞腰荳縺ｮ繧ｦ繧｣繝ｳ繝峨え縺ｫ髯仙ｮ壹＠縺ｾ縺吶・n繝｡繝九Η繝ｼ繧・・繝ｬ繝薙Η繝ｼ縲√・繝・・繧｢繝・・縺ｯ蜈ｨ縺ｦ縺昴・繧ｦ繧｣繝ｳ繝峨え蜀・↓驟咲ｽｮ縺輔ｌ縺ｾ縺吶・multi_win = 蜷・う繝ｳ繧ｿ繝輔ぉ繝ｼ繧ｹ繧ｦ繧｣繝ｳ繝峨え縺ｫ蟇ｾ縺励※荳縺､縺壹▽繧ｦ繧｣繝ｳ繝峨え繧剃ｽ懈・縺励∪縺吶・n繝｡繝九Η繝ｼ縲√・繝ｬ繝薙Η繝ｼ縲√・繝・・繧｢繝・・縺後◎繧後◇繧悟挨縺ｮ繧ｦ繧｣繝ｳ繝峨え縺ｫ縺ｪ繧翫∪縺吶・theme_mode = 繝・・繝槭Δ繝ｼ繝会ｼ・screen_scaling = 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ縺ｮ繧ｹ繧ｱ繝ｼ繝ｫ・・ui_scaling = UI縺ｮ繧ｹ繧ｱ繝ｼ繝ｫ・・language = 陦ｨ遉ｺ險隱橸ｼ・gpu_acceleration = GPU繧｢繧ｯ繧ｻ繝ｩ繝ｬ繝ｼ繧ｷ繝ｧ繝ｳ
+gpu_acceleration_tooltip = 繝上・繝峨え繧ｧ繧｢繧｢繧ｯ繧ｻ繝ｩ繝ｬ繝ｼ繧ｷ繝ｧ繝ｳ繧呈怏蜉ｹ縺ｫ縺吶ｋ縺ｫ縺ｯ縺薙・繧ｪ繝励す繝ｧ繝ｳ繧偵メ繧ｧ繝・け
+show_menu_bar = 繝｡繝九Η繝ｼ繝舌・繧定｡ｨ遉ｺ縺吶ｋ
+show_aseprite_file_dialog = Aseprite繝輔ぃ繧､繝ｫ繝繧､繧｢繝ｭ繧ｰ繧定｡ｨ遉ｺ縺吶ｋ
+show_home = Aseprite縺ｮ襍ｷ蜍墓凾縺ｫ[繝帙・繝]繧ｿ繝悶ｒ陦ｨ遉ｺ縺吶ｋ
+expand_menu_bar_items_on_mouseover = 繝槭え繧ｹ繧ｪ繝ｼ繝舌・譎ゅ↓繝｡繝九Η繝ｼ繝舌・鬆・岼繧定｡ｨ遉ｺ縺吶ｋ
+expand_menu_bar_items_on_mouseover_tooltip = 繝√ぉ繝・け縺吶ｋ縺ｨ繝｡繝九Η繝ｼ縺ｮ繝舌・縺ｫ繧ｫ繝ｼ繧ｽ繝ｫ繧貞粋繧上○縺滄圀縲―n繧ｵ繝悶Γ繝九Η繝ｼ縺瑚｡ｨ遉ｺ縺輔ｌ縺ｾ縺・color_bar_entries_separator = 蜷・ヱ繝ｬ繝・ヨ縺ｮ蛹ｺ蛻・ｊ縺ｫ蠅・阜邱壹ｒ陦ｨ遉ｺ縺吶ｋ
+recover_files = 繝ｪ繧ｫ繝舌Μ繝ｼ繝輔ぃ繧､繝ｫ
+auto_save_recovery_data = 蟶ｸ縺ｫ繝ｪ繧ｫ繝舌Μ繝ｼ繝・・繧ｿ繧定・蜍穂ｿ晏ｭ・auto_save_recovery_data_tooltip = 縺薙・繧ｪ繝励す繝ｧ繝ｳ繧剃ｽｿ逕ｨ縺吶ｋ縺ｨ縲√・繝ｭ繧ｰ繝ｩ繝縺御ｺ域悄縺帙★邨ゆｺ・＠縺滄圀縺ｫ\n繝峨く繝･繝｡繝ｳ繝医ｒ蠕ｩ蜈・〒縺阪∪縺・10_seconds = 10遘・30_seconds = 30遘・1_minute = 1蛻・2_minutes = 2蛻・5_minutes = 5蛻・10_minutes = 10蛻・15_minutes = 15蛻・30_minutes = 30蛻・1_hour = 1譎る俣
+4_hours = 4譎る俣
+8_hours = 8譎る俣
+keep_edited_sprite_data = 邱ｨ髮・＠縺溘せ繝励Λ繧､繝医ョ繝ｼ繧ｿ縺ｮ菫晄戟
+keep_edited_sprite_data_tooltip = 縺薙・繧ｪ繝励す繝ｧ繝ｳ繧剃ｽｿ逕ｨ縺吶ｋ縺ｨ\n謖・ｮ壹＠縺滓律謨ｰ縺ｮ髢薙・繝ｭ繧ｰ繝ｩ繝繧箪n髢峨§縺溷ｾ後ｂ縲∫ｷｨ髮・＠縺溘ラ繧ｭ繝･繝｡繝ｳ繝医ｒ蜀榊ｺｦ髢九￥縺薙→縺後〒縺阪∪縺・1_day = 1譌･
+2_days = 2譌･
+3_days = 3譌･
+1_week = 1騾ｱ髢・2_weeks = 2騾ｱ髢・1_month = 1縺区怦
+show_full_path = 繝輔Ν繝代せ繧定｡ｨ遉ｺ縺吶ｋ
+show_full_path_tooltip = [繝帙・繝]繧ｿ繝悶・繝輔ぃ繧､繝ｫ繝代せ繧帝撼陦ｨ遉ｺ縺ｫ縺吶ｋ蝣ｴ蜷医・縲√％縺ｮ繧ｪ繝励す繝ｧ繝ｳ縺ｮ繝√ぉ繝・け繧貞､悶＠縺ｾ縺兔n・医Λ繧､繝悶せ繝医Μ繝ｼ繝溘Φ繧ｰ縺ｫ萓ｿ蛻ｩ縺ｧ縺呻ｼ・keep_closed_sprite_on_memory = 髢峨§縺溘せ繝励Λ繧､繝医ｒ繝｡繝｢繝ｪ繝ｼ縺ｫ菫晄戟
+keep_closed_sprite_on_memory_tooltip = 繧ｹ繝励Λ繧､繝医ｒ髢峨§縺滓凾縲∬ｪ､縺｣縺ｦ繧ｹ繝励Λ繧､繝医ｒ髢峨§縺溷ｴ蜷医↓蛯吶∴縺ｦ繝｡繝｢繝ｪ縺ｫ菫晄戟縺励∪縺吶・n[繝輔ぃ繧､繝ｫ]>[髢峨§縺溘ヵ繧｡繧､繝ｫ繧貞・蠎ｦ髢九￥]繝｡繝九Η繝ｼ繧剃ｽｿ逕ｨ縺吶ｋ縺ｨ縲・哩縺倥ｋ繧｢繧ｯ繧ｷ繝ｧ繝ｳ繧箪n縲悟・縺ｫ謌ｻ縺吶阪％縺ｨ縺後〒縺阪∪縺・default_extension_for = 繝輔ぃ繧､繝ｫ繧剃ｿ晏ｭ俶凾縺ｮ繝・ヵ繧ｩ繝ｫ繝医・諡｡蠑ｵ蟄撰ｼ・save_default_extension = 繝輔ぃ繧､繝ｫ ・・菫晏ｭ假ｼ・export_image_default_extension = 繝輔ぃ繧､繝ｫ ・・繧ｨ繧ｯ繧ｹ繝昴・繝・・・譫壹・逕ｻ蜒擾ｼ会ｼ・export_animation_default_extension = 繝輔ぃ繧､繝ｫ ・・繧ｨ繧ｯ繧ｹ繝昴・繝・・医い繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ・会ｼ・export_sprite_sheet_default_extension = 繝輔ぃ繧､繝ｫ ・・繧ｹ繝励Λ繧､繝医す繝ｼ繝医・繧ｨ繧ｯ繧ｹ繝昴・繝茨ｼ・recent_files = 譛霑代・繧｢繧､繝・Β謨ｰ・・recent_files_tooltip = 譛霑鷹幕縺・◆繝輔ぃ繧､繝ｫ縺ｨ繝輔か繝ｫ繝縺ｮ謨ｰ
+clear_recent_files = 繧ｯ繝ｪ繧｢
+clear_recent_files_tooltip = 譛譁ｰ縺ｮ繝輔ぃ繧､繝ｫ縺ｨ繝輔か繝ｫ繝縺ｮ繝ｪ繧ｹ繝医ｒ繧ｯ繝ｪ繧｢縺励∪縺・locate_file = 險ｭ螳壹ヵ繧｡繧､繝ｫ縺ｮ蝣ｴ謇
+locate_crash_folder = 繧ｯ繝ｩ繝・す繝･繝輔か繝ｫ繝縺ｮ蝣ｴ謇
+tablet_api_windows_pointer = Windows 8/10繝昴う繝ｳ繧ｿ繝ｼAPI・・indows Ink・・tablet_api_wintab_system = Wintab
+tablet_api_wintab_direct = Wintab・育峩謗･繝代こ繝・ヨ蜃ｦ逅・ｼ・wheel_zoom = 繝槭え繧ｹ繝帙う繝ｼ繝ｫ縺ｧ繧ｺ繝ｼ繝
+slide_zoom = 2譛ｬ縺ｮ謖・ｒ荳贋ｸ九↓繧ｹ繝ｩ繧､繝峨＆縺帙ｋ繧ｺ繝ｼ繝
+zoom_from_center_with_wheel = 繝槭え繧ｹ繝帙う繝ｼ繝ｫ縺ｧ荳ｭ蠢・°繧峨ぜ繝ｼ繝
+zoom_from_center_with_keys = 繧ｭ繝ｼ縺ｧ荳ｭ蠢・°繧峨ぜ繝ｼ繝
+show_scrollbars = 繧ｹ繝励Λ繧､繝医お繝・ぅ繧ｿ縺ｫ繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ繝舌・繧定｡ｨ遉ｺ縺吶ｋ
+show_scrollbars_tooltip = 縺吶∋縺ｦ縺ｮ繧ｹ繝励Λ繧､繝医お繝・ぅ繧ｿ蜀・↓繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ繝舌・繧定｡ｨ遉ｺ縺励∪縺・auto_scroll = 謠冗判譎ゅ↓閾ｪ蜍輔せ繧ｯ繝ｭ繝ｼ繝ｫ
+auto_fit = 繧ｹ繝励Λ繧､繝医ｒ髢九＞縺溘→縺阪↓逕ｻ髱｢縺ｫ閾ｪ蜍輔ヵ繧｣繝・ヨ
+straight_line_preview = 繝壹Φ繝・・繝ｫ縺ｮ逶ｴ邱壹ｒ繝励Ξ繝薙Η繝ｼ
+straight_line_preview_tooltip = 縺薙・繧ｪ繝励す繝ｧ繝ｳ繧偵が繝ｳ縺ｫ縺吶ｋ縺ｨ縲√・繝ｳ繝・・繝ｫ縺ｧ逶ｴ邱壹ｒ謠冗判縺ｧ縺阪∪縺吶・n繝壹Φ繝・・繝ｫ繧剃ｽｿ逕ｨ縺励※縺・ｋ髫帙ヾhift繧ｭ繝ｼ繧呈款縺吶→縲―n蜑榊屓謠冗判縺励◆轤ｹ縺九ｉ縺ｨ繝槭え繧ｹ繧ｫ繝ｼ繧ｽ繝ｫ繧堤ｵ舌・逶ｴ邱壹ｒ陦ｨ遉ｺ縺励∪縺吶・nShift繧ｭ繝ｼ繧呈款縺励◆縺ｾ縺ｾ蟾ｦ繧ｯ繝ｪ繝・け縺吶ｋ縺ｨ縲∫峩邱壹′繧ｹ繝励Λ繧､繝医↓謠冗判縺輔ｌ縺ｾ縺・discard_brush = 繧ｹ繝昴う繝医ｒ菴ｿ縺・ｺｦ縺ｫ繧ｫ繧ｹ繧ｿ繝繝悶Λ繧ｷ繧堤ｴ譽・☆繧・right_click = 蜿ｳ繧ｯ繝ｪ繝・け縺ｮ謫堺ｽ懶ｼ・right_click_paint_bgcolor = 閭梧勹濶ｲ縺ｧ蝪励ｋ
+right_click_pick_fgcolor = 謠冗判濶ｲ縺ｮ繧ｹ繝昴う繝・right_click_erase = 豸医☆
+right_click_scroll = 繧ｹ繧ｯ繝ｭ繝ｼ繝ｫ
+right_click_rectangular_marquee = 遏ｩ蠖｢驕ｸ謚・right_click_lasso = 謚輔￡邵・right_click_select_layer_and_move = 繝ｬ繧､繝､繝ｼ繧帝∈謚槭＠遘ｻ蜍・editor_selection = 驕ｸ謚・auto_opaque = 荳埼乗・/騾乗・繝｢繝ｼ繝峨ｒ閾ｪ蜍慕噪縺ｫ隱ｿ謨ｴ縺吶ｋ
+auto_opaque_tooltip = 驕ｸ謚樒ｯ・峇繧堤ｧｻ蜍輔☆繧九→縺構n繧｢繧ｯ繝・ぅ繝悶↑繝ｬ繧､繝､繝ｼ・郁レ譎ｯ/騾乗・・峨↓蠢懊§縺ｦ縲―n驕ｸ謚槭Δ繝ｼ繝峨・縺昴ｌ縺槭ｌ荳埼乗・/騾乗・縺瑚・蜍慕噪縺ｫ\n隱ｿ謨ｴ縺輔ｌ縺ｾ縺・keep_selection_after_clear = 邱ｨ髮・ｼ槫炎髯､ 繧ｳ繝槭Φ繝峨・蠕後↓驕ｸ謚槭＠縺溘∪縺ｾ縺ｫ縺吶ｋ
+keep_selection_after_clear_tooltip = 驕ｸ謚樒ｯ・峇繧堤ｶｭ謖√＠縺溘＞蝣ｴ蜷・n縺薙ｌ繧偵メ繧ｧ繝・け縺励※縺上□縺輔＞
+auto_show_selection_edges = 驕ｸ謚樒ｯ・峇繧貞､画峩縺励◆蠕後・∈謚樒ｯ・峇縺ｮ繧ｨ繝・ず繧定・蜍慕噪縺ｫ陦ｨ遉ｺ縺吶ｋ
+auto_show_selection_edges_tooltip = 繝√ぉ繝・け譎ゅ・∈謚槭ｒ螟画峩縺吶ｋ縺溘・縺ｫ縲後ン繝･繝ｼ > 陦ｨ遉ｺ > 驕ｸ謚槭お繝・ず縲阪が繝励す繝ｧ繝ｳ縺梧怏蜉ｹ縺ｫ縺ｪ繧翫∪縺兔n\n繝弱う繧ｺ縺悟・縺｣縺溘ｊ繝代ヵ繧ｩ繝ｼ繝槭Φ繧ｹ荳翫・蝠城｡後ｒ蝗樣∩縺励◆縺・↑縺ｩ\n縲後ン繝･繝ｼ > 陦ｨ遉ｺ > 驕ｸ謚槭お繝・ず縲阪が繝励す繝ｧ繝ｳ縺圭n辟｡蜉ｹ縺ｮ髫帙↓驕ｸ謚槭＠縺溘お繝・ず繧帝撼陦ｨ遉ｺ縺ｫ縺励※縺翫″縺溘＞蝣ｴ蜷医・\n繝√ぉ繝・け繧貞､悶＠縺ｦ荳九＆縺・move_edges = 驕ｸ謚樒ｯ・峇繧堤ｧｻ蜍輔〒縺阪ｋ繧医≧縺ｫ縺吶ｋ
+move_edges_tooltip = 驕ｸ謚樒ｯ・峇繧堤ｧｻ蜍輔☆繧矩圀縲―n驕ｸ謚樒ｯ・峇縺ｮ譫縺ｮ縺ｿ遘ｻ蜍輔＠縺溘＞蝣ｴ蜷医・\n縺薙・繧ｪ繝励す繝ｧ繝ｳ繧帝∈謚槭＠縺ｦ縺上□縺輔＞
+modifiers_disable_handles = 菫ｮ鬟ｾ繧ｭ繝ｼ縺梧款縺輔ｌ縺溘→縺阪↓驕ｸ謚樒ｯ・峇縺ｮ繝上Φ繝峨Ν繧堤┌蜉ｹ縺ｫ縺吶ｋ
+modifiers_disable_handles_tooltip = Shift / Ctrl / Alt繧ｭ繝ｼ繧呈款縺励◆髫帙―n驕ｸ謚樒ｯ・峇縺ｮ繝上Φ繝峨Ν繧剃ｸ譎ら噪縺ｫ\n辟｡蜉ｹ縺ｫ縺励∪縺・move_on_add_mode = 霑ｽ蜉繝｢繝ｼ繝峨〒驕ｸ謚槭ｒ遘ｻ蜍・move_on_add_mode_tooltip = 縲碁∈謚樒ｯ・峇縺ｫ霑ｽ蜉縲阪Δ繝ｼ繝峨〒驕ｸ謚樒ｯ・峇繧堤ｧｻ蜍輔☆繧矩圀 \n驕ｸ謚樒ｯ・峇縺ｮ譫縺ｮ縺ｿ繧堤ｧｻ蜍輔＠縺ｾ縺・select_tile_with_double_click = 繝繝悶Ν繧ｯ繝ｪ繝・け縺ｧ繧ｰ繝ｪ繝・ラ繧ｿ繧､繝ｫ繧帝∈謚槭☆繧・force_rotsprite = 逶ｴ隗・逶ｴ邱壹・隗貞ｺｦ縺ｧ繧３otSprite繧貞ｼｷ蛻ｶ縺吶ｋ
+multicel_when_layers_or_frames = 繧ｿ繧､繝繝ｩ繧､繝ｳ荳翫・驕ｸ謚槭＠縺溘Ξ繧､繝､繝ｼ縺ｾ縺溘・繝輔Ξ繝ｼ繝縺ｮ繧ｻ繝ｫ繧貞､画鋤縺吶ｋ
+multicel_when_layers_or_frames_tooltip = 驕ｸ謚樒ｯ・峇繧貞､牙ｽ｢縺吶ｋ縺ｨ縲√ち繧､繝繝ｩ繧､繝ｳ荳翫・驕ｸ謚槭＆繧後◆縺吶∋縺ｦ縺ｮ繧ｻ繝ｫ縺悟､牙ｽ｢縺輔ｌ縺ｾ縺吶・n隍・焚縺ｮ繝ｬ繧､繝､繝ｼ繧・ヵ繝ｬ繝ｼ繝繧帝∈謚槭＠縺ｦ縺・ｋ蝣ｴ蜷医√％縺ｮ繧ｪ繝励す繝ｧ繝ｳ繧剃ｽｿ逕ｨ縺吶ｋ縺ｨ縲―n驕ｸ謚槭＠縺溘Ξ繧､繝､繝ｼ/繝輔Ξ繝ｼ繝縺ｮ縺吶∋縺ｦ縺ｮ繧ｻ繝ｫ縺ｫ螟牙ｽ｢縺碁←逕ｨ縺輔ｌ縺ｾ縺吶・n縺薙・繧ｪ繝励す繝ｧ繝ｳ縺後↑縺・ｴ蜷医√ち繧､繝繝ｩ繧､繝ｳ荳翫〒隍・焚縺ｮ繧ｻ繝ｫ繧呈・遉ｺ逧・↓驕ｸ謚槭＠縺溷ｴ蜷医・縺ｿ縲―n隍・焚縺ｮ繧ｻ繝ｫ縺悟､牙ｽ｢縺輔ｌ縺ｾ縺・snap_to_grid_selection = 繧ｪ繝励す繝ｧ繝ｳ譛牙柑譎ゅ↓繧ｰ繝ｪ繝・ラ縺ｫ繧ｹ繝翫ャ繝・autotimeline = 繧ｿ繧､繝繝ｩ繧､繝ｳ繧定・蜍慕噪縺ｫ陦ｨ遉ｺ縺吶ｋ
+autotimeline_tooltip = 譁ｰ縺励＞繝輔Ξ繝ｼ繝縺ｾ縺溘・繝ｬ繧､繝､繝ｼ縺瑚ｿｽ蜉縺輔ｌ縺溘→縺構n繧ｿ繧､繝繝ｩ繧､繝ｳ繧定・蜍慕噪縺ｫ陦ｨ遉ｺ縺励∪縺・rewind_on_stop = 蛛懈ｭ｢譎ゅ↓蟾ｻ縺肴綾縺・rewind_on_stop_tooltip = 縲悟●豁｢縲阪・繧ｿ繝ｳ繧呈款縺励◆譎ゅ・幕蟋九＠縺溘ヵ繝ｬ繝ｼ繝縺ｾ縺ｧ\n繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ繧貞ｷｻ縺肴綾縺励∪縺・timeline_selection = 繧ｿ繧､繝繝ｩ繧､繝ｳ遽・峇驕ｸ謚・keep_timeline_selection = 驕ｸ謚槭ｒ菫晄戟縺吶ｋ
+keep_timeline_selection_tooltip = 繧ｭ繝｣繝ｳ繝舌せ繧堤ｷｨ髮・☆繧九→縺阪・\n驕ｸ謚槭＠縺溽ｯ・峇縺ｮ\n繝ｬ繧､繝､繝ｼ/繝輔Ξ繝ｼ繝/繧ｻ繝ｫ繧剃ｿ晄戟縺励∪縺・select_on_click = 繧ｯ繝ｪ繝・け縺ｧ驕ｸ謚・select_on_click_tooltip = 繝槭え繧ｹ繧ｯ繝ｪ繝・け譎ゅ↓\n繝ｬ繧､繝､繝ｼ/繝輔Ξ繝ｼ繝/繧ｻ繝ｫ縺ｮ遽・峇繧帝∈謚槭〒縺阪ｋ繧医≧縺ｫ縺吶ｋ
+select_on_click_with_key = Shift+繧ｯ繝ｪ繝・け縺ｧ驕ｸ謚・select_on_click_with_key_tooltip = Shift繧ｭ繝ｼ+繧ｯ繝ｪ繝・け縺ｧ繝ｬ繧､繝､繝ｼ縲√ヵ繝ｬ繝ｼ繝縲√そ繝ｫ縺ｮ\n遽・峇繧帝∈謚槭〒縺阪ｋ繧医≧縺ｫ縺吶ｋ
+select_on_drag = 繝峨Λ繝・げ縺ｧ驕ｸ謚・select_on_drag_tooltip = 繧ｯ繝ｪ繝・け蠕後き繝ｼ繧ｽ繝ｫ繧貞挨縺ｪ蝣ｴ謇縺ｫ遘ｻ蜍輔＆縺帙ｋ縺薙→縺ｧ\n繝ｬ繧､繝､繝ｼ/繝輔Ξ繝ｼ繝/繧ｻ繝ｫ縺ｮ遽・峇繧帝∈謚槭〒縺阪ｋ繧医≧縺ｫ\n縺吶ｋ
+drag_and_drop_from_edges = 驕ｸ謚樒ｯ・峇縺ｮ繧ｨ繝・ず繧偵ラ繝ｩ繝・げ&&繝峨Ο繝・・
+default_first_frame = 繝・ヵ繧ｩ繝ｫ繝医・髢句ｧ九ヵ繝ｬ繝ｼ繝・・ui_mouse_cursor = 繝槭え繧ｹ繧ｫ繝ｼ繧ｽ繝ｫ
+native_cursor = OS縺ｮ繝槭え繧ｹ繧ｫ繝ｼ繧ｽ繝ｫ繧剃ｽｿ逕ｨ縺吶ｋ
+cursor_scale_label = 繝槭え繧ｹ繧ｫ繝ｼ繧ｽ繝ｫ縺ｮ繧ｹ繧ｱ繝ｼ繝ｫ・・painting_cursors = 繝壹う繝ｳ繝医き繝ｼ繧ｽ繝ｫ
+crosshair_type = 蜊∝ｭ励き繝ｼ繧ｽ繝ｫ縺ｮ繧ｿ繧､繝暦ｼ・simple_crosshair = 繧ｷ繝ｳ繝励Ν
+crosshair_on_sprite = 繝・・繝槭・繧ｹ繝励Λ繧､繝医ｒ菴ｿ逕ｨ
+brush_preview = 繝悶Λ繧ｷ縺ｮ繝励Ξ繝薙Η繝ｼ・・brush_preview_none = 縺ｪ縺・brush_preview_edges = 霈ｪ驛ｭ邱壹・縺ｿ
+brush_preview_full = 繝ｪ繧｢繝ｫ繧ｿ繧､繝縺ｧ蜿肴丐
+brush_preview_fullall = 蜈ｨ繝・・繝ｫ縺ｧ繝励Ξ繝薙Η繝ｼ繧貞渚譏
+brush_preview_fullnedges = 蜈ｨ繝・・繝ｫ縺ｧ霈ｪ驛ｭ邱壹→繝励Ξ繝薙Η繝ｼ繧貞渚譏
+cursor_color_type = 蜊∝ｭ励き繝ｼ繧ｽ繝ｫ・・ヶ繝ｩ繧ｷ縺ｮ霈ｪ驛ｭ邱壹・濶ｲ・・cursor_neg_bw = 蜿崎ｻ｢繝｢繝弱け繝ｭ
+cursor_specific_color = 謖・ｮ壹＠縺溯牡
+snap_cursor_to_grid = 繧ｪ繝励す繝ｧ繝ｳ譛牙柑譎ゅ↓繧ｰ繝ｪ繝・ラ縺ｫ繧ｹ繝翫ャ繝・bg_checkered = 閭梧勹縺ｮ繝√ぉ繝・け讓｡讒倥・險ｭ螳・bg_size = 繧ｵ繧､繧ｺ・・bg_custom_size = 繧ｫ繧ｹ繧ｿ繝
+bg_apply_zoom = 繧ｺ繝ｼ繝譎ゅ↓騾｣蜍・bg_colors = 濶ｲ・・bg_for_new_docs = 譁ｰ隕上ラ繧ｭ繝･繝｡繝ｳ繝医・閭梧勹
+bg_for_active_doc = 迴ｾ蝨ｨ髢九＞縺ｦ縺・ｋ繝峨く繝･繝｡繝ｳ繝医・閭梧勹
+grid_for_active_doc = 迴ｾ蝨ｨ髢九＞縺ｦ縺・ｋ繝峨く繝･繝｡繝ｳ繝医・繧ｰ繝ｪ繝・ラ
+grid_for_new_docs = 譁ｰ隕上ラ繧ｭ繝･繝｡繝ｳ繝医・繧ｰ繝ｪ繝・ラ
+grid_visible = 繧ｰ繝ｪ繝・ラ縺ｮ陦ｨ遉ｺ
+grid_x = X・・grid_y = Y・・grid_width = 蟷・ｼ・grid_height = 鬮倥＆・・grid_color = 濶ｲ・・grid_opacity = 荳埼乗・蠎ｦ・・grid_auto = 閾ｪ蜍・grid_pixel_grid_visible = 繝斐け繧ｻ繝ｫ繧ｰ繝ｪ繝・ラ縺ｮ陦ｨ遉ｺ
+grid_pixel_grid_color = 濶ｲ・・grid_pixel_grid_opacity = 荳埼乗・蠎ｦ・・guides = 繧ｬ繧､繝・slices = 繧ｹ繝ｩ繧､繧ｹ
+layer_edges_color = 繝ｬ繧､繝､繝ｼ縺ｮ蠅・阜邱壹・濶ｲ・・auto_guides_color = 繧ｪ繝ｼ繝医ぎ繧､繝峨・濶ｲ・・default_slice_color = 繝・ヵ繧ｩ繝ｫ繝茨ｼ・undo = 蜈・↓謌ｻ縺・undo_show_tooltip = 蜈・↓謌ｻ縺吶ヤ繝ｼ繝ｫ繝√ャ繝励ｒ陦ｨ遉ｺ
+undo_size_limit = 蜈・↓謌ｻ縺吝宛髯撰ｼ・undo_size_limit_tooltip = 蜈・↓謌ｻ縺咎圀縺ｮ縲∽ｽｿ逕ｨ繝｡繝｢繝ｪ縺ｮ\n荳企剞繧定ｨｭ螳壹〒縺阪∪縺吶・n繝｡繧ｬ繝舌う繝亥腰菴阪〒謖・ｮ壹＠縺ｾ縺・undo_mb = MB
+undo_goto_modified = 螟画峩縺輔ｌ縺溘ヵ繝ｬ繝ｼ繝/繝ｬ繧､繝､繝ｼ縺ｫ遘ｻ蜍・undo_goto_modified_tooltip = 縺薙・繧ｪ繝励す繝ｧ繝ｳ縺梧怏蜉ｹ縺ｫ縺励◆蝣ｴ蜷医―n迴ｾ蝨ｨ縺ｮ繝輔Ξ繝ｼ繝縺ｨ繝ｬ繧､繝､繝ｼ繧・蜈・↓謌ｻ縺・繧・ｊ逶ｴ縺・髫帙↓\n蜈・↓謌ｻ縺・繧・ｊ逶ｴ縺・繧偵＠縺溘Ξ繧､繝､繝ｼ繧偵ヵ繧ｩ繝ｼ繧ｫ繧ｹ縺励∪縺・undo_allow_nonlinear_history = 騾｣邯壹〒縺ｪ縺・ｱ･豁ｴ繧定ｨｱ蜿ｯ縺吶ｋ
+open_sequence_alert = 荳騾｣縺ｮ騾｣逡ｪ繝輔ぃ繧､繝ｫ繧偵い繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｨ縺励※髢九￥
+open_sequence_alert_ask = 遒ｺ隱・open_sequence_alert_no = 縺・＞縺・open_sequence_alert_yes = 縺ｯ縺・file_format_doesnt_support_alert = 繧ｵ繝昴・繝医＆繧後※縺・↑縺・ｩ溯・繧呈戟縺､繝輔ぃ繧､繝ｫ繧剃ｿ晏ｭ倥☆繧九→縺阪∬ｭｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+export_animation_in_sequence_alert = 繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ繧剃ｸ騾｣縺ｮ髱呎ｭ｢逕ｻ蜒上→縺励※菫晏ｭ倥☆繧九→縺阪∬ｭｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+overwrite_files_on_export_alert = 繝輔ぃ繧､繝ｫ>繧ｨ繧ｯ繧ｹ繝昴・繝医〒繝輔ぃ繧､繝ｫ繧剃ｸ頑嶌縺阪☆繧矩圀縲∬ｭｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+overwrite_files_on_export_sprite_sheet_alert = 繧ｨ繧ｯ繧ｹ繝昴・繝医☆繧九せ繝励Λ繧､繝医す繝ｼ繝医・繝輔ぃ繧､繝ｫ縺御ｸ頑嶌縺阪＆繧後ｋ髫帙∬ｭｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+delete_tilemap_delete_unused_tileset_alert = 譛ｪ菴ｿ逕ｨ繧ｿ繧､繝ｫ繧ｻ繝・ヨ繧貞炎髯､縺吶ｋ髫帙↓隴ｦ蜻翫ｒ陦ｨ遉ｺ
+image_format_alerts = 菫晏ｭ倥☆繧九→縺阪↓繧ｪ繝励す繝ｧ繝ｳ繧定｡ｨ遉ｺ縺吶ｋ繝輔ぃ繧､繝ｫ・・advanced_mode_alert = 繧｢繝峨ヰ繝ｳ繧ｹ繝｢繝ｼ繝峨↓蜈･繧九→隴ｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+invalid_fg_bg_color_alert = 繝代Ξ繝・ヨ縺ｮ遽・峇螟悶・繧､繝ｳ繝・ャ繧ｯ繧ｹ縺ｧ謠冗判縺吶ｋ縺ｨ縺阪↓隴ｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+run_script_alert = 繧ｹ繧ｯ繝ｪ繝励ヨ繧貞ｮ溯｡後＠繧医≧縺ｨ縺励◆縺ｨ縺阪↓隴ｦ蜻翫ｒ陦ｨ遉ｺ縺吶ｋ
+reset_alerts = 縺吶∋縺ｦ縺ｮ隴ｦ蜻翫ム繧､繧｢繝ｭ繧ｰ繧偵Μ繧ｻ繝・ヨ縺吶ｋ
+color_management = 繧ｫ繝ｩ繝ｼ繝槭ロ繧ｸ繝｡繝ｳ繝・window_cs = Window繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ
+use_monitor_cs = 迴ｾ蝨ｨ縺ｮ繝｢繝九ち繝ｼ縺ｮ繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ繧剃ｽｿ逕ｨ
+use_srgb_cs = sRGB繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ繧剃ｽｿ逕ｨ
+use_specific_cs = {0}繧剃ｽｿ逕ｨ
+working_rgb_cs = 菴懈･ｭRGB遨ｺ髢難ｼ・files_with_cs = 繝輔ぃ繧､繝ｫ荳翫・繝励Ο繝輔ぃ繧､繝ｫ・・missing_cs = 繝励Ο繝輔ぃ繧､繝ｫ縺梧ｬ關ｽ縺励※縺・ｋ蝣ｴ蜷茨ｼ・disable_cs = 繧ｫ繝ｩ繝ｼ繧呈桶繧上↑縺・use_embedded_cs = 蝓九ａ霎ｼ縺ｿ繝励Ο繝輔ぃ繧､繝ｫ繧剃ｽｿ逕ｨ
+convert_cs = 菴懈･ｭ逕ｨRGB遨ｺ髢薙↓螟画鋤
+assign_cs = 菴懈･ｭ逕ｨRGB繧ｹ繝壹・繧ｹ繧貞牡繧雁ｽ薙※
+ask_cs = 遒ｺ隱・alpha_and_opacity = 繧｢繝ｫ繝輔ぃ蛟､ && 荳埼乗・蠎ｦ
+alpha_range = 繧｢繝ｫ繝輔ぃ蛟､遽・峇・・opacity_range = 荳埼乗・蠎ｦ遽・峇・・8bit_value = 0-255
+percentage = 0%-100%
+font = 繝輔か繝ｳ繝・
+available_themes = 蛻ｩ逕ｨ蜿ｯ閭ｽ縺ｪ繝・・繝・extension_themes = 諡｡蠑ｵ繝・・繝・select_theme = 驕ｸ謚・&S)
+download_themes = 繝・・繝槭・繝繧ｦ繝ｳ繝ｭ繝ｼ繝・open_theme_folder = 繝輔か繝ｫ繝繧帝幕縺・&F)
+language_extensions = 陦ｨ遉ｺ險隱・theme_extensions = 繝・・繝・keys_extensions = 繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ
+script_extensions = 繧ｹ繧ｯ繝ｪ繝励ヨ
+palette_extensions = 繝代Ξ繝・ヨ
+dithering_matrix_extensions = 繝・ぅ繧ｶ繝ｪ繝ｳ繧ｰ繝ｻ繝槭ヨ繝ｪ繝・け繧ｹ
+multiple_extensions = 隍・焚繧ｫ繝・ざ繝ｪ繝ｼ
+add_extension = 諡｡蠑ｵ讖溯・繧定ｿｽ蜉(&A)
+add_extension_title = 諡｡蠑ｵ讖溯・繧定ｿｽ蜉
+enable_extension = 譛牙柑蛹・&E)
+disable_extension = 辟｡蜉ｹ蛹・&D)
+uninstall_extension = 繧｢繝ｳ繧､繝ｳ繧ｹ繝医・繝ｫ(&U)
+open_extension_folder = 繝輔か繝ｫ繝繧帝幕縺・&F)
+user_interface = 繝ｦ繝ｼ繧ｶ繝ｼ繧､繝ｳ繧ｿ繝ｼ繝輔ぉ繝ｼ繧ｹ
+color_quantization = 濶ｲ縺ｮ驥丞ｭ仙喧
+performance = 繝代ヵ繧ｩ繝ｼ繝槭Φ繧ｹ
+multiple_windows = 隍・焚繧ｦ繧｣繝ｳ繝峨え縺ｮUI
+new_blend = 譁ｰ隕上Ξ繧､繝､繝ｼ縺ｮ繝悶Ξ繝ｳ繝画婿豕・new_render_engine = 繧ｹ繝励Λ繧､繝医お繝・ぅ繧ｿ繝ｼ縺ｮ譁ｰ縺励＞繝ｬ繝ｳ繝繝ｪ繝ｳ繧ｰ繧ｨ繝ｳ繧ｸ繝ｳ
+native_clipboard = OS縺ｮ繧ｯ繝ｪ繝・・繝懊・繝峨ｒ菴ｿ逕ｨ縺吶ｋ
+native_file_dialog = OS縺ｮ繝輔ぃ繧､繝ｫ繝繧､繧｢繝ｭ繧ｰ繧剃ｽｿ逕ｨ縺吶ｋ
+shaders_for_color_selectors = 繧ｫ繝ｩ繝ｼ繧ｻ繝ｬ繧ｯ繧ｿ繝ｼ縺ｫ繧ｷ繧ｧ繝ｼ繝繝ｼ繧剃ｽｿ逕ｨ縺吶ｋ
+hue_with_sat_value = 濶ｲ逶ｸ/蠖ｩ蠎ｦ/譏主ｺｦ繧ｻ繝ｬ繧ｯ繧ｿ繝ｼ荳翫・濶ｲ逶ｸ繧ｹ繝ｩ繧､繝繝ｼ縺ｫ蠖ｩ蠎ｦ/譏主ｺｦ繧帝←逕ｨ縺吶ｋ
+cache_compressed_tilesets = 蝨ｧ邵ｮ縺輔ｌ縺溘ち繧､繝ｫ繧ｻ繝・ヨ繧偵く繝｣繝・す繝･縺励※菫晏ｭ倥ｒ鬮倬溷喧・医Γ繝｢繝ｪ豸郁ｲｻ驥上′蠅怜刈縺励∪縺呻ｼ・windows_pointer = Windows 繝昴う繝ｳ繧ｿ繝ｼ繧ｪ繝励す繝ｧ繝ｳ
+one_finger_as_mouse_movement = 1譛ｬ謖・ｒ繝槭え繧ｹ縺ｮ蜍輔″縺ｨ縺励※隗｣驥医☆繧・one_finger_as_mouse_movement_tooltip = 1譛ｬ謖・ｒ繝槭え繧ｹ縺ｮ蜍輔″縺ｨ縺励※隗｣驥医＠縲―n2譛ｬ謖・ｒ繝代Φ繧・せ繧ｯ繝ｭ繝ｼ繝ｫ縺ｨ縺励※隗｣驥医＠縺ｾ縺吶よ立譚･縺ｮ蜍穂ｽ懊ｒ菴ｿ逕ｨ縺励◆縺・ｴ蜷医↓縺ｯ縲―n縺薙ｌ繧偵が繝輔↓縺吶ｋ縺ｨ縲・譛ｬ謖・〒繝代Φ繧・せ繧ｯ繝ｭ繝ｼ繝ｫ縺ｧ縺阪∪縺・set_cursor_fix = 繧ｹ繧ｿ繧､繝ｩ繧ｹ縺ｮ菴咲ｽｮ縺九ｉ繧ｫ繝ｼ繧ｽ繝ｫ縺ｮ菴咲ｽｮ繧定ｨｭ螳壹☆繧・set_cursor_fix_tooltip = 2 縺､縺ｮ繝昴う繝ｳ繧ｿ繝ｼ (繝槭え繧ｹ縺ｨ繝壹Φ縺ｪ縺ｩ) 縺御ｽｿ逕ｨ蜿ｯ閭ｽ縺ｪ蝣ｴ蜷医↓\n繝槭え繧ｹ縺ｮ菴咲ｽｮ繧偵・繝ｳ縺ｮ菴咲ｽｮ縺ｫ險ｭ螳壹＠縺ｾ縺吶・n繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繧ｭ繝｣繧ｹ繝医ｄ繝ｩ繧､繝・繧ｹ繝医Μ繝ｼ繝溘Φ繧ｰ譎ゅ↓縲√・繝ｳ縺ｮ菴咲ｽｮ縺九ｉ繧ｺ繝ｼ繝繧､繝ｳ/繧ｺ繝ｼ繝繧｢繧ｦ繝医＠縺溘ｊ\n豁｣縺励＞繧ｫ繝ｼ繧ｽ繝ｫ菴咲ｽｮ繧貞叙蠕励＠縺溘ｊ縺吶ｋ縺ｮ縺ｫ蠖ｹ遶九■縺ｾ縺吶・wintab_more_info = ・郁ｩｳ邏ｰ諠・ｱ・・flash_selected_layer = 驕ｸ謚槭＠縺溘→縺阪Ξ繧､繝､繝ｼ繧堤せ貊・＆縺帙ｋ
+non_active_layer_opacity = 髱槭い繧ｯ繝・ぅ繝悶Ξ繧､繝､縺ｮ荳埼乗・蠎ｦ・・cel_format_compressed = 蝨ｧ邵ｮ
+reset_title = 險ｭ螳壹ｒ繝ｪ繧ｻ繝・ヨ
+reset_default = 險ｭ螳壹え繧｣繝ｳ繝峨え縺ｧ險ｭ螳壹が繝励す繝ｧ繝ｳ繧偵Μ繧ｻ繝・ヨ縺励∪縺・reset_tools = 縺吶∋縺ｦ縺ｮ繝・・繝ｫ險ｭ螳壹ｒ繝ｪ繧ｻ繝・ヨ
+reset_installed = 繧､繝ｳ繧ｹ繝医・繝ｫ縺輔ｌ縺溘ユ繝ｼ繝槭∵僑蠑ｵ讖溯・縲√ヱ繝ｬ繝・ヨ繧貞炎髯､縺吶ｋ
+reset_recents = 譛霑鷹幕縺・◆繝輔ぃ繧､繝ｫ繝ｪ繧ｹ繝医ｒ繧ｯ繝ｪ繧｢縺吶ｋ・医ヴ繝ｳ逡吶ａ縺励◆繝輔ぃ繧､繝ｫ繧貞性繧・・reset_perfile = 繝輔ぃ繧､繝ｫ縺斐→縺ｮ險ｭ螳壹ｒ蜑企勁
+reset_perfile_tooltip = 髢九°繧後◆繝輔ぃ繧､繝ｫ蝗ｺ譛峨・繧ゅ・縺ｧ縺兔n繧ｰ繝ｪ繝・ラ繧ｪ繝励す繝ｧ繝ｳ縲∬レ譎ｯ濶ｲ縺ｪ縺ｩ縺悟性縺ｾ繧後∪縺吶・reset = 繝ｪ繧ｻ繝・ヨ(&R)
+ok = &OK
+apply = 驕ｩ逕ｨ(&A)
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ(&C)
+section_aseprite_format = Aseprite繝輔ぃ繧､繝ｫ蠖｢蠑・font_warning = 縺薙・險隱槭・繝輔か繝ｳ繝医ｒ繧ｫ繧ｹ繧ｿ繝槭う繧ｺ
+brush_preview_in_preview = 繝励Ξ繝薙Η繝ｼ蜀・〒繝悶Λ繧ｷ繧偵・繝ｬ繝薙Η繝ｼ
+customize_theme = 繝・・繝槭ｒ繧ｫ繧ｹ繧ｿ繝槭う繧ｺ
+mini_font = 繝溘ル繝輔か繝ｳ繝・
+preview = 繝励Ξ繝薙Η繝ｼ:
+font_preview = 繝輔か繝ｳ繝医・繝ｬ繝薙Η繝ｼ
+mini_font_preview = 繝溘ル繝輔か繝ｳ繝医・繝ｬ繝薙Η繝ｼ
+compose_groups = 繧ｰ繝ｫ繝ｼ繝励ｒ蛻･縲・↓讒区・(繧ｰ繝ｫ繝ｼ繝励↓繝ｬ繧､繝､繝ｼ繝｢繝ｼ繝峨′驕ｩ逕ｨ)
+reset_window = 繧ｦ繧｣繝ｳ繝峨え縺ｮ繧ｵ繧､繧ｺ縺ｨ驟咲ｽｮ繧偵Μ繧ｻ繝・ヨ
+reset_brushes = 繝ｦ繝ｼ繧ｶ繝ｼ繝悶Λ繧ｷ繧偵Μ繧ｻ繝・ヨ
+reset_toggle = 驕ｸ謚樒憾諷九ｒ蛻・ｊ譖ｿ縺・cel_format_raw_warning = 縺薙・譁ｹ蠑上・.aseprite繝輔ぃ繧､繝ｫ縺ｮ繧ｵ繧､繧ｺ繧貞､ｧ蟷・↓蠅怜刈縺輔○縺ｾ縺・cel_format_keep = 繝輔ぃ繧､繝ｫ蜀・・蜈・・蠖｢蠑・cel_content_format = 繧ｻ繝ｫ蜀・ｮｹ蠖｢蠑擾ｼ・cel_format_raw = 逕溽判蜒・section_windows_specific = Windows 蝗ｺ譛・section_file_explorer = 繝輔ぃ繧､繝ｫ繧ｨ繧ｯ繧ｹ繝励Ο繝ｼ繝ｩ繝ｼ
+16_hours = 16 譎る俣
+24_hours = 24 譎る俣
+48_hours = 48 譎る俣
+inf_hours = 辟｡譛滄剞
+use_slice_keys = 繧ｹ繝ｩ繧､繧ｹ繧ｭ繝ｼ繝輔Ξ繝ｼ繝繧貞━蜈・(譌ｧ譁ｹ蠑・
+use_selection_tool_loop = 譁ｰ縺励＞驕ｸ謚槭ヤ繝ｼ繝ｫ螳溯｣・file_explorer_thumbnails = 繝輔ぃ繧､繝ｫ繧ｨ繧ｯ繧ｹ繝励Ο繝ｼ繝ｩ繝ｼ縺ｮ繧ｵ繝繝阪う繝ｫ
+thumbnailer_dll_not_found = {} 縺瑚ｦ九▽縺九ｉ縺ｪ縺・◆繧√√し繝繝阪う繝ｫ繧呈怏蜉ｹ縺ｫ縺ｧ縺阪∪縺帙ｓ
+display_thumbnail = 繝輔ぃ繧､繝ｫ繧ｨ繧ｯ繧ｹ繝励Ο繝ｼ繝ｩ繝ｼ縺ｫ繧ｵ繝繝阪う繝ｫ繧定｡ｨ遉ｺ
+display_little_icon = 繧ｵ繝繝阪う繝ｫ縺ｨ荳邱偵↓蟆上＆縺ｪ Aseprite 繧｢繧､繧ｳ繝ｳ繧定｡ｨ遉ｺ
+restart_explorer_proc = Windows 縺ｾ縺溘・ explorer.exe 繧ｿ繧ｹ繧ｯ繧貞・襍ｷ蜍輔☆繧九→譛牙柑縺ｫ縺ｪ繧翫∪縺・restart_explorer_proc_tooltip = 縺吶∋縺ｦ縺ｮ繧ｵ繝繝阪う繝ｫ繧貞・逕滓・縺吶ｋ縺ｫ縺ｯ縲―n繝・ぅ繧ｹ繧ｯ繧ｯ繝ｪ繝ｼ繝ｳ繧｢繝・・繝ｦ繝ｼ繝・ぅ繝ｪ繝・ぅ繧貞ｮ溯｡後☆繧句ｿ・ｦ√′縺ゅｋ蝣ｴ蜷医′縺ゅｊ縺ｾ縺・file_associations = 繝輔ぃ繧､繝ｫ縺ｮ髢｢騾｣莉倥￠
+file_type = 繝輔ぃ繧､繝ｫ縺ｮ遞ｮ鬘橸ｼ・associate_file_type = Aseprite 縺ｫ髢｢騾｣莉倥￠繧・
+[outline]
+color = 繧｢繧ｦ繝医Λ繧､繝ｳ縺ｮ濶ｲ・・outside = 螟門・
+inside = 蜀・・
+circle = 蜀・ｽ｢
+horizontal = 豌ｴ蟷ｳ
+vertical = 蝙ら峩
+square = 遏ｩ蠖｢
+bg_color = 閭梧勹濶ｲ・・
+[palette_from_sprite]
+title = 繧ｹ繝励Λ繧､繝医・繝代Ξ繝・ヨ
+new_palette = 迚ｹ螳壹・濶ｲ謨ｰ・医∪縺溘・縺昴ｌ莉･荳具ｼ峨・譁ｰ縺励＞繝代Ξ繝・ヨ繧剃ｽ懈・・・replace_palette = 迴ｾ蝨ｨ縺ｮ繝代Ξ繝・ヨ繧堤ｽｮ縺肴鋤縺医ｋ
+replace_range = 迴ｾ蝨ｨ縺ｮ遽・峇繧堤ｽｮ縺肴鋤縺医ｋ
+alpha_channel = 繧｢繝ｫ繝輔ぃ蛟､繧貞性繧繝代Ξ繝・ヨ繧剃ｽ懈・
+
+[palette_popup]
+load = 隱ｭ縺ｿ霎ｼ繧(&L)
+open_folder = 繝輔か繝ｫ繝繧帝幕縺・&F)
+
+[palette_popup_menu]
+title = 繝代Ξ繝・ヨ
+edit_palette = 繝代Ξ繝・ヨ縺ｮ邱ｨ髮・&P)
+palette_size = 繝代Ξ繝・ヨ縺ｮ螟ｧ縺阪＆(&S)
+select_palette_colors = 驕ｸ謚・&e)
+small_size = 繧ｵ繧､繧ｺ・壼ｰ・&S)
+medium_size = 繧ｵ繧､繧ｺ・壻ｸｭ(&M)
+large_size = 繧ｵ繧､繧ｺ・壼､ｧ(&L)
+color_tint_shade_tone = 濶ｲ逶ｸ/蠖ｩ蠎ｦ/譏主ｺｦ繧ｻ繝ｬ繧ｯ繧ｿ繝ｼ
+color_spectrum = 繧ｫ繝ｩ繝ｼ繧ｹ繝壹け繝医Ν
+rgb_color_wheel = RGB繧ｫ繝ｩ繝ｼ繝帙う繝ｼ繝ｫ
+ryb_color_wheel = RYB繧ｫ繝ｩ繝ｼ繝帙う繝ｼ繝ｫ
+normal_map_color_wheel = 豕慕ｷ壹・繝・・繧ｫ繝ｩ繝ｼ繝帙う繝ｼ繝ｫ
+load_palette = 繝代Ξ繝・ヨ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ(&L)
+save_palette = 繝代Ξ繝・ヨ縺ｮ菫晏ｭ・&S)
+save_palette_as_preset = 繝代Ξ繝・ヨ繧偵・繝ｪ繧ｻ繝・ヨ縺ｨ縺励※菫晏ｭ・load_default_palette = 繝・ヵ繧ｩ繝ｫ繝医ヱ繝ｬ繝・ヨ繧定ｪｭ縺ｿ霎ｼ繧
+save_as_default_palette = 繝・ヵ繧ｩ繝ｫ繝医ヱ繝ｬ繝・ヨ縺ｨ縺励※菫晏ｭ・create_palette_from_current_sprite = 迴ｾ蝨ｨ縺ｮ繧ｹ繝励Λ繧､繝医°繧峨ヱ繝ｬ繝・ヨ繧剃ｽ懈・
+unused_colors = 譛ｪ菴ｿ逕ｨ濶ｲ
+unused_tiles = 譛ｪ菴ｿ逕ｨ繧ｿ繧､繝ｫ
+used_colors = 菴ｿ逕ｨ濶ｲ
+used_tiles = 菴ｿ逕ｨ繧ｿ繧､繝ｫ
+
+[palette_size]
+title = 繝代Ξ繝・ヨ繧ｵ繧､繧ｺ
+number_of_colors = 濶ｲ縺ｮ謨ｰ・・
+[paste_text]
+title = 繝・く繧ｹ繝医ｒ謖ｿ蜈･縺吶ｋ
+text = 繝・く繧ｹ繝茨ｼ・font_size = 繝輔か繝ｳ繝医し繧､繧ｺ・・font = 繝輔か繝ｳ繝茨ｼ・select_font = 繝輔か繝ｳ繝医・驕ｸ謚・color = 濶ｲ・・antialias = 繧｢繝ｳ繝√お繧､繝ｪ繧｢繧ｹ繝輔ぅ繝ｫ繧ｿ
+antialias_tooltip = 貊代ｉ縺九↑繝輔か繝ｳ繝・
+[preview]
+title = 繝励Ξ繝薙Η繝ｼ
+
+[recover_files]
+title = 繝ｪ繧ｫ繝舌Μ繝ｼ繝輔ぃ繧､繝ｫ
+recover_sprite = 繝ｪ繧ｫ繝舌Μ繝ｼ繧ｹ繝励Λ繧､繝・recover_n_sprites = {} 譫壹・繧ｹ繝励Λ繧､繝医ｒ菫ｮ蠕ｩ
+delete = 蜑企勁
+refresh = 繝ｪ繝輔Ξ繝・す繝･
+raw_images_as_frames = 繝輔Ξ繝ｼ繝縺ｮ逕溽判蜒・raw_images_as_layers = 繝ｬ繧､繝､繝ｼ縺ｮ逕溽判蜒・loading = 隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...
+crash_sessions = 繧ｯ繝ｩ繝・す繝･縺励◆繧ｻ繝・す繝ｧ繝ｳ
+old_sessions = 蜑榊屓縺ｮ繧ｻ繝・す繝ｧ繝ｳ
+incompatible = [莠呈鋤諤ｧ縺後↑縺・庄閭ｽ諤ｧ縺ゅｊ v{1}] {0}
+
+[replace_color]
+title = 濶ｲ縺ｮ蜈･繧梧崛縺・from = 鄂ｮ縺肴鋤縺亥燕・・to = 鄂ｮ縺肴鋤縺亥ｾ鯉ｼ・tolerance = 險ｱ螳ｹ蟾ｮ・・
+[remove_slice]
+x_removed = 繧ｹ繝ｩ繧､繧ｹ "{}" 繧貞炎髯､
+n_slices_removed = {} 譫壹・繧ｹ繝ｩ繧､繧ｹ繧貞炎髯､
+
+[remove_layer]
+x_removed = 繝ｬ繧､繝､繝ｼ {} 蜑企勁
+layers_removed = 隍・焚縺ｮ繝ｬ繧､繝､繝ｼ繧貞炎髯､
+
+[resource_listbox]
+loading = 隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ
+unpin = 縺薙・繧｢繧､繝・Β縺ｮ繝斐Φ繧定ｧ｣髯､縺吶ｋ
+pin = 縺薙・繧｢繧､繝・Β繧偵ヴ繝ｳ逡吶ａ縺吶ｋ
+
+[save_file]
+title = 繝輔ぃ繧､繝ｫ繧剃ｿ晏ｭ・save_as = 蛻･蜷阪〒菫晏ｭ・export = 繧ｨ繧ｯ繧ｹ繝昴・繝・saving = 繝輔ぃ繧､繝ｫ繧剃ｿ晏ｭ倅ｸｭ
+saved = 繝輔ぃ繧､繝ｫ <{}> 繧剃ｿ晏ｭ倥＠縺ｾ縺励◆縲・
+[save_palette]
+title = 繝代Ξ繝・ヨ繧剃ｿ晏ｭ・
+[save_selection]
+title = 驕ｸ謚樣Κ蛻・ｒ菫晏ｭ假ｼ・msk繝輔ぃ繧､繝ｫ・・
+[script_access]
+title = 繧ｻ繧ｭ繝･繝ｪ繝・ぅ
+script_label = 谺｡縺ｮ繧ｹ繧ｯ繝ｪ繝励ヨ・・file_label = 縺薙・繝輔ぃ繧､繝ｫ縺ｫ繧｢繧ｯ繧ｻ繧ｹ縺励◆縺・ｼ・command_label = 谺｡縺ｮ繧ｳ繝槭Φ繝峨ｒ螳溯｡後＠縺溘＞・・websocket_label = 縺薙・URL縺ｸ縺ｮWebSocket謗･邯壹ｒ髢九″縺溘＞:
+dont_show_for_this_access = 縺薙・繧ｹ繧ｯ繝ｪ繝励ヨ縺ｫ蟇ｾ縺励※縺薙・迚ｹ螳壹・繧｢繝ｩ繝ｼ繝医ｒ蜀榊ｺｦ陦ｨ遉ｺ縺励↑縺・dont_show_for_this_script = 縺薙・繧ｹ繧ｯ繝ｪ繝励ヨ縺ｫ螳悟・縺ｪ菫｡鬆ｼ繧剃ｸ弱∴繧・allow_execute_access = 螳溯｡後い繧ｯ繧ｻ繧ｹ繧定ｨｱ蜿ｯ(&A)
+allow_write_access = 譖ｸ縺崎ｾｼ縺ｿ繧｢繧ｯ繧ｻ繧ｹ繧定ｨｱ蜿ｯ(&A)
+allow_read_access = 隱ｭ縺ｿ蜿悶ｊ繧｢繧ｯ繧ｻ繧ｹ繧定ｨｱ蜿ｯ(&A)
+allow_open_conn_access = 謗･邯壹ｒ髢九￥縺薙→繧定ｨｱ蜿ｯ(&A)
+allow_load_lib_access = 螟夜Κ繝ｩ繧､繝悶Λ繝ｪ縺ｮ隱ｭ縺ｿ霎ｼ縺ｿ繧定ｨｱ蜿ｯ(&A)
+give_full_access = 繧ｹ繧ｯ繝ｪ繝励ヨ縺ｫ繝輔Ν繧｢繧ｯ繧ｻ繧ｹ繧定ｨｱ蜿ｯ(&A)
+stop_script = 繧ｹ繧ｯ繝ｪ繝励ヨ蛛懈ｭ｢(&S)
+clipboard_label = 繧ｷ繧ｹ繝・Β縺ｮ繧ｯ繝ｪ繝・・繝懊・繝峨↓繧｢繧ｯ繧ｻ繧ｹ縺励◆縺・file_write_label = 縺薙・繝輔ぃ繧､繝ｫ縺ｫ譖ｸ縺崎ｾｼ縺ｿ縺溘＞・・
+[select_shortcut]
+title = 繧ｭ繝ｼ繝懊・繝峨す繝ｧ繝ｼ繝医き繝・ヨ
+key = 繧ｭ繝ｼ・・clear = 蜈･蜉帙ｒ繧ｯ繝ｪ繧｢
+modifiers = 菫ｮ鬟ｾ繧ｭ繝ｼ・・ctrl = Ctrl
+cmd = Cmd
+alt = Alt
+shift = Shift
+space = Space
+win = Win
+assigned_to = 蜑ｲ繧雁ｽ薙※貂医∩謫堺ｽ懶ｼ・ok = OK
+cancel = 繧ｭ繝｣繝ｳ繧ｻ繝ｫ
+
+[select_file]
+text = 繝輔ぃ繧､繝ｫ繧帝∈謚・browse = ...
+choose = 繝輔ぃ繧､繝ｫ繧帝∈謚・..
+absolute_path = 邨ｶ蟇ｾ繝代せ
+relative_path = "{}" 縺ｸ縺ｮ逶ｸ蟇ｾ繝代せ
+
+[selection_mode]
+replace = 驕ｸ謚槭ｒ蜈･繧梧崛縺・add = 驕ｸ謚樒ｯ・峇繧定ｿｽ蜉
+subtract = 驕ｸ謚樒ｯ・峇縺九ｉ髯､蜴ｻ
+intersect = 驥阪↑縺｣縺滄Κ蛻・ｒ驕ｸ謚・
+[send_crash]
+title = 繧ｯ繝ｩ繝・す繝･繝ｬ繝昴・繝・send_file = 谺｡縺ｮ繝輔ぃ繧､繝ｫ繧帝∽ｿ｡縺励※縺上□縺輔＞・・to_email = 縺薙・繝｡繝ｼ繝ｫ縺ｫ縺ｯ・・explaining = 繝励Ο繧ｰ繝ｩ繝縺後け繝ｩ繝・す繝･縺励◆縺ｨ縺阪↓菴輔ｒ縺励※縺・◆縺ｮ縺九ｒ隱ｬ譏弱＠縺ｾ縺吶・using_dev_ver = 縺ゅ↑縺溘・髢狗匱迚医ｒ菴ｿ逕ｨ縺励※縺・∪縺吶・open_dmp_file = 繧ｳ繝ｳ繝代う繝ｫ繧偵ョ繝舌ャ繧ｰ縺吶ｋ縺溘ａ縲∵ｬ｡縺ｮ繝輔ぃ繧､繝ｫ繧帝幕縺阪∪縺呻ｼ・do_it_later = 蠕後〒
+delete_file = 繝輔ぃ繧､繝ｫ繧貞炎髯､縺励√☆縺ｧ縺ｫ騾∽ｿ｡貂医∩縺ｧ縺・
+[slice_popup_menu]
+properties = 繧ｹ繝ｩ繧､繧ｹ縺ｮ繝励Ο繝代ユ繧｣(&P)...
+delete = 繧ｹ繝ｩ繧､繧ｹ縺ｮ蜑企勁(&D)
+duplicate = 繧ｹ繝ｩ繧､繧ｹ繧定､・｣ｽ (&U)
+
+[slice_properties]
+title = 繧ｹ繝ｩ繧､繧ｹ縺ｮ繝励Ο繝代ユ繧｣
+name = 繧ｹ繝ｩ繧､繧ｹ蜷搾ｼ・user_data_tooltip = 繝ｦ繝ｼ繧ｶ繝ｼ繝・・繧ｿ
+bounds = 遽・峇・・center = 9繧ｹ繝ｩ繧､繧ｹ
+pivot = 謾ｯ轤ｹ
+x = X
+y = Y
+width = 蟷・height = 鬮倥＆
+
+[sprite_properties]
+title = 繧ｹ繝励Λ繧､繝医・繝励Ο繝代ユ繧｣
+filename = 繝輔ぃ繧､繝ｫ蜷搾ｼ・type = 繧ｿ繧､繝暦ｼ・size = 繧ｵ繧､繧ｺ・・frames = 繝輔Ξ繝ｼ繝・・advanced = 鬮伜ｺｦ縺ｪ險ｭ螳・transparent_color = 騾乗・濶ｲ・・transparent_color_tooltip = 繝代Ξ繝・ヨ繧ｨ繝ｳ繝医Μ縺ｨ縺励※菴ｿ逕ｨ\n縺昴ｌ縺槭ｌ縺ｮ騾乗・縺ｪ濶ｲ\n繝ｬ繧､繝､繝ｼ・医う繝ｳ繝・ャ繧ｯ繧ｹ莉倥″縺ｮ逕ｻ蜒上・縺ｿ・・pixel_ratio = 繝斐け繧ｻ繝ｫ縺ｮ繧｢繧ｹ繝壹け繝域ｯ費ｼ・square_pixels = 豁｣譁ｹ蠖｢・・・・・・double_wide = 繝繝悶Ν繝ｯ繧､繝会ｼ・・・・・double_high = 繝繝悶Ν繝上う・・・・・・color_profile = 繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ・・assign = 驕ｩ逕ｨ
+convert = 螟画鋤
+rgb = RGB
+grayscale = 繧ｰ繝ｬ繝ｼ繧ｹ繧ｱ繝ｼ繝ｫ
+indexed_color = 繧､繝ｳ繝・ャ繧ｯ繧ｹ縺ｫ霑ｽ蜉・・0} 濶ｲ・・indexed_image_only = ・医う繝ｳ繝・ャ繧ｯ繧ｹ縺､縺阪・逕ｻ蜒上・縺ｿ・・assign_color_profile = 蜑ｲ繧雁ｽ薙※
+convert_color_profile = 繧ｫ繝ｩ繝ｼ繝励Ο繝輔ぃ繧､繝ｫ縺ｮ螟画鋤
+change_sprite_props = 繧ｹ繝励Λ繧､繝医・繝ｭ繝代ユ繧｣縺ｮ螟画峩
+tilesets = 繧ｿ繧､繝ｫ繧ｻ繝・ヨ
+delete_tileset = 蜑企勁
+duplicate_tileset = 隍・｣ｽ
+use_uuid_for_layers_tooltip = 縺薙・繧ｪ繝励す繝ｧ繝ｳ繧呈怏蜉ｹ縺ｫ縺吶ｋ縺ｨ縲∝推繝ｬ繧､繝､繝ｼ縺ｫ\nUUID・域ｱ守畑荳諢剰ｭ伜挨蟄撰ｼ峨′閾ｪ蜍慕噪縺ｫ蜑ｲ繧雁ｽ薙※繧峨ｌ縲―n.aseprite繝輔ぃ繧､繝ｫ縺ｫ菫晏ｭ倥＆繧後∪縺・use_uuid_for_layers = 繝ｬ繧､繝､繝ｼ逕ｨ縺ｮUUID繧剃ｽ懈・縺吶ｋ
+
+[sprite_size]
+title = 繧ｹ繝励Λ繧､繝医・繧ｵ繧､繧ｺ
+pixels = 繝斐け繧ｻ繝ｫ縺ｧ謖・ｮ夲ｼ・width = 蟷・ｼ・width_px_tooltip = 繧ｹ繝励Λ繧､繝医・蟷・ｼ医ヴ繧ｯ繧ｻ繝ｫ蜊倅ｽ搾ｼ・width_perc_tooltip = 繧ｹ繝励Λ繧､繝医・蟷・ｒ\n迴ｾ蝨ｨ縺ｮ蟷・↓蟇ｾ縺吶ｋ豈皮紫縺ｧ謖・ｮ・height = 鬮倥＆・・height_px_tooltip = 繧ｹ繝励Λ繧､繝医・鬮倥＆・医ヴ繧ｯ繧ｻ繝ｫ蜊倅ｽ搾ｼ・height_perc_tooltip = 繧ｹ繝励Λ繧､繝医・鬮倥＆繧箪n迴ｾ蝨ｨ縺ｮ鬮倥＆縺ｫ蟇ｾ縺吶ｋ豈皮紫縺ｧ謖・ｮ・lock_ratio = 豈皮紫縺ｮ蝗ｺ螳・percentage = 豈皮紫・・・峨〒謖・ｮ夲ｼ・interpolation = 陬憺俣豕包ｼ・method = 譁ｹ蠑擾ｼ・method_nearest_neighbor = 繝九い繝ｬ繧ｹ繝医ロ繧､繝舌・豕・method_bilinear = 繝舌う繝ｪ繝九い豕・method_rotsprite = RotSprite陬憺俣
+
+[svg_options]
+title = SVG繧ｪ繝励す繝ｧ繝ｳ
+pixel_scale = 繝斐け繧ｻ繝ｫ繧ｹ繧ｱ繝ｼ繝ｫ・・
+[tab_popup_menu]
+close = 髢峨§繧・&C)
+
+[tag_properties]
+title = 繧ｿ繧ｰ縺ｮ繝励Ο繝代ユ繧｣
+name = 蜷榊燕・・from = From・・to = To・・color = 濶ｲ・・ani_dir = 繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ譁ｹ蜷托ｼ・repeat = 郢ｰ繧願ｿ斐＠・・
+[tga_options]
+title = TGA繧ｪ繝励す繝ｧ繝ｳ
+bits_per_pixel = 繝斐け繧ｻ繝ｫ縺ゅ◆繧翫・繝薙ャ繝域焚
+compress = 蝨ｧ邵ｮ
+
+[css_options]
+title = CSS繧ｪ繝励す繝ｧ繝ｳ
+pixel_scale = 繝斐け繧ｻ繝ｫ繧ｹ繧ｱ繝ｼ繝ｫ
+with_vars = CSS3螟画焚繧剃ｽｿ逕ｨ
+generate_html = 繧ｵ繝ｳ繝励ΝHTML繝輔ぃ繧､繝ｫ繧堤函謌・
+[timeline_conf]
+position = 繧ｿ繧､繝繝ｩ繧､繝ｳ縺ｮ菴咲ｽｮ・・left = 蟾ｦ(&L)
+right = 蜿ｳ(&R)
+bottom = 荳・&B)
+frame_header = 繝輔Ξ繝ｼ繝繝倥ャ繝繝ｼ・・first_frame = 髢句ｧ九ヵ繝ｬ繝ｼ繝・・thumbnails = 繧ｵ繝繝阪う繝ｫ
+thumbnail_size = 繧ｵ繝繝阪う繝ｫ縺ｮ繧ｵ繧､繧ｺ・・overlay_size = 繧ｪ繝ｼ繝舌・繝ｬ繧､縺ｮ繧ｵ繧､繧ｺ・・onion_skin = 繧ｪ繝九が繝ｳ繧ｹ繧ｭ繝ｳ・・merge_frames = 繝輔Ξ繝ｼ繝縺ｮ邨仙粋
+red_blue_tint = 襍､/髱偵・濶ｲ蜷医＞
+reset = 繝ｪ繧ｻ繝・ヨ
+opacity = 荳埼乗・蠎ｦ・・opacity_step = 繝輔Ξ繝ｼ繝豈弱・荳埼乗・蠎ｦ縺ｮ谿ｵ髫趣ｼ・loop_tags = 繧ｿ繧ｰ蜀・・繝輔Ξ繝ｼ繝繧偵Ν繝ｼ繝励☆繧・current_layer = 迴ｾ蝨ｨ縺ｮ繝ｬ繧､繝､繝ｼ縺ｮ縺ｿ
+behind_sprite = 繧ｹ繝励Λ繧､繝医・閭碁擇縺ｫ陦ｨ遉ｺ
+behind_sprite_toolip = 騾乗・縺ｪ繝ｬ繧､繝､繝ｼ縺ｮ蝣ｴ蜷医・縺ｿ繧ｪ繝九が繝ｳ繧ｹ繧ｭ繝ｳ縺悟渚譏縺輔ｌ縺ｾ縺吶・n閭梧勹繝ｬ繧､繝､繝ｼ縺ｯ縺薙・繧ｪ繝九が繝ｳ繧ｹ繧ｭ繝ｳ繝｢繝ｼ繝峨↓縺ｯ蜷ｫ縺ｾ繧後∪縺帙ｓ縲・in_front = 謇句燕縺ｮ繧ｹ繝励Λ繧､繝医・蜑埼擇縺ｫ陦ｨ遉ｺ
+in_front_toolip = 縺吶∋縺ｦ縺ｮ遞ｮ鬘槭・繝ｬ繧､繝､繝ｼ縺ｫ繧ｪ繝九が繝ｳ繧ｹ繧ｭ繝ｳ繧貞渚譏縺励∪縺吶ゑｼ郁レ譎ｯ縺ｨ騾乗・蠎ｦ・・set_as_defaults = 繝・ヵ繧ｩ繝ｫ繝医↓險ｭ螳・scale_up_to_fit = 諡｡螟ｧ縺励※繝輔ぅ繝・ヨ
+
+[tools]
+rectangular_marquee = 遏ｩ蠖｢驕ｸ謚・selection_tooltip = *蟾ｦ繧ｯ繝ｪ繝・け・夐∈謚樒ｯ・峇繧呈眠隕丈ｽ懈・/霑ｽ蜉縺励∪縺吶・n*蜿ｳ繝懊ち繝ｳ・夂樟蝨ｨ縺ｮ驕ｸ謚樒ｯ・峇縺九ｉ蜑企勁縺励∪縺・elliptical_marquee = 蜀・ｽ｢驕ｸ謚・lasso_tool = 謚輔￡邵・∈謚・polygonal_lasso = 螟夊ｧ貞ｽ｢驕ｸ謚・magic_wand = 繝槭ず繝・け繝ｯ繝ｳ繝・pencil = 繝壹Φ
+spray = 繧ｹ繝励Ξ繝ｼ
+eraser = 豸医＠繧ｴ繝
+eraser_tooltip = *蟾ｦ繧ｯ繝ｪ繝・け・壹瑚レ譎ｯ縲阪Ξ繧､繝､繝ｼ縺ｮ閭梧勹濶ｲ\n縺ｾ縺溘・莉ｻ諢上・莉悶・繝ｬ繧､繝､繝ｼ縺ｮ騾乗・縺ｪ濶ｲ縺ｧ豸亥悉縺励∪縺兔n*繧ｯ繝ｪ繝・け・壽緒逕ｻ濶ｲ繧定レ譎ｯ濶ｲ縺ｫ鄂ｮ縺肴鋤縺医∪縺・eyedropper = 繧ｹ繝昴う繝・zoom = 繧ｺ繝ｼ繝
+hand = 繝上Φ繝・move = 遘ｻ蜍・slice = 繧ｹ繝ｩ繧､繧ｹ
+paint_bucket = 繝舌こ繝・gradient = 繧ｰ繝ｩ繝・・繧ｷ繝ｧ繝ｳ
+line = 繝ｩ繧､繝ｳ
+curve = 繧ｫ繝ｼ繝・rectangle = 遏ｩ蠖｢
+filled_rectangle = 蝪励ｊ縺､縺ｶ縺礼洸蠖｢
+ellipse = 蜀・ｽ｢
+filled_ellipse = 蝪励ｊ縺､縺ｶ縺怜・蠖｢
+contour = 謚輔￡邵・polygon = 螟夊ｧ貞ｽ｢
+blur = 縺ｼ縺九＠
+jumble = 豺ｷ縺懷粋繧上○
+shortcut = 繧ｷ繝ｧ繝ｼ繝医き繝・ヨ・・{0}
+preview_hide = 繝励Ξ繝薙Η繝ｼ繧帝撼陦ｨ遉ｺ
+preview_show = 繝励Ξ繝薙Η繝ｼ繧定｡ｨ遉ｺ
+timeline_hide = 繧ｿ繧､繝繝ｩ繧､繝ｳ繧帝撼陦ｨ遉ｺ
+timeline_show = 繧ｿ繧､繝繝ｩ繧､繝ｳ繧定｡ｨ遉ｺ
+text = 繝・く繧ｹ繝・
+[undo_history]
+title = 謫堺ｽ懷ｱ･豁ｴ
+initial_state = 蛻晄悄迥ｶ諷・
+[user_data]
+user_data = 繝ｦ繝ｼ繧ｶ繝ｼ繝・・繧ｿ・・color = 濶ｲ・・
+[webp_options]
+title = WebP縺ｮ菫晏ｭ倩ｨｭ螳・save_as = 蜷榊燕繧剃ｻ倥￠縺ｦ菫晏ｭ假ｼ・animation_loop = 繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ縺ｨ繝ｫ繝ｼ繝・&L)
+type = 繧ｿ繧､繝暦ｼ・simple_webp = 繧ｷ繝ｳ繝励Ν・夲ｼ亥━繧後◆蜿ｯ騾・悸邵ｮ・・lossless_webp = WebP・亥庄騾・悸邵ｮ・・compression = 蝨ｧ邵ｮ・・image_hint = 逕ｻ蜒上ヲ繝ｳ繝茨ｼ・image_hint_default = 繝・ヵ繧ｩ繝ｫ繝・image_hint_picture = 逕ｻ蜒・image_hint_photo = 蜀咏悄
+image_hint_graph = 繧ｰ繝ｩ繝・lossy_webp = WebP・磯撼蜿ｯ騾・悸邵ｮ・・quality = 蜩∬ｳｪ・・image_preset = 逕ｻ蜒上・繝ｪ繧ｻ繝・ヨ・・image_preset_default = 繝・ヵ繧ｩ繝ｫ繝・image_preset_picture = 逕ｻ蜒・image_preset_photo = 蜀咏悄
+image_preset_drawing = 繝峨Ο繝ｼ繧､繝ｳ繧ｰ
+image_preset_icon = 繧｢繧､繧ｳ繝ｳ
+image_preset_text = 繝・く繧ｹ繝・
+[symmetry]
+toggle = 繧ｷ繝ｳ繝｡繝医Μ繝ｼ譁ｹ蠑上・蛻・ｊ譖ｿ縺・toggle_horizontal = 蟾ｦ蜿ｳ蟇ｾ遘ｰ繧貞・繧頑崛縺・toggle_vertical = 荳贋ｸ句ｯｾ遘ｰ繧貞・繧頑崛縺・show_options = 繧ｷ繝ｳ繝｡繝医Μ繝ｼ繧ｪ繝励す繝ｧ繝ｳ
+reset_position = 繧ｷ繝ｳ繝｡繝医Μ繝ｼ縺ｮ荳ｭ蠢・ｒ繝ｪ繧ｻ繝・ヨ
+reset_position_to_view_center = 繧ｷ繝ｳ繝｡繝医Μ繝ｼ繧偵ン繝･繝ｼ縺ｮ荳ｭ蠢・↓繝ｪ繧ｻ繝・ヨ
+toggle_right_diagonal = 45ﾂｰ蟇ｾ遘ｰ繧貞・繧頑崛縺・toggle_left_diagonal = 窶・5ﾂｰ蟇ｾ遘ｰ繧貞・繧頑崛縺・
+
+[duplicate_slice]
+x_duplicated = 繧ｹ繝ｩ繧､繧ｹ "{}" 繧定､・｣ｽ
+n_slices_duplicated = {} 譫壹・繧ｹ繝ｩ繧､繧ｹ繧定､・｣ｽ
+
+[text_tool]
+more_options = 縺昴・莉悶・繧ｪ繝励す繝ｧ繝ｳ
+italic = 繧､繧ｿ繝ｪ繝・け
+bold = 螟ｪ蟄・font_size = 繝輔か繝ｳ繝医し繧､繧ｺ
+font_family = 繝輔か繝ｳ繝医ヵ繧｡繝溘Μ繝ｼ
+
+[shape]
+stroke_width = 繧ｹ繝医Ο繝ｼ繧ｯ蟷・stroke = 繧ｹ繝医Ο繝ｼ繧ｯ
+fill = 蝪励ｊ縺､縺ｶ縺・
+[main_window]
+layout = 繝ｯ繝ｼ繧ｯ繧ｹ繝壹・繧ｹ繝ｬ繧､繧｢繧ｦ繝・default_layout = 繝・ヵ繧ｩ繝ｫ繝・mirrored_default_layout = 蟾ｦ蜿ｳ蜿崎ｻ｢縺励◆繝・ヵ繧ｩ繝ｫ繝・timeline = 繧ｿ繧､繝繝ｩ繧､繝ｳ
+user_layouts = 繝ｦ繝ｼ繧ｶ繝ｼ繝ｬ繧､繧｢繧ｦ繝・new_layout = 譁ｰ隕上Ξ繧､繧｢繧ｦ繝・..
+
+[new_layout]
+title = 譁ｰ隕上Ρ繝ｼ繧ｯ繧ｹ繝壹・繧ｹ繝ｬ繧､繧｢繧ｦ繝・name = 蜷榊燕・・deleting_layout = 繝ｬ繧､繧｢繧ｦ繝医・蜑企勁
+deleting_layout_confirmation = 繝ｬ繧､繧｢繧ｦ繝・{}'繧貞炎髯､縺励※繧ゅｈ繧阪＠縺・〒縺吶°・・restoring_layout = 繝ｬ繧､繧｢繧ｦ繝医・蠕ｩ蜈・restoring_layout_confirmation = 繝ｬ繧､繧｢繧ｦ繝・{}'繧貞ｾｩ蜈・＠縺ｦ繧ゅｈ繧阪＠縺・〒縺吶°・・
+[dock]
+left = 蟾ｦ縺ｫ繝峨ャ繧ｯ
+right = 蜿ｳ縺ｫ繝峨ャ繧ｯ
+top = 荳翫↓繝峨ャ繧ｯ
+bottom = 荳九↓繝峨ャ繧ｯ
+
+[run_command]
+title = 繧ｳ繝槭Φ繝峨ｒ螳溯｡・title_help = 繧ｳ繝槭Φ繝峨ｒ螳溯｡鯉ｼ壹・繝ｫ繝・title_expression = 繧ｳ繝槭Φ繝峨ｒ螳溯｡鯉ｼ壽焚蠑・title_script = 繧ｳ繝槭Φ繝峨ｒ螳溯｡鯉ｼ哭ua 繧ｹ繧ｯ繝ｪ繝励ヨ繝ｩ繝ｳ繝翫・
+command_placeholder = 繧ｳ繝槭Φ繝峨ｒ讀懃ｴ｢縲・? 縺ｧ繝倥Ν繝・more_result_count = ... (莉本}莉ｶ)
+tip_executed_command = 螳溯｡梧ｸ医∩・・{0}'
+tip_code_executed = 繧ｳ繝ｼ繝峨′豁｣蟶ｸ縺ｫ螳溯｡後＆繧後∪縺励◆縲・help_search = Aseprite 縺ｮ讖溯・縺九ｉ讀懃ｴ｢縺励※蜈･蜉帙＠縺ｾ縺吶・help_expressions = 縲・縲阪°繧牙ｧ九ａ縺ｦ謨ｰ蠑剰ｨ育ｮ励ｂ縺ｧ縺阪∪縺・help_lua = 縺ｾ縺溘・縲掘縲阪〒 Lua 繧ｹ繧ｯ繝ｪ繝励ヨ繧ｳ繝ｼ繝峨ｒ螳溯｡・extension_tag = 諡｡蠑ｵ讖溯・

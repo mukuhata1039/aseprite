@@ -100,6 +100,11 @@ public:
     MOUSE,  // Zoom from cursor
   };
 
+  enum class CustomPlaybackMode {
+    Loop,
+    PingPong,
+  };
+
   static ui::WidgetType Type();
 
   Editor(Doc* document, EditorFlags flags = kDefaultEditorFlags, EditorStatePtr state = nullptr);
@@ -278,6 +283,9 @@ public:
   frame_t customPlaybackTo() const { return m_customPlaybackTo; }
   void clearCustomPlaybackRange() { m_customPlaybackEnabled = false; }
 
+  void setCustomPlaybackMode(CustomPlaybackMode mode) { m_customPlaybackMode = mode; }
+  CustomPlaybackMode customPlaybackMode() const { return m_customPlaybackMode; }
+
   // Shows a popup menu to change the editor animation speed.
   void showAnimationSpeedMultiplierPopup();
   double getAnimationSpeedMultiplier() const;
@@ -446,6 +454,7 @@ private:
   bool m_customPlaybackEnabled;
   frame_t m_customPlaybackFrom;
   frame_t m_customPlaybackTo;
+  CustomPlaybackMode m_customPlaybackMode;
 
   render::Projection m_proj; // Zoom/pixel ratio in the editor
   DocumentPreferences& m_docPref;

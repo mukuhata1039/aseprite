@@ -642,6 +642,12 @@
       <option id="auto_guides" type="bool" default="true" />
       <option id="tile_numbers" type="bool" default="true" />
     </section>
+    <section id="custom_playback">
+      <option id="enabled" type="bool" default="false" />
+      <option id="from" type="doc::frame_t" default="doc::frame_t(0)" />
+      <option id="to" type="doc::frame_t" default="doc::frame_t(0)" />
+      <option id="ping_pong" type="bool" default="true" />
+    </section>
   </document>
 
 </preferences>

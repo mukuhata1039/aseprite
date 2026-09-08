@@ -21,6 +21,11 @@
 #include "app/ui_context.h"
 #include "ui/tooltips.h"
 
+#include <algorithm>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+
 namespace app {
 
 using namespace app::skin;
@@ -33,11 +38,10 @@ enum AniAction {
   ACTION_NEXT,
   ACTION_LAST,
   ACTION_MODE,
-  ACTION_DIM_OTHERS,
   ACTIONS
 };
 
-AniControls::AniControls(TooltipManager* tooltipManager) : ButtonSet(7)
+AniControls::AniControls(TooltipManager* tooltipManager) : ButtonSet(6)
 {
   auto* theme = SkinTheme::get(this);
 
@@ -48,10 +52,10 @@ AniControls::AniControls(TooltipManager* tooltipManager) : ButtonSet(7)
   addItem(theme->parts.aniLast(), theme->styles.aniButton());
 
   // Custom per-editor playback mode button.
-  addItem(theme->parts.aniPingpong(), theme->styles.aniButton());
-
-  // Toggle dimming of inactive layers.
-  addItem(theme->parts.timelineOpenEyeNormal(), theme->styles.aniButton());
+  // The text shows the CURRENT mode:
+  //   PING = ping-pong
+  //   LOOP = forward loop
+  addItem("PING", theme->styles.aniButton());
 
   ItemChange.connect([this] { onClickButton(); });
 
@@ -74,22 +78,17 @@ void AniControls::updateUsingEditor(Editor* editor)
   auto theme = SkinTheme::get(this);
 
   getItem(ACTION_PLAY)
-    ->setIcon((editor && editor->isPlaying() ?
-      theme->parts.aniStop():
-      theme->parts.aniPlay()));
+    ->setIcon((editor && editor->isPlaying() ? theme->parts.aniStop() : theme->parts.aniPlay()));
 
-  if (editor &&
-      editor->customPlaybackMode() == Editor::CustomPlaybackMode::Loop) {
-    getItem(ACTION_MODE)->setIcon(theme->parts.aniLoop());
+  if (editor) {
+    getItem(ACTION_MODE)
+      ->setText(editor->customPlaybackMode() == Editor::CustomPlaybackMode::PingPong ?
+                  "PING" :
+                  "LOOP");
   }
   else {
-    getItem(ACTION_MODE)->setIcon(theme->parts.aniPingpong());
+    getItem(ACTION_MODE)->setText("PING");
   }
-
-  getItem(ACTION_DIM_OTHERS)
-    ->setIcon(Preferences::instance().experimental.nonactiveLayersOpacity() < 255 ?
-      theme->parts.timelineClosedEyeNormal() :
-      theme->parts.timelineOpenEyeNormal());
 }
 
 void AniControls::onClickButton()
@@ -115,7 +114,7 @@ void AniControls::onClickButton()
       editor->setCustomPlaybackMode(Editor::CustomPlaybackMode::PingPong);
 
     // If this editor was already playing, restart it immediately so
-    // the newly selected mode takes effect.
+    // the newly selected mode takes effect without requiring Stop/Play.
     if (wasPlaying) {
       editor->play(Preferences::instance().editor.playOnce(),
                    Preferences::instance().editor.playAll(),
@@ -151,8 +150,7 @@ const char* AniControls::getCommandId(int index) const
     case ACTION_PLAY:  return CommandId::PlayAnimation();
     case ACTION_NEXT:  return CommandId::GotoNextFrame();
     case ACTION_LAST:  return CommandId::GotoLastFrame();
-    case ACTION_MODE:       return nullptr;
-    case ACTION_DIM_OTHERS: return CommandId::SwitchNonactiveLayersOpacity();
+    case ACTION_MODE:  return nullptr;
   }
   ASSERT(false);
   return nullptr;
@@ -161,7 +159,7 @@ const char* AniControls::getCommandId(int index) const
 std::string AniControls::getTooltipFor(int index) const
 {
   if (index == ACTION_MODE) {
-    return "Playback mode\n\nClick to switch between Ping-Pong and Loop for the active tab.";
+    return "Playback mode: LOOP / PING-PONG\n\nClick to switch the active tab.";
   }
 
   std::string tooltip;

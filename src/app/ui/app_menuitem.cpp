@@ -26,6 +26,7 @@
 #include "ui/size_hint_event.h"
 #include "ui/widget.h"
 
+#include <algorithm>
 #include <cstdarg>
 #include <string>
 
@@ -46,6 +47,7 @@ AppMenuItem::AppMenuItem(const std::string& text,
   , m_key(nullptr)
   , m_commandId(commandId)
   , m_params(params)
+  , m_icon(nullptr)
   , m_native(nullptr)
 {
 }
@@ -138,6 +140,14 @@ void AppMenuItem::onSizeHint(SizeHintEvent& ev)
     size.w = textWidth() + (inBar() ? guiscaled_div(childSpacing(), 4) : childSpacing()) +
              border().width();
     size.h = textHeight() + border().height();
+
+    if (m_icon && !inBar()) {
+      // Reserve horizontal space for the icon + a small gap before the text.
+      size.w += m_icon->width() + 2 * guiscale();
+
+      // Allow icons taller than the current font without clipping the menu item.
+      size.h = std::max(size.h, m_icon->height() + border().height());
+    }
 
     if (m_key && !m_key->shortcuts().empty()) {
       size.w += font()->textLength(m_key->shortcuts().front().toString());

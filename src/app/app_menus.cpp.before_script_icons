@@ -488,18 +488,6 @@ void AppMenus::loadScriptsSubmenu(ui::Menu* menu, const std::string& dir, const 
         params.set("filename", fullFn.c_str());
         menuitem =
           new AppMenuItem(base::get_file_title(fn).c_str(), CommandId::RunScript(), params);
-
-        // Use a PNG with the same base name as the script as its menu icon.
-        const std::string iconFn =
-          base::join_path(dir, base::get_file_title(fn) + ".png");
-
-        if (base::is_file(iconFn)) {
-          os::SurfaceRef scriptIcon =
-            os::System::instance()->loadRgbaSurface(iconFn.c_str());
-
-          if (scriptIcon)
-            menuitem->setIcon(scriptIcon);
-        }
       }
     }
     else if (base::is_directory(fullFn)) {

@@ -32,8 +32,6 @@ using namespace ui;
 
 PlayState::PlayState(const bool playOnce, const bool playAll, const bool playSubtags)
   : m_editor(nullptr)
-  , m_customPlaybackTag(0, 0)
-  , m_playback()
   , m_playOnce(playOnce)
   , m_playAll(playAll)
   , m_playSubtags(playSubtags)
@@ -42,6 +40,7 @@ PlayState::PlayState(const bool playOnce, const bool playAll, const bool playSub
   , m_nextFrameTime(-1)
   , m_refFrame(0)
   , m_tag(nullptr)
+  , m_customPlaybackTag(0, 0)
 {
   m_playTimer.Tick.connect(&PlayState::onPlaybackTick, this);
 
@@ -85,8 +84,9 @@ void PlayState::onEnterState(Editor* editor)
   // ------------------------------------------------------------
   // CUSTOM PLAYBACK
   //
-  // If this Editor has a remembered playback range, use that range
-  // instead of the temporary fixed 2-7 test range.
+  // If this Editor has a remembered playback range, use that range.
+  // Otherwise, use the whole sprite range so LOOP / PING-PONG also
+  // works when the user has never selected a custom frame range.
   //
   // The temporary tag is not added to the Sprite/document.
   // ------------------------------------------------------------
@@ -94,18 +94,28 @@ void PlayState::onEnterState(Editor* editor)
     m_customPlaybackTag.setFrameRange(
       m_editor->customPlaybackFrom(),
       m_editor->customPlaybackTo());
-
-    m_customPlaybackTag.setAniDir(AniDir::PING_PONG);
-
-    // Use our temporary tag instead of a real document tag.
-    m_tag = &m_customPlaybackTag;
-
-    // Force Playback::PlayInLoop so our temporary tag is used
-    // continuously.
-    m_playOnce = false;
-    m_playAll = false;
-    m_playSubtags = false;
   }
+  else {
+    m_customPlaybackTag.setFrameRange(
+      frame_t(0),
+      m_editor->sprite()->lastFrame());
+  }
+
+  if (m_editor->customPlaybackMode() == Editor::CustomPlaybackMode::PingPong) {
+    m_customPlaybackTag.setAniDir(AniDir::PING_PONG);
+  }
+  else {
+    m_customPlaybackTag.setAniDir(AniDir::FORWARD);
+  }
+
+  // Use our temporary tag instead of a real document tag.
+  m_tag = &m_customPlaybackTag;
+
+  // Force Playback::PlayInLoop so our temporary tag is used
+  // continuously.
+  m_playOnce = false;
+  m_playAll = false;
+  m_playSubtags = false;
 
   // Go to the first frame of the animation or active frame tag.
   if (m_playOnce) {
@@ -130,9 +140,10 @@ void PlayState::onEnterState(Editor* editor)
   // with ping-pong direction: the direction was reset every time
   // the user released the mouse button after scrolling the editor).
   if (!m_playTimer.isRunning()) {
-    // When using a remembered custom range, start playback from
-    // the beginning of that range.
-    if (m_tag == &m_customPlaybackTag)
+    // For a remembered custom range, start playback from the
+    // beginning of that range. For whole-sprite playback, keep the
+    // current frame as the starting point.
+    if (m_editor->hasCustomPlaybackRange())
       m_editor->setFrame(m_customPlaybackTag.fromFrame());
 
     m_playback = doc::Playback(
@@ -298,11 +309,8 @@ void PlayState::onBeforeCommandExecution(CommandExecutionEvent& ev)
   if (!m_editor->isActive())
     return;
 
-  // If we're executing PlayAnimation command, it means that the
-  // user wants to stop the animation. We cannot stop the animation
-  // here, because if it's stopped, PlayAnimation will re-play it
-  // (so it would be impossible to stop the animation using
-  // PlayAnimation command/Enter key).
+  // Playback control commands must not be preemptively stopped here.
+  // Their own command handlers decide which editor(s) should stop/play.
   //
   // There are other commands that just don't stop the animation
   // (zoom, scroll, etc.).

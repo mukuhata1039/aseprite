@@ -13,6 +13,7 @@
 
 #include "app/app.h"
 #include "app/app_menus.h"
+#include "app/cmd/set_layer_opacity.h"
 #include "app/cmd/set_tag_range.h"
 #include "app/cmd_transaction.h"
 #include "app/color_utils.h"
@@ -257,6 +258,7 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   , m_scroll(false)
   , m_fromTimeline(false)
   , m_aniControls(tooltipManager)
+  , m_layerOpacitySlider(255, AlphaSlider::OPACITY)
 {
   enableFlags(CTRL_RIGHT_CLICK | ALLOW_DROP);
 
@@ -267,11 +269,19 @@ Timeline::Timeline(TooltipManager* tooltipManager)
 
   setDoubleBuffered(true);
   addChild(&m_aniControls);
+  addChild(&m_layerOpacitySlider);
   addChild(&m_hbar);
   addChild(&m_vbar);
 
   m_hbar.setTransparent(true);
   m_vbar.setTransparent(true);
+
+  m_layerOpacitySlider.Change.connect(
+    [this] { onLayerOpacitySliderChange(); });
+  m_layerOpacitySlider.SliderReleased.connect(
+    [this] { onLayerOpacitySliderReleased(); });
+  m_layerOpacitySlider.setEnabled(false);
+
   initTheme();
 }
 
@@ -458,6 +468,7 @@ void Timeline::setLayer(Layer* layer)
   invalidateLayer(layer);
 
   m_layer = layer;
+  updateLayerOpacitySlider();
 
   // Expand all parents
   if (m_layer) {
@@ -473,6 +484,98 @@ void Timeline::setLayer(Layer* layer)
 
   if (m_editor->layer() != layer)
     m_editor->setLayer(m_layer);
+}
+
+void Timeline::updateLayerOpacitySlider()
+{
+  const bool editable =
+    (m_layer &&
+     !m_layer->isBackground() &&
+     (m_layer->isImage() ||
+      (m_layer->isGroup() &&
+       Preferences::instance().experimental.composeGroups())));
+
+  m_layerOpacitySlider.setEnabled(editable);
+  m_layerOpacityEditing = false;
+
+  if (editable) {
+    m_layerOpacityStart = m_layer->opacity();
+    m_layerOpacitySlider.setValue(m_layerOpacityStart);
+  }
+  else {
+    m_layerOpacityStart = 255;
+    m_layerOpacitySlider.setValue(255);
+  }
+}
+
+void Timeline::onLayerOpacitySliderChange()
+{
+  if (!m_layer || !m_document)
+    return;
+
+  const bool editable =
+    (!m_layer->isBackground() &&
+     (m_layer->isImage() ||
+      (m_layer->isGroup() &&
+       Preferences::instance().experimental.composeGroups())));
+
+  if (!editable)
+    return;
+
+  if (!m_layerOpacityEditing) {
+    m_layerOpacityStart = m_layer->opacity();
+    m_layerOpacityEditing = true;
+  }
+
+  const int newOpacity = m_layerOpacitySlider.getValue();
+  if (newOpacity == m_layer->opacity())
+    return;
+
+  auto* layer = static_cast<LayerImage*>(m_layer);
+  layer->setOpacity(newOpacity);
+  m_layer->incrementVersion();
+
+  update_screen_for_document(m_document);
+}
+
+void Timeline::onLayerOpacitySliderReleased()
+{
+  if (!m_layerOpacityEditing)
+    return;
+
+  m_layerOpacityEditing = false;
+
+  if (!m_layer || !m_document)
+    return;
+
+  const bool editable =
+    (!m_layer->isBackground() &&
+     (m_layer->isImage() ||
+      (m_layer->isGroup() &&
+       Preferences::instance().experimental.composeGroups())));
+
+  if (!editable) {
+    updateLayerOpacitySlider();
+    return;
+  }
+
+  const int newOpacity = m_layerOpacitySlider.getValue();
+  if (newOpacity == m_layerOpacityStart)
+    return;
+
+  auto* layer = static_cast<LayerImage*>(m_layer);
+
+  // Restore the original value first so SetLayerOpacity stores the
+  // correct value for a single Undo step.
+  layer->setOpacity(m_layerOpacityStart);
+  m_layer->incrementVersion();
+
+  ContextWriter writer(m_context);
+  Tx tx(writer, "Set Layer Opacity");
+  tx(new cmd::SetLayerOpacity(layer, newOpacity));
+  tx.commit();
+
+  update_screen_for_document(writer.document());
 }
 
 void Timeline::setFrame(col_t frame, bool byUser)
@@ -1648,10 +1751,28 @@ void Timeline::onResize(ui::ResizeEvent& ev)
   setBoundsQuietly(rc);
 
   gfx::Size sz = m_aniControls.sizeHint();
+  const int controlsW =
+    (!m_sprite || m_sprite->tags().empty() ? std::min(sz.w, rc.w) :
+                                             std::min(sz.w, separatorX()));
+  const int topY =
+    rc.y + (visibleTagBands() - 1) * oneTagHeight();
+
   m_aniControls.setBounds(gfx::Rect(
     rc.x,
-    rc.y + (visibleTagBands() - 1) * oneTagHeight(),
-    (!m_sprite || m_sprite->tags().empty() ? std::min(sz.w, rc.w) : std::min(sz.w, separatorX())),
+    topY,
+    controlsW,
+    oneTagHeight()));
+
+  // Layer/group opacity slider, placed to the right of the animation controls.
+  // It can extend into the frame area instead of being limited to the layer panel.
+  const int opacityGap = 2 * guiscale();
+  const int opacityX = rc.x + controlsW + opacityGap;
+  const int availableOpacityW = std::max(0, rc.x + rc.w - opacityX);
+  const int opacityW = std::min(120 * guiscale(), availableOpacityW);
+  m_layerOpacitySlider.setBounds(gfx::Rect(
+    opacityX,
+    topY,
+    opacityW,
     oneTagHeight()));
 
   updateScrollBars();

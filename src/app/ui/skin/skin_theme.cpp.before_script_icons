@@ -1611,22 +1611,6 @@ void SkinTheme::paintMenuItem(ui::PaintEvent& ev)
     g->drawRgbaSurface(icon, x, y);
   }
 
-  // Optional custom icon for AppMenuItem
-  os::Surface* customIcon = nullptr;
-
-  if (!bar) {
-    if (AppMenuItem* appMenuItem = dynamic_cast<AppMenuItem*>(widget)) {
-      if (appMenuItem->icon())
-        customIcon = appMenuItem->icon().get();
-    }
-  }
-
-  if (customIcon) {
-    const int x = bounds.x + widget->childSpacing() / 2;
-    const int y = bounds.y + bounds.h / 2 - customIcon->height() / 2;
-    g->drawRgbaSurface(customIcon, x, y);
-  }
-
   // Text
   if (bar)
     widget->setAlign(CENTER | MIDDLE);
@@ -1634,14 +1618,8 @@ void SkinTheme::paintMenuItem(ui::PaintEvent& ev)
     widget->setAlign(LEFT | MIDDLE);
 
   Rect pos = bounds;
-  if (!bar) {
-    int textOffset = widget->childSpacing() / 2;
-
-    if (customIcon)
-      textOffset += customIcon->width() + 2 * scale;
-
-    pos.offset(textOffset, 0);
-  }
+  if (!bar)
+    pos.offset(widget->childSpacing() / 2, 0);
   drawText(g, nullptr, fg, ColorNone, widget, pos, widget->align(), widget->mnemonic());
 
   // For menu-box

@@ -152,6 +152,7 @@ Editor::Editor(Doc* document, EditorFlags flags, EditorStatePtr state)
   , m_customPlaybackEnabled(false)
   , m_customPlaybackFrom(frame_t(0))
   , m_customPlaybackTo(frame_t(0))
+  , m_customPlaybackMode(CustomPlaybackMode::PingPong)
   , m_docPref(Preferences::instance().document(document))
   , m_tiledModeHelper(app::TiledModeHelper(m_docPref.tiled.mode(), m_sprite))
   , m_brushPreview(this)
@@ -203,6 +204,18 @@ Editor::Editor(Doc* document, EditorFlags flags, EditorStatePtr state)
       setLayer(layers[layerIndex]);
   }
 
+  // Restore the custom playback range/mode saved for this document.
+  if (m_docPref.customPlayback.enabled()) {
+    setCustomPlaybackRange(
+      m_docPref.customPlayback.from(),
+      m_docPref.customPlayback.to());
+  }
+
+  setCustomPlaybackMode(
+    m_docPref.customPlayback.pingPong() ?
+      CustomPlaybackMode::PingPong :
+      CustomPlaybackMode::Loop);
+
   m_tiledConnBefore = m_docPref.tiled.BeforeChange.connect([this] { onTiledModeBeforeChange(); });
   m_tiledConn = m_docPref.tiled.AfterChange.connect([this] { onTiledModeChange(); });
   m_gridConn = m_docPref.grid.AfterChange.connect([this] { invalidate(); });
@@ -226,6 +239,14 @@ Editor::~Editor()
 
     m_docPref.site.frame(frame());
     m_docPref.site.layer(layerIndex);
+
+    // Save the custom playback range/mode with this document's
+    // existing per-file preferences.
+    m_docPref.customPlayback.enabled(m_customPlaybackEnabled);
+    m_docPref.customPlayback.from(m_customPlaybackFrom);
+    m_docPref.customPlayback.to(m_customPlaybackTo);
+    m_docPref.customPlayback.pingPong(
+      m_customPlaybackMode == CustomPlaybackMode::PingPong);
   }
 
   m_observers.notifyDestroyEditor(this);
