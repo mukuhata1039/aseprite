@@ -555,6 +555,7 @@
     </section>
     <section id="timeline">
       <option id="first_frame" type="int" default="1" />
+      <option id="hidden_layers" type="std::string" />
     </section>
     <section id="thumbnails">
       <option id="zoom" type="double" default="1" />

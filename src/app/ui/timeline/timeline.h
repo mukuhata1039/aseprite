@@ -296,6 +296,8 @@ private:
   bool isTimelineLayerDirectlyHidden(const Layer* layer) const;
   bool isTimelineLayerEffectivelyHidden(const Layer* layer) const;
   void pruneTimelineHiddenLayers();
+  void loadTimelineHiddenLayers();
+  void saveTimelineHiddenLayers();
   void hideSelectedTimelineLayers();
   void showRestoreTimelineLayersDialog();
 

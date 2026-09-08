@@ -68,6 +68,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <utility>
 #include <vector>
@@ -407,6 +408,10 @@ void Timeline::updateUsingEditor(Editor* editor)
   m_onionskinConn = docPref.onionskin.AfterChange.connect([this] { invalidate(); });
 
   setFocusStop(true);
+
+  // Restore the Timeline-only hidden rows saved for this file.
+  loadTimelineHiddenLayers();
+
   regenerateCols();
   regenerateRows();
 
@@ -651,6 +656,210 @@ void Timeline::pruneTimelineHiddenLayers()
     else
       ++it;
   }
+}
+
+void Timeline::loadTimelineHiddenLayers()
+{
+  if (!m_document || !m_sprite)
+    return;
+
+  auto& hidden =
+    m_hiddenTimelineLayersByDocument[m_document];
+
+  hidden.clear();
+
+  const std::string encoded =
+    docPref().timeline.hiddenLayers();
+
+  if (encoded.empty())
+    return;
+
+  size_t pathStart = 0;
+
+  while (pathStart <= encoded.size()) {
+    const size_t pathEnd =
+      encoded.find(';', pathStart);
+
+    const std::string path =
+      encoded.substr(
+        pathStart,
+        (pathEnd == std::string::npos ?
+           encoded.size() :
+           pathEnd) - pathStart);
+
+    if (!path.empty()) {
+      Layer* current = m_sprite->root();
+      bool valid = true;
+
+      size_t segmentStart = 0;
+
+      while (segmentStart <= path.size()) {
+        const size_t segmentEnd =
+          path.find('/', segmentStart);
+
+        const std::string segment =
+          path.substr(
+            segmentStart,
+            (segmentEnd == std::string::npos ?
+               path.size() :
+               segmentEnd) - segmentStart);
+
+        if (segment.empty()) {
+          valid = false;
+          break;
+        }
+
+        char* parseEnd = nullptr;
+
+        const long wantedIndex =
+          std::strtol(
+            segment.c_str(),
+            &parseEnd,
+            10);
+
+        if (!parseEnd ||
+            parseEnd == segment.c_str() ||
+            *parseEnd != '\0' ||
+            wantedIndex < 0) {
+          valid = false;
+          break;
+        }
+
+        Layer* next = nullptr;
+        long index = 0;
+
+        for (Layer* child : current->layers()) {
+          if (index == wantedIndex) {
+            next = child;
+            break;
+          }
+
+          ++index;
+        }
+
+        if (!next) {
+          valid = false;
+          break;
+        }
+
+        current = next;
+
+        if (segmentEnd == std::string::npos)
+          break;
+
+        segmentStart = segmentEnd + 1;
+      }
+
+      if (valid &&
+          current &&
+          current != m_sprite->root()) {
+        hidden.insert(current->id());
+      }
+    }
+
+    if (pathEnd == std::string::npos)
+      break;
+
+    pathStart = pathEnd + 1;
+  }
+
+  pruneTimelineHiddenLayers();
+}
+
+void Timeline::saveTimelineHiddenLayers()
+{
+  if (!m_document || !m_sprite)
+    return;
+
+  auto docIt =
+    m_hiddenTimelineLayersByDocument.find(m_document);
+
+  if (docIt == m_hiddenTimelineLayersByDocument.end() ||
+      docIt->second.empty()) {
+    docPref().timeline.hiddenLayers(std::string());
+    return;
+  }
+
+  std::vector<std::string> paths;
+
+  for (const doc::ObjectId id : docIt->second) {
+    Layer* layer = doc::get<Layer>(id);
+
+    if (!layer || layer->sprite() != m_sprite)
+      continue;
+
+    std::vector<int> indices;
+
+    Layer* current = layer;
+    bool valid = true;
+
+    while (current &&
+           current != m_sprite->root()) {
+      Layer* parent = current->parent();
+
+      if (!parent) {
+        valid = false;
+        break;
+      }
+
+      int index = 0;
+      bool found = false;
+
+      for (Layer* child : parent->layers()) {
+        if (child == current) {
+          found = true;
+          break;
+        }
+
+        ++index;
+      }
+
+      if (!found) {
+        valid = false;
+        break;
+      }
+
+      indices.push_back(index);
+      current = parent;
+    }
+
+    if (!valid || indices.empty())
+      continue;
+
+    std::reverse(
+      indices.begin(),
+      indices.end());
+
+    std::string path;
+
+    for (size_t i = 0;
+         i < indices.size();
+         ++i) {
+      if (i > 0)
+        path += '/';
+
+      path += std::to_string(indices[i]);
+    }
+
+    paths.push_back(path);
+  }
+
+  std::sort(
+    paths.begin(),
+    paths.end());
+
+  std::string encoded;
+
+  for (size_t i = 0;
+       i < paths.size();
+       ++i) {
+    if (i > 0)
+      encoded += ';';
+
+    encoded += paths[i];
+  }
+
+  docPref().timeline.hiddenLayers(encoded);
 }
 
 void Timeline::hideSelectedTimelineLayers()
@@ -3947,6 +4156,11 @@ void Timeline::regenerateRows()
   m_restoreTimelineLayersButton.setEnabled(
     hiddenIt != m_hiddenTimelineLayersByDocument.end() &&
     !hiddenIt->second.empty());
+
+  // Keep the per-document preference synchronized with the
+  // current layer hierarchy. ObjectId itself is runtime-only,
+  // so persistence uses stable hierarchy index paths instead.
+  saveTimelineHiddenLayers();
 }
 
 void Timeline::regenerateTagBands()
