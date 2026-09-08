@@ -21,6 +21,7 @@
 #include "app/ui/input_chain_element.h"
 #include "app/ui/palette_view.h"
 #include "app/ui/tile_button.h"
+#include "doc/layer.h"
 #include "doc/object_id.h"
 #include "doc/palette_gradient_type.h"
 #include "doc/pixel_format.h"
@@ -33,6 +34,8 @@
 #include "ui/splitter.h"
 #include "ui/view.h"
 
+#include <map>
+
 namespace ui {
 class TooltipManager;
 }
@@ -42,6 +45,7 @@ class ColorButton;
 class ColorSpectrum;
 class ColorTintShadeTone;
 class ColorWheel;
+class Doc;
 class CommandExecutionEvent;
 class PaletteIndexChangeEvent;
 class PalettePopup;
@@ -76,6 +80,11 @@ public:
   app::Color getBgColor() const;
   void setFgColor(const app::Color& color);
   void setBgColor(const app::Color& color);
+
+  // Per-layer drawing color lock used by the Timeline.
+  bool isLayerColorLocked(const Doc* doc, const doc::Layer* layer) const;
+  app::Color layerColorLock(const Doc* doc, const doc::Layer* layer) const;
+  void toggleLayerColorLock(Doc* doc, doc::Layer* layer);
 
   doc::tile_index getFgTile() const;
   doc::tile_index getBgTile() const;
@@ -157,6 +166,7 @@ protected:
   void onFgTileChangeFromPreferences();
   void onBgTileChangeFromPreferences();
   void onFgColorButtonBeforeChange(app::Color& color);
+  void onBgColorButtonBeforeChange(app::Color& color);
   void onFgColorButtonChange(const app::Color& color);
   void onBgColorButtonChange(const app::Color& color);
   void onColorButtonChange(const app::Color& color);
@@ -193,6 +203,15 @@ protected:
   void onTilesViewIndexChange(int index, ui::MouseButton button) override;
 
 private:
+  const app::Color* activeLayerColorLock() const;
+  bool isLayerColorLockTransparent(const app::Color& color) const;
+  void loadLayerColorLocks();
+  void saveLayerColorLocks();
+  void pruneLayerColorLocks();
+  void applyActiveLayerColorLock();
+  void repairActiveLayerColorPair(bool foregroundChanged);
+  void setLayerColorLockPair(const app::Color& fixedColor, bool transparentInForeground);
+
   void showRemapPal();
   void showRemapTiles();
   void hideRemapPal();
@@ -262,6 +281,10 @@ private:
 
   bool m_fromFgButton;
   bool m_fromBgButton;
+
+  // Locks for the currently active document only.
+  std::map<doc::ObjectId, app::Color> m_layerColorLocks;
+  bool m_enforcingLayerColorLock = false;
 
   std::unique_ptr<doc::Palette> m_oldPalette;
   std::unique_ptr<doc::Tileset> m_oldTileset;

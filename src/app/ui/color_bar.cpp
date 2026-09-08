@@ -30,6 +30,7 @@
 #include "app/commands/quick_command.h"
 #include "app/console.h"
 #include "app/context_access.h"
+#include "app/doc.h"
 #include "app/doc_api.h"
 #include "app/doc_undo.h"
 #include "app/i18n/strings.h"
@@ -58,6 +59,7 @@
 #include "doc/cels_range.h"
 #include "doc/image.h"
 #include "doc/layer_tilemap.h"
+#include "doc/object.h"
 #include "doc/palette.h"
 #include "doc/palette_gradient_type.h"
 #include "doc/primitives.h"
@@ -78,9 +80,12 @@
 #include "ui/system.h"
 #include "ui/tooltips.h"
 
+#include <algorithm>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <memory>
+#include <vector>
 
 namespace app {
 
@@ -284,6 +289,7 @@ ColorBar::ColorBar(TooltipManager* tooltipManager)
   m_remapTilesButton.Click.connect([this] { onRemapTilesButtonClick(); });
   m_fgColor.Change.connect(&ColorBar::onFgColorButtonChange, this);
   m_fgColor.BeforeChange.connect(&ColorBar::onFgColorButtonBeforeChange, this);
+  m_bgColor.BeforeChange.connect(&ColorBar::onBgColorButtonBeforeChange, this);
   m_bgColor.Change.connect(&ColorBar::onBgColorButtonChange, this);
   m_fgWarningIcon->Click.connect([this] { onFixWarningClick(&m_fgColor, m_fgWarningIcon); });
   m_bgWarningIcon->Click.connect([this] { onFixWarningClick(&m_bgColor, m_bgWarningIcon); });
@@ -419,6 +425,362 @@ void ColorBar::setBgColor(const app::Color& color)
   m_bgColor.setColor(color);
   if (!m_fromPalView)
     onColorButtonChange(color);
+}
+
+bool ColorBar::isLayerColorLocked(const Doc* doc, const doc::Layer* layer) const
+{
+  if (!doc || !layer || doc != m_lastDocument)
+    return false;
+
+  return m_layerColorLocks.find(layer->id()) != m_layerColorLocks.end();
+}
+
+app::Color ColorBar::layerColorLock(const Doc* doc, const doc::Layer* layer) const
+{
+  if (!doc || !layer || doc != m_lastDocument)
+    return app::Color::fromMask();
+
+  const auto it = m_layerColorLocks.find(layer->id());
+  return (it != m_layerColorLocks.end() ? it->second : app::Color::fromMask());
+}
+
+const app::Color* ColorBar::activeLayerColorLock() const
+{
+  if (!m_lastDocument)
+    return nullptr;
+
+  const Site site = UIContext::instance()->activeSite();
+  if (site.document() != m_lastDocument || !site.layer())
+    return nullptr;
+
+  const auto it = m_layerColorLocks.find(site.layer()->id());
+  return (it != m_layerColorLocks.end() ? &it->second : nullptr);
+}
+
+bool ColorBar::isLayerColorLockTransparent(const app::Color& color) const
+{
+  if (color.getType() == app::Color::MaskType)
+    return true;
+
+  switch (color.getType()) {
+    case app::Color::RgbType:
+    case app::Color::HsvType:
+    case app::Color::HslType:
+    case app::Color::GrayType:
+      return color.getAlpha() == 0;
+
+    case app::Color::IndexType: {
+      if (m_lastDocument && m_lastDocument->sprite() &&
+          m_lastDocument->sprite()->pixelFormat() == IMAGE_INDEXED) {
+        return color.getIndex() == int(m_lastDocument->sprite()->transparentColor());
+      }
+      return false;
+    }
+
+    default:
+      return false;
+  }
+}
+
+void ColorBar::setLayerColorLockPair(const app::Color& fixedColor,
+                                     const bool transparentInForeground)
+{
+  const app::Color transparent = app::Color::fromMask();
+  const app::Color fg = (transparentInForeground ? transparent : fixedColor);
+  const app::Color bg = (transparentInForeground ? fixedColor : transparent);
+
+  {
+    base::ScopedValue enforcing(m_enforcingLayerColorLock, true);
+    base::ScopedValue syncing(m_fromPref, true);
+
+    m_fgColor.setColor(fg);
+    m_bgColor.setColor(bg);
+
+    auto& pref = Preferences::instance().colorBar;
+    pref.fgColor(fg);
+    pref.bgColor(bg);
+  }
+
+  updateWarningIcon(getFgColor(), m_fgWarningIcon);
+  updateWarningIcon(getBgColor(), m_bgWarningIcon);
+  onColorButtonChange(getFgColor());
+}
+
+void ColorBar::applyActiveLayerColorLock()
+{
+  const app::Color* fixed = activeLayerColorLock();
+  if (!fixed)
+    return;
+
+  const bool fgTransparent = isLayerColorLockTransparent(getFgColor());
+  const bool bgTransparent = isLayerColorLockTransparent(getBgColor());
+
+  bool transparentInForeground = false;
+
+  if (fgTransparent && !bgTransparent)
+    transparentInForeground = true;
+  else if (!fgTransparent && bgTransparent)
+    transparentInForeground = false;
+  else if (fgTransparent && bgTransparent)
+    transparentInForeground = true;
+
+  setLayerColorLockPair(*fixed, transparentInForeground);
+}
+
+void ColorBar::repairActiveLayerColorPair(const bool foregroundChanged)
+{
+  if (m_enforcingLayerColorLock)
+    return;
+
+  const app::Color* fixed = activeLayerColorLock();
+  if (!fixed)
+    return;
+
+  const app::Color fg = getFgColor();
+  const app::Color bg = getBgColor();
+
+  const bool fgTransparent = isLayerColorLockTransparent(fg);
+  const bool bgTransparent = isLayerColorLockTransparent(bg);
+  const bool fgFixed = (fg == *fixed);
+  const bool bgFixed = (bg == *fixed);
+
+  if ((fgFixed && bgTransparent) ||
+      (fgTransparent && bgFixed)) {
+    return;
+  }
+
+  if (fgFixed && bgFixed) {
+    setLayerColorLockPair(*fixed, !foregroundChanged);
+  }
+  else if (fgTransparent && bgTransparent) {
+    setLayerColorLockPair(*fixed, foregroundChanged);
+  }
+  else {
+    setLayerColorLockPair(*fixed, false);
+  }
+}
+
+void ColorBar::pruneLayerColorLocks()
+{
+  if (!m_lastDocument || !m_lastDocument->sprite())
+    return;
+
+  for (auto it = m_layerColorLocks.begin(); it != m_layerColorLocks.end();) {
+    doc::Layer* layer = doc::get<doc::Layer>(it->first);
+
+    if (!layer || layer->sprite() != m_lastDocument->sprite())
+      it = m_layerColorLocks.erase(it);
+    else
+      ++it;
+  }
+}
+
+void ColorBar::loadLayerColorLocks()
+{
+  m_layerColorLocks.clear();
+
+  if (!m_lastDocument || !m_lastDocument->sprite())
+    return;
+
+  const std::string encoded =
+    Preferences::instance().document(m_lastDocument).timeline.lockedLayerColors();
+
+  if (encoded.empty())
+    return;
+
+  doc::Sprite* sprite = m_lastDocument->sprite();
+  size_t entryStart = 0;
+
+  while (entryStart <= encoded.size()) {
+    const size_t entryEnd = encoded.find(';', entryStart);
+    const std::string entry =
+      encoded.substr(entryStart,
+                     (entryEnd == std::string::npos ? encoded.size() : entryEnd) - entryStart);
+
+    const size_t equals = entry.find('=');
+    if (equals != std::string::npos && equals > 0 && equals + 1 < entry.size()) {
+      const std::string path = entry.substr(0, equals);
+      const std::string colorText = entry.substr(equals + 1);
+
+      doc::Layer* current = sprite->root();
+      bool valid = true;
+      size_t segmentStart = 0;
+
+      while (segmentStart <= path.size()) {
+        const size_t segmentEnd = path.find('/', segmentStart);
+        const std::string segment =
+          path.substr(segmentStart,
+                      (segmentEnd == std::string::npos ? path.size() : segmentEnd) - segmentStart);
+
+        if (segment.empty()) {
+          valid = false;
+          break;
+        }
+
+        char* parseEnd = nullptr;
+        const long wantedIndex = std::strtol(segment.c_str(), &parseEnd, 10);
+
+        if (!parseEnd ||
+            parseEnd == segment.c_str() ||
+            *parseEnd != '\0' ||
+            wantedIndex < 0) {
+          valid = false;
+          break;
+        }
+
+        doc::Layer* next = nullptr;
+        long index = 0;
+
+        for (doc::Layer* child : current->layers()) {
+          if (index == wantedIndex) {
+            next = child;
+            break;
+          }
+          ++index;
+        }
+
+        if (!next) {
+          valid = false;
+          break;
+        }
+
+        current = next;
+
+        if (segmentEnd == std::string::npos)
+          break;
+
+        segmentStart = segmentEnd + 1;
+      }
+
+      if (valid && current && current != sprite->root() && current->isImage()) {
+        const app::Color color = app::Color::fromString(colorText);
+        if (!isLayerColorLockTransparent(color))
+          m_layerColorLocks[current->id()] = color;
+      }
+    }
+
+    if (entryEnd == std::string::npos)
+      break;
+
+    entryStart = entryEnd + 1;
+  }
+
+  pruneLayerColorLocks();
+}
+
+void ColorBar::saveLayerColorLocks()
+{
+  if (!m_lastDocument || !m_lastDocument->sprite())
+    return;
+
+  pruneLayerColorLocks();
+
+  doc::Sprite* sprite = m_lastDocument->sprite();
+  std::vector<std::string> entries;
+
+  for (const auto& item : m_layerColorLocks) {
+    doc::Layer* layer = doc::get<doc::Layer>(item.first);
+    if (!layer || layer->sprite() != sprite || !layer->isImage())
+      continue;
+
+    std::vector<int> indices;
+    doc::Layer* current = layer;
+    bool valid = true;
+
+    while (current && current != sprite->root()) {
+      doc::Layer* parent = current->parent();
+      if (!parent) {
+        valid = false;
+        break;
+      }
+
+      int index = 0;
+      bool found = false;
+
+      for (doc::Layer* child : parent->layers()) {
+        if (child == current) {
+          found = true;
+          break;
+        }
+        ++index;
+      }
+
+      if (!found) {
+        valid = false;
+        break;
+      }
+
+      indices.push_back(index);
+      current = parent;
+    }
+
+    if (!valid || indices.empty())
+      continue;
+
+    std::reverse(indices.begin(), indices.end());
+
+    std::string path;
+    for (size_t i = 0; i < indices.size(); ++i) {
+      if (i > 0)
+        path += '/';
+      path += std::to_string(indices[i]);
+    }
+
+    entries.push_back(path + "=" + item.second.toString());
+  }
+
+  std::sort(entries.begin(), entries.end());
+
+  std::string encoded;
+  for (size_t i = 0; i < entries.size(); ++i) {
+    if (i > 0)
+      encoded += ';';
+    encoded += entries[i];
+  }
+
+  Preferences::instance().document(m_lastDocument).timeline.lockedLayerColors(encoded);
+}
+
+void ColorBar::toggleLayerColorLock(Doc* doc, doc::Layer* layer)
+{
+  if (!doc || !layer ||
+      doc != m_lastDocument ||
+      !doc->sprite() ||
+      layer->sprite() != doc->sprite() ||
+      !layer->isImage()) {
+    return;
+  }
+
+  const auto existing = m_layerColorLocks.find(layer->id());
+  if (existing != m_layerColorLocks.end()) {
+    m_layerColorLocks.erase(existing);
+    saveLayerColorLocks();
+    return;
+  }
+
+  const app::Color fg = getFgColor();
+  const app::Color bg = getBgColor();
+  const bool fgTransparent = isLayerColorLockTransparent(fg);
+  const bool bgTransparent = isLayerColorLockTransparent(bg);
+
+  app::Color fixed = app::Color::fromMask();
+
+  if (!fgTransparent)
+    fixed = fg;
+  else if (!bgTransparent)
+    fixed = bg;
+  else
+    return;
+
+  if (isLayerColorLockTransparent(fixed))
+    return;
+
+  m_layerColorLocks[layer->id()] = fixed;
+  saveLayerColorLocks();
+
+  const Site site = UIContext::instance()->activeSite();
+  if (site.document() == doc && site.layer() == layer)
+    applyActiveLayerColorLock();
 }
 
 void ColorBar::setFgTile(doc::tile_t tile)
@@ -660,13 +1022,18 @@ void ColorBar::onResize(ui::ResizeEvent& ev)
 void ColorBar::onActiveSiteChange(const Site& site)
 {
   if (m_lastDocument != site.document()) {
-    if (m_lastDocument)
+    if (m_lastDocument) {
+      saveLayerColorLocks();
       m_lastDocument->remove_observer(this);
+    }
 
     m_lastDocument = const_cast<Doc*>(site.document());
+    m_layerColorLocks.clear();
 
-    if (m_lastDocument)
+    if (m_lastDocument) {
       m_lastDocument->add_observer(this);
+      loadLayerColorLocks();
+    }
 
     hideRemapPal();
     hideRemapTiles();
@@ -699,6 +1066,8 @@ void ColorBar::onActiveSiteChange(const Site& site)
   else {
     m_lastTilesetId = doc::NullId;
   }
+
+  applyActiveLayerColorLock();
 }
 
 void ColorBar::onGeneralUpdate(DocEvent& ev)
@@ -1293,8 +1662,18 @@ void ColorBar::onFgColorChangeFromPreferences()
   if (m_fromPref)
     return;
 
-  base::ScopedValue sync(m_fromPref, true);
-  setFgColor(Preferences::instance().colorBar.fgColor());
+  auto& pref = Preferences::instance().colorBar;
+  const app::Color requested = pref.fgColor();
+
+  {
+    base::ScopedValue sync(m_fromPref, true);
+    setFgColor(requested);
+  }
+
+  if (getFgColor() != requested) {
+    base::ScopedValue sync(m_fromPref, true);
+    pref.fgColor(getFgColor());
+  }
 }
 
 void ColorBar::onBgColorChangeFromPreferences()
@@ -1305,14 +1684,24 @@ void ColorBar::onBgColorChangeFromPreferences()
   if (m_fromPref)
     return;
 
+  auto& pref = Preferences::instance().colorBar;
+  const app::Color requested = pref.bgColor();
+
   if (inEditMode()) {
     // In edit mode, clicking with right-click will copy the color
     // selected with eyedropper to the active color entry.
-    setFgColor(Preferences::instance().colorBar.bgColor());
+    setFgColor(requested);
   }
   else {
-    base::ScopedValue sync(m_fromPref, true);
-    setBgColor(Preferences::instance().colorBar.bgColor());
+    {
+      base::ScopedValue sync(m_fromPref, true);
+      setBgColor(requested);
+    }
+
+    if (getBgColor() != requested) {
+      base::ScopedValue sync(m_fromPref, true);
+      pref.bgColor(getBgColor());
+    }
   }
 }
 
@@ -1342,6 +1731,16 @@ void ColorBar::onFgColorButtonBeforeChange(app::Color& color)
 {
   COLOR_BAR_TRACE("ColorBar::onFgColorButtonBeforeChange(%s)\n", color.toString().c_str());
 
+  if (m_enforcingLayerColorLock)
+    return;
+
+  if (const app::Color* locked = activeLayerColorLock()) {
+    if (color != *locked && !isLayerColorLockTransparent(color)) {
+      color = getFgColor();
+      return;
+    }
+  }
+
   if (m_fromPalView)
     return;
 
@@ -1364,6 +1763,17 @@ void ColorBar::onFgColorButtonBeforeChange(app::Color& color)
   }
 }
 
+void ColorBar::onBgColorButtonBeforeChange(app::Color& color)
+{
+  if (m_enforcingLayerColorLock)
+    return;
+
+  if (const app::Color* locked = activeLayerColorLock()) {
+    if (color != *locked && !isLayerColorLockTransparent(color))
+      color = getBgColor();
+  }
+}
+
 void ColorBar::onFgColorButtonChange(const app::Color& color)
 {
   COLOR_BAR_TRACE("ColorBar::onFgColorButtonChange(%s)\n", color.toString().c_str());
@@ -1380,6 +1790,8 @@ void ColorBar::onFgColorButtonChange(const app::Color& color)
 
   updateWarningIcon(color, m_fgWarningIcon);
   onColorButtonChange(color);
+
+  repairActiveLayerColorPair(true);
 }
 
 void ColorBar::onBgColorButtonChange(const app::Color& color)
@@ -1401,6 +1813,8 @@ void ColorBar::onBgColorButtonChange(const app::Color& color)
 
   updateWarningIcon(color, m_bgWarningIcon);
   onColorButtonChange(color);
+
+  repairActiveLayerColorPair(false);
 }
 
 void ColorBar::onColorButtonChange(const app::Color& color)

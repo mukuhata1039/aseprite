@@ -36,6 +36,7 @@
 #include "app/transaction.h"
 #include "app/tx.h"
 #include "app/ui/app_menuitem.h"
+#include "app/ui/color_bar.h"
 #include "app/ui/configure_timeline_popup.h"
 #include "app/ui/doc_view.h"
 #include "app/ui/editor/editor.h"
@@ -97,6 +98,7 @@ enum {
   PART_ROW_EYE_ICON,
   PART_ROW_PADLOCK_ICON,
   PART_ROW_CONTINUOUS_ICON,
+  PART_ROW_COLOR_LOCK,
   PART_ROW_TEXT,
   PART_CEL,
   PART_RANGE_OUTLINE,
@@ -1376,6 +1378,20 @@ bool Timeline::onProcessMessage(Message* msg)
           }
           break;
         }
+        case PART_ROW_COLOR_LOCK: {
+          if (validLayer(m_clk.layer) && mouseMsg->left()) {
+            Layer* layer = m_rows[m_clk.layer].layer();
+
+            if (layer && layer->isImage()) {
+              if (ColorBar* colorBar = ColorBar::instance()) {
+                colorBar->toggleLayerColorLock(m_document, layer);
+                invalidate();
+              }
+            }
+          }
+          break;
+        }
+
         case PART_ROW_TEXT: {
           base::ScopedValue lock(m_fromTimeline, true);
           const layer_t old_layer = getLayerIndex(m_layer);
@@ -3024,6 +3040,85 @@ void Timeline::drawLayer(ui::Graphics* g, const int layerIdx)
            (hotlayer && m_hot.part == PART_ROW_CONTINUOUS_ICON),
            (clklayer && m_clk.part == PART_ROW_CONTINUOUS_ICON));
 
+  // Draw per-layer drawing-color lock marker.
+  bounds = getPartBounds(Hit(PART_ROW_COLOR_LOCK, layerIdx));
+
+  const bool is_clicked_color_lock =
+    (clklayer && m_clk.part == PART_ROW_COLOR_LOCK);
+  const bool is_hover_color_lock =
+    (hotlayer && m_hot.part == PART_ROW_COLOR_LOCK);
+
+  drawPart(g,
+           bounds,
+           nullptr,
+           styles.timelineBox(),
+           is_active || is_clicked_color_lock,
+           is_hover_color_lock,
+           is_clicked_color_lock,
+           !layer->isImage());
+
+  if (layer->isImage()) {
+    ColorBar* colorBar = ColorBar::instance();
+    const bool locked =
+      colorBar &&
+      colorBar->isLayerColorLocked(m_document, layer);
+
+    gfx::Color markerColor =
+      (is_active ?
+         skinTheme()->colors.timelineClickedText() :
+         skinTheme()->colors.timelineNormalText());
+
+    if (locked) {
+      const app::Color color =
+        colorBar->layerColorLock(m_document, layer);
+
+      markerColor =
+        gfx::rgba(color.getRed(),
+                  color.getGreen(),
+                  color.getBlue(),
+                  255);
+    }
+
+    const int s = guiscale();
+    const int cx = bounds.x + bounds.w / 2;
+    const int cy = bounds.y + bounds.h / 2;
+
+    if (locked) {
+      g->fillRect(markerColor,
+                  gfx::Rect(cx - 2 * s,
+                            cy - 3 * s,
+                            4 * s,
+                            6 * s));
+      g->fillRect(markerColor,
+                  gfx::Rect(cx - 3 * s,
+                            cy - 2 * s,
+                            6 * s,
+                            4 * s));
+    }
+    else {
+      g->fillRect(markerColor,
+                  gfx::Rect(cx - 2 * s,
+                            cy - 3 * s,
+                            4 * s,
+                            s));
+      g->fillRect(markerColor,
+                  gfx::Rect(cx - 2 * s,
+                            cy + 2 * s,
+                            4 * s,
+                            s));
+      g->fillRect(markerColor,
+                  gfx::Rect(cx - 3 * s,
+                            cy - 2 * s,
+                            s,
+                            4 * s));
+      g->fillRect(markerColor,
+                  gfx::Rect(cx + 2 * s,
+                            cy - 2 * s,
+                            s,
+                            4 * s));
+    }
+  }
+
   // Get the layer's name bounds.
   bounds = getPartBounds(Hit(PART_ROW_TEXT, layerIdx));
 
@@ -3856,9 +3951,19 @@ gfx::Rect Timeline::getPartBounds(const Hit& hit) const
       }
       break;
 
+    case PART_ROW_COLOR_LOCK:
+      if (validLayer(hit.layer)) {
+        return gfx::Rect(bounds.x + 3 * headerBoxWidth(),
+                         bounds.y + y + headerBoxHeight() +
+                           layerBoxHeight() * (lastLayer() - hit.layer) - viewScroll().y,
+                         headerBoxWidth(),
+                         layerBoxHeight());
+      }
+      break;
+
     case PART_ROW_TEXT:
       if (validLayer(hit.layer)) {
-        int x = headerBoxWidth() * 3;
+        int x = headerBoxWidth() * 4;
         return gfx::Rect(bounds.x + x,
                          bounds.y + y + headerBoxHeight() +
                            layerBoxHeight() * (lastLayer() - hit.layer) - viewScroll().y,
@@ -4423,6 +4528,8 @@ Timeline::Hit Timeline::hitTest(ui::Message* msg, const gfx::Point& mousePos)
         hit.part = PART_ROW_PADLOCK_ICON;
       else if (getPartBounds(Hit(PART_ROW_CONTINUOUS_ICON, hit.layer)).contains(mousePos))
         hit.part = PART_ROW_CONTINUOUS_ICON;
+      else if (getPartBounds(Hit(PART_ROW_COLOR_LOCK, hit.layer)).contains(mousePos))
+        hit.part = PART_ROW_COLOR_LOCK;
       else if (getPartBounds(Hit(PART_ROW_TEXT, hit.layer)).contains(mousePos))
         hit.part = PART_ROW_TEXT;
       else
