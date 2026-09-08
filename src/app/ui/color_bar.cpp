@@ -22,6 +22,7 @@
 #include "app/cmd/replace_image.h"
 #include "app/cmd/set_palette.h"
 #include "app/cmd/set_transparent_color.h"
+#include "app/cmd/set_user_data.h"
 #include "app/cmd_sequence.h"
 #include "app/color.h"
 #include "app/commands/command.h"
@@ -68,6 +69,7 @@
 #include "doc/sort_palette.h"
 #include "doc/sprite.h"
 #include "doc/tileset.h"
+#include "doc/user_data.h"
 #include "os/surface.h"
 #include "ui/alert.h"
 #include "ui/graphics.h"
@@ -93,6 +95,65 @@ enum class PalButton { SORT, PRESETS, OPTIONS, MAX };
 
 using namespace app::skin;
 using namespace ui;
+
+
+namespace {
+
+constexpr const char* kLayerColorLockGroup = "mukuhata.layer_color_lock";
+constexpr const char* kLayerColorLockField = "color";
+
+bool read_embedded_layer_color_lock(const doc::Layer* layer,
+                                    app::Color* color)
+{
+  if (!layer || !color)
+    return false;
+
+  const auto& maps = layer->userData().propertiesMaps();
+  const auto groupIt = maps.find(kLayerColorLockGroup);
+
+  if (groupIt == maps.end())
+    return false;
+
+  const auto valueIt =
+    groupIt->second.find(kLayerColorLockField);
+
+  if (valueIt == groupIt->second.end() ||
+      valueIt->second.type() != USER_DATA_PROPERTY_TYPE_STRING) {
+    return false;
+  }
+
+  const std::string& encoded =
+    doc::get_value<std::string>(valueIt->second);
+
+  if (encoded.empty())
+    return false;
+
+  *color = app::Color::fromString(encoded);
+  return true;
+}
+
+void write_embedded_layer_color_lock(doc::UserData& userData,
+                                     const app::Color* color)
+{
+  if (color) {
+    userData.properties(kLayerColorLockGroup)[kLayerColorLockField] =
+      color->toString();
+    return;
+  }
+
+  auto& maps = userData.propertiesMaps();
+  auto groupIt = maps.find(kLayerColorLockGroup);
+
+  if (groupIt == maps.end())
+    return;
+
+  groupIt->second.erase(kLayerColorLockField);
+
+  if (groupIt->second.empty())
+    maps.erase(groupIt);
+}
+
+} // anonymous namespace
 
 class ColorBar::WarningIcon : public ui::Button {
 public:
@@ -429,19 +490,48 @@ void ColorBar::setBgColor(const app::Color& color)
 
 bool ColorBar::isLayerColorLocked(const Doc* doc, const doc::Layer* layer) const
 {
-  if (!doc || !layer || doc != m_lastDocument)
+  if (!doc ||
+      !layer ||
+      doc != m_lastDocument ||
+      !doc->sprite() ||
+      layer->sprite() != doc->sprite()) {
     return false;
+  }
 
-  return m_layerColorLocks.find(layer->id()) != m_layerColorLocks.end();
+  app::Color color = app::Color::fromMask();
+
+  if (read_embedded_layer_color_lock(layer, &color))
+    return !isLayerColorLockTransparent(color);
+
+  const auto it =
+    m_layerColorLocks.find(layer->id());
+
+  return it != m_layerColorLocks.end();
 }
 
 app::Color ColorBar::layerColorLock(const Doc* doc, const doc::Layer* layer) const
 {
-  if (!doc || !layer || doc != m_lastDocument)
+  if (!doc ||
+      !layer ||
+      doc != m_lastDocument ||
+      !doc->sprite() ||
+      layer->sprite() != doc->sprite()) {
     return app::Color::fromMask();
+  }
 
-  const auto it = m_layerColorLocks.find(layer->id());
-  return (it != m_layerColorLocks.end() ? it->second : app::Color::fromMask());
+  app::Color color = app::Color::fromMask();
+
+  if (read_embedded_layer_color_lock(layer, &color) &&
+      !isLayerColorLockTransparent(color)) {
+    return color;
+  }
+
+  const auto it =
+    m_layerColorLocks.find(layer->id());
+
+  return (it != m_layerColorLocks.end() ?
+            it->second :
+            app::Color::fromMask());
 }
 
 const app::Color* ColorBar::activeLayerColorLock() const
@@ -579,38 +669,83 @@ void ColorBar::loadLayerColorLocks()
 {
   m_layerColorLocks.clear();
 
-  if (!m_lastDocument || !m_lastDocument->sprite())
+  if (!m_lastDocument ||
+      !m_lastDocument->sprite()) {
     return;
+  }
 
+  doc::Sprite* sprite =
+    m_lastDocument->sprite();
+
+  // New source of truth: the lock is stored inside the layer UserData.
+  for (doc::Layer* layer : sprite->allLayers()) {
+    if (!layer || !layer->isImage())
+      continue;
+
+    app::Color color =
+      app::Color::fromMask();
+
+    if (read_embedded_layer_color_lock(layer, &color) &&
+        !isLayerColorLockTransparent(color)) {
+      m_layerColorLocks[layer->id()] = color;
+    }
+  }
+
+  // Backward compatibility: migrate the previous filename-based
+  // per-document preference into the .aseprite document.
   const std::string encoded =
-    Preferences::instance().document(m_lastDocument).timeline.lockedLayerColors();
+    Preferences::instance()
+      .document(m_lastDocument)
+      .timeline
+      .lockedLayerColors();
 
-  if (encoded.empty())
+  if (encoded.empty()) {
+    pruneLayerColorLocks();
     return;
+  }
 
-  doc::Sprite* sprite = m_lastDocument->sprite();
+  bool legacyLockFound = false;
   size_t entryStart = 0;
 
   while (entryStart <= encoded.size()) {
-    const size_t entryEnd = encoded.find(';', entryStart);
+    const size_t entryEnd =
+      encoded.find(';', entryStart);
+
     const std::string entry =
-      encoded.substr(entryStart,
-                     (entryEnd == std::string::npos ? encoded.size() : entryEnd) - entryStart);
+      encoded.substr(
+        entryStart,
+        (entryEnd == std::string::npos ?
+           encoded.size() :
+           entryEnd) - entryStart);
 
-    const size_t equals = entry.find('=');
-    if (equals != std::string::npos && equals > 0 && equals + 1 < entry.size()) {
-      const std::string path = entry.substr(0, equals);
-      const std::string colorText = entry.substr(equals + 1);
+    const size_t equals =
+      entry.find('=');
 
-      doc::Layer* current = sprite->root();
+    if (equals != std::string::npos &&
+        equals > 0 &&
+        equals + 1 < entry.size()) {
+      const std::string path =
+        entry.substr(0, equals);
+
+      const std::string colorText =
+        entry.substr(equals + 1);
+
+      doc::Layer* current =
+        sprite->root();
+
       bool valid = true;
       size_t segmentStart = 0;
 
       while (segmentStart <= path.size()) {
-        const size_t segmentEnd = path.find('/', segmentStart);
+        const size_t segmentEnd =
+          path.find('/', segmentStart);
+
         const std::string segment =
-          path.substr(segmentStart,
-                      (segmentEnd == std::string::npos ? path.size() : segmentEnd) - segmentStart);
+          path.substr(
+            segmentStart,
+            (segmentEnd == std::string::npos ?
+               path.size() :
+               segmentEnd) - segmentStart);
 
         if (segment.empty()) {
           valid = false;
@@ -618,7 +753,12 @@ void ColorBar::loadLayerColorLocks()
         }
 
         char* parseEnd = nullptr;
-        const long wantedIndex = std::strtol(segment.c_str(), &parseEnd, 10);
+
+        const long wantedIndex =
+          std::strtol(
+            segment.c_str(),
+            &parseEnd,
+            10);
 
         if (!parseEnd ||
             parseEnd == segment.c_str() ||
@@ -636,6 +776,7 @@ void ColorBar::loadLayerColorLocks()
             next = child;
             break;
           }
+
           ++index;
         }
 
@@ -649,101 +790,129 @@ void ColorBar::loadLayerColorLocks()
         if (segmentEnd == std::string::npos)
           break;
 
-        segmentStart = segmentEnd + 1;
+        segmentStart =
+          segmentEnd + 1;
       }
 
-      if (valid && current && current != sprite->root() && current->isImage()) {
-        const app::Color color = app::Color::fromString(colorText);
-        if (!isLayerColorLockTransparent(color))
-          m_layerColorLocks[current->id()] = color;
+      if (valid &&
+          current &&
+          current != sprite->root() &&
+          current->isImage()) {
+        if (m_layerColorLocks.find(current->id()) ==
+            m_layerColorLocks.end()) {
+          const app::Color color =
+            app::Color::fromString(colorText);
+
+          if (!isLayerColorLockTransparent(color)) {
+            m_layerColorLocks[current->id()] = color;
+            legacyLockFound = true;
+          }
+        }
       }
     }
 
     if (entryEnd == std::string::npos)
       break;
 
-    entryStart = entryEnd + 1;
+    entryStart =
+      entryEnd + 1;
   }
 
   pruneLayerColorLocks();
+
+  if (legacyLockFound)
+    saveLayerColorLocks();
+  else
+    Preferences::instance()
+      .document(m_lastDocument)
+      .timeline
+      .lockedLayerColors(std::string());
 }
 
 void ColorBar::saveLayerColorLocks()
 {
-  if (!m_lastDocument || !m_lastDocument->sprite())
+  if (!m_lastDocument ||
+      !m_lastDocument->sprite()) {
     return;
+  }
 
   pruneLayerColorLocks();
 
-  doc::Sprite* sprite = m_lastDocument->sprite();
-  std::vector<std::string> entries;
+  struct Update {
+    doc::Layer* layer;
+    doc::UserData userData;
+  };
 
+  std::vector<Update> updates;
+
+  // The map is only a runtime cache. Missing cache entries must never
+  // erase embedded locks from duplicated layers with new ObjectIds.
   for (const auto& item : m_layerColorLocks) {
-    doc::Layer* layer = doc::get<doc::Layer>(item.first);
-    if (!layer || layer->sprite() != sprite || !layer->isImage())
+    doc::Layer* layer =
+      doc::get<doc::Layer>(item.first);
+
+    if (!layer ||
+        layer->sprite() != m_lastDocument->sprite() ||
+        !layer->isImage() ||
+        isLayerColorLockTransparent(item.second)) {
       continue;
-
-    std::vector<int> indices;
-    doc::Layer* current = layer;
-    bool valid = true;
-
-    while (current && current != sprite->root()) {
-      doc::Layer* parent = current->parent();
-      if (!parent) {
-        valid = false;
-        break;
-      }
-
-      int index = 0;
-      bool found = false;
-
-      for (doc::Layer* child : parent->layers()) {
-        if (child == current) {
-          found = true;
-          break;
-        }
-        ++index;
-      }
-
-      if (!found) {
-        valid = false;
-        break;
-      }
-
-      indices.push_back(index);
-      current = parent;
     }
 
-    if (!valid || indices.empty())
+    app::Color embedded =
+      app::Color::fromMask();
+
+    if (read_embedded_layer_color_lock(
+          layer,
+          &embedded) &&
+        embedded == item.second) {
       continue;
-
-    std::reverse(indices.begin(), indices.end());
-
-    std::string path;
-    for (size_t i = 0; i < indices.size(); ++i) {
-      if (i > 0)
-        path += '/';
-      path += std::to_string(indices[i]);
     }
 
-    entries.push_back(path + "=" + item.second.toString());
+    doc::UserData userData =
+      layer->userData();
+
+    write_embedded_layer_color_lock(
+      userData,
+      &item.second);
+
+    updates.push_back(
+      Update{ layer, userData });
   }
 
-  std::sort(entries.begin(), entries.end());
+  if (!updates.empty()) {
+    try {
+      Tx tx(
+        m_lastDocument,
+        "Set Layer Drawing Color Lock");
 
-  std::string encoded;
-  for (size_t i = 0; i < entries.size(); ++i) {
-    if (i > 0)
-      encoded += ';';
-    encoded += entries[i];
+      for (auto& update : updates) {
+        tx(new cmd::SetUserData(
+          update.layer,
+          update.userData,
+          m_lastDocument));
+      }
+
+      tx.commit();
+    }
+    catch (const std::exception& e) {
+      Console::showException(e);
+      return;
+    }
   }
 
-  Preferences::instance().document(m_lastDocument).timeline.lockedLayerColors(encoded);
+  Preferences::instance()
+    .document(m_lastDocument)
+    .timeline
+    .lockedLayerColors(std::string());
+
+  if (App::instance()->timeline())
+    App::instance()->timeline()->invalidate();
 }
 
 void ColorBar::toggleLayerColorLock(Doc* doc, doc::Layer* layer)
 {
-  if (!doc || !layer ||
+  if (!doc ||
+      !layer ||
       doc != m_lastDocument ||
       !doc->sprite() ||
       layer->sprite() != doc->sprite() ||
@@ -751,19 +920,73 @@ void ColorBar::toggleLayerColorLock(Doc* doc, doc::Layer* layer)
     return;
   }
 
-  const auto existing = m_layerColorLocks.find(layer->id());
-  if (existing != m_layerColorLocks.end()) {
-    m_layerColorLocks.erase(existing);
-    saveLayerColorLocks();
+  app::Color embedded =
+    app::Color::fromMask();
+
+  const bool embeddedLocked =
+    read_embedded_layer_color_lock(
+      layer,
+      &embedded) &&
+    !isLayerColorLockTransparent(embedded);
+
+  const auto cached =
+    m_layerColorLocks.find(layer->id());
+
+  // Unlock exactly the clicked layer.
+  if (embeddedLocked ||
+      cached != m_layerColorLocks.end()) {
+    doc::UserData userData =
+      layer->userData();
+
+    write_embedded_layer_color_lock(
+      userData,
+      nullptr);
+
+    try {
+      Tx tx(
+        doc,
+        "Unlock Layer Drawing Color");
+
+      tx(new cmd::SetUserData(
+        layer,
+        userData,
+        doc));
+
+      tx.commit();
+    }
+    catch (const std::exception& e) {
+      Console::showException(e);
+      return;
+    }
+
+    m_layerColorLocks.erase(
+      layer->id());
+
+    Preferences::instance()
+      .document(doc)
+      .timeline
+      .lockedLayerColors(std::string());
+
+    if (App::instance()->timeline())
+      App::instance()->timeline()->invalidate();
+
     return;
   }
 
-  const app::Color fg = getFgColor();
-  const app::Color bg = getBgColor();
-  const bool fgTransparent = isLayerColorLockTransparent(fg);
-  const bool bgTransparent = isLayerColorLockTransparent(bg);
+  const app::Color fg =
+    getFgColor();
 
-  app::Color fixed = app::Color::fromMask();
+  const app::Color bg =
+    getBgColor();
+
+  const bool fgTransparent =
+    isLayerColorLockTransparent(fg);
+
+  const bool bgTransparent =
+    isLayerColorLockTransparent(bg);
+
+  app::Color fixed =
+    app::Color::fromMask();
 
   if (!fgTransparent)
     fixed = fg;
@@ -775,12 +998,48 @@ void ColorBar::toggleLayerColorLock(Doc* doc, doc::Layer* layer)
   if (isLayerColorLockTransparent(fixed))
     return;
 
-  m_layerColorLocks[layer->id()] = fixed;
-  saveLayerColorLocks();
+  doc::UserData userData =
+    layer->userData();
 
-  const Site site = UIContext::instance()->activeSite();
-  if (site.document() == doc && site.layer() == layer)
+  write_embedded_layer_color_lock(
+    userData,
+    &fixed);
+
+  try {
+    Tx tx(
+      doc,
+      "Lock Layer Drawing Color");
+
+    tx(new cmd::SetUserData(
+      layer,
+      userData,
+      doc));
+
+    tx.commit();
+  }
+  catch (const std::exception& e) {
+    Console::showException(e);
+    return;
+  }
+
+  m_layerColorLocks[layer->id()] =
+    fixed;
+
+  Preferences::instance()
+    .document(doc)
+    .timeline
+    .lockedLayerColors(std::string());
+
+  if (App::instance()->timeline())
+    App::instance()->timeline()->invalidate();
+
+  const Site site =
+    UIContext::instance()->activeSite();
+
+  if (site.document() == doc &&
+      site.layer() == layer) {
     applyActiveLayerColorLock();
+  }
 }
 
 void ColorBar::setFgTile(doc::tile_t tile)
@@ -1022,10 +1281,8 @@ void ColorBar::onResize(ui::ResizeEvent& ev)
 void ColorBar::onActiveSiteChange(const Site& site)
 {
   if (m_lastDocument != site.document()) {
-    if (m_lastDocument) {
-      saveLayerColorLocks();
+    if (m_lastDocument)
       m_lastDocument->remove_observer(this);
-    }
 
     m_lastDocument = const_cast<Doc*>(site.document());
     m_layerColorLocks.clear();
@@ -1065,6 +1322,30 @@ void ColorBar::onActiveSiteChange(const Site& site)
   }
   else {
     m_lastTilesetId = doc::NullId;
+  }
+
+  // UserData is the source of truth. A duplicated layer has a new
+  // ObjectId, so sync this active layer into the runtime cache.
+  if (m_lastDocument &&
+      site.document() == m_lastDocument &&
+      site.layer() &&
+      site.layer()->isImage()) {
+    app::Color embedded =
+      app::Color::fromMask();
+
+    if (read_embedded_layer_color_lock(
+          site.layer(),
+          &embedded) &&
+        !isLayerColorLockTransparent(
+          embedded)) {
+      m_layerColorLocks[
+        site.layer()->id()] =
+        embedded;
+    }
+    else {
+      m_layerColorLocks.erase(
+        site.layer()->id());
+    }
   }
 
   applyActiveLayerColorLock();
@@ -1131,8 +1412,16 @@ void ColorBar::onBeforeExecuteCommand(CommandExecutionEvent& ev)
 
 void ColorBar::onAfterExecuteCommand(CommandExecutionEvent& ev)
 {
-  if (ev.command()->id() == CommandId::Undo() || ev.command()->id() == CommandId::Redo())
+  if (ev.command()->id() == CommandId::Undo() ||
+      ev.command()->id() == CommandId::Redo()) {
+    loadLayerColorLocks();
+    applyActiveLayerColorLock();
+
+    if (App::instance()->timeline())
+      App::instance()->timeline()->invalidate();
+
     invalidate();
+  }
 
   // If the sprite isn't Indexed anymore (e.g. because we've just
   // undone a "RGB -> Indexed" conversion), we hide the "Remap
