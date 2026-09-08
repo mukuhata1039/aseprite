@@ -60,6 +60,7 @@
 #include "os/system.h"
 #include "text/font.h"
 #include "text/font_metrics.h"
+#include "ui/alert.h"
 #include "ui/ui.h"
 #include "view/layers.h"
 #include "view/timeline_adapter.h"
@@ -67,6 +68,8 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <string>
+#include <utility>
 #include <vector>
 
 namespace app {
@@ -258,6 +261,8 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   , m_scroll(false)
   , m_fromTimeline(false)
   , m_aniControls(tooltipManager)
+  , m_hideTimelineLayersButton("Hide")
+  , m_restoreTimelineLayersButton("Restore")
   , m_layerOpacitySlider(255, AlphaSlider::OPACITY)
 {
   enableFlags(CTRL_RIGHT_CLICK | ALLOW_DROP);
@@ -270,6 +275,8 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   setDoubleBuffered(true);
   addChild(&m_aniControls);
   addChild(&m_layerOpacitySlider);
+  addChild(&m_hideTimelineLayersButton);
+  addChild(&m_restoreTimelineLayersButton);
   addChild(&m_hbar);
   addChild(&m_vbar);
 
@@ -281,6 +288,15 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   m_layerOpacitySlider.SliderReleased.connect(
     [this] { onLayerOpacitySliderReleased(); });
   m_layerOpacitySlider.setEnabled(false);
+
+  m_hideTimelineLayersButton.Click.connect(
+    [this] { hideSelectedTimelineLayers(); });
+
+  m_restoreTimelineLayersButton.Click.connect(
+    [this] { showRestoreTimelineLayersDialog(); });
+
+  m_hideTimelineLayersButton.setEnabled(false);
+  m_restoreTimelineLayersButton.setEnabled(false);
 
   initTheme();
 }
@@ -421,6 +437,9 @@ void Timeline::detachDocument()
   // anymore (because the document might be deleted soon).
   m_sprite = nullptr;
   m_layer = nullptr;
+
+  m_hideTimelineLayersButton.setEnabled(false);
+  m_restoreTimelineLayersButton.setEnabled(false);
 
   if (m_editor) {
     if (DocView* view = m_editor->getDocView())
@@ -576,6 +595,280 @@ void Timeline::onLayerOpacitySliderReleased()
   tx.commit();
 
   update_screen_for_document(writer.document());
+}
+
+bool Timeline::isTimelineLayerDirectlyHidden(const Layer* layer) const
+{
+  if (!layer || !m_document)
+    return false;
+
+  const auto docIt =
+    m_hiddenTimelineLayersByDocument.find(m_document);
+
+  if (docIt == m_hiddenTimelineLayersByDocument.end())
+    return false;
+
+  return
+    docIt->second.find(layer->id()) !=
+    docIt->second.end();
+}
+
+bool Timeline::isTimelineLayerEffectivelyHidden(const Layer* layer) const
+{
+  if (!layer || !m_sprite)
+    return false;
+
+  const Layer* current = layer;
+
+  while (current && current != m_sprite->root()) {
+    if (isTimelineLayerDirectlyHidden(current))
+      return true;
+
+    current = current->parent();
+  }
+
+  return false;
+}
+
+void Timeline::pruneTimelineHiddenLayers()
+{
+  if (!m_document || !m_sprite)
+    return;
+
+  auto docIt =
+    m_hiddenTimelineLayersByDocument.find(m_document);
+
+  if (docIt == m_hiddenTimelineLayersByDocument.end())
+    return;
+
+  auto& hidden = docIt->second;
+
+  for (auto it = hidden.begin(); it != hidden.end();) {
+    Layer* layer = doc::get<Layer>(*it);
+
+    if (!layer || layer->sprite() != m_sprite)
+      it = hidden.erase(it);
+    else
+      ++it;
+  }
+}
+
+void Timeline::hideSelectedTimelineLayers()
+{
+  if (!m_document || !m_sprite)
+    return;
+
+  pruneTimelineHiddenLayers();
+
+  std::vector<Layer*> selectedLayers;
+
+  // Use the current timeline range when multiple layer rows/cels
+  // are selected. Otherwise hide the active layer.
+  if (m_range.enabled() &&
+      (m_range.type() == Range::kLayers ||
+       m_range.type() == Range::kCels)) {
+    for (Layer* layer : m_range.selectedLayers()) {
+      if (layer)
+        selectedLayers.push_back(layer);
+    }
+  }
+
+  if (selectedLayers.empty() && m_layer)
+    selectedLayers.push_back(m_layer);
+
+  if (selectedLayers.empty())
+    return;
+
+  auto& hidden =
+    m_hiddenTimelineLayersByDocument[m_document];
+
+  std::set<doc::ObjectId> selectedIds;
+
+  for (Layer* layer : selectedLayers)
+    selectedIds.insert(layer->id());
+
+  bool changed = false;
+
+  // If one Hide operation contains both a group and one of its
+  // descendants, only the highest selected ancestor becomes
+  // directly hidden.
+  for (Layer* layer : selectedLayers) {
+    bool hasSelectedAncestor = false;
+
+    Layer* parent = layer->parent();
+
+    while (parent && parent != m_sprite->root()) {
+      if (selectedIds.find(parent->id()) != selectedIds.end()) {
+        hasSelectedAncestor = true;
+        break;
+      }
+
+      parent = parent->parent();
+    }
+
+    if (!hasSelectedAncestor) {
+      if (hidden.insert(layer->id()).second)
+        changed = true;
+    }
+  }
+
+  if (!changed)
+    return;
+
+  // If the active layer is about to disappear from the Timeline,
+  // select the nearest row which will remain visible.
+  Layer* layerToSelect = nullptr;
+
+  if (m_layer &&
+      isTimelineLayerEffectivelyHidden(m_layer)) {
+    const layer_t oldIndex = getLayerIndex(m_layer);
+
+    if (oldIndex >= 0) {
+      for (int distance = 1;
+           distance <= int(m_rows.size());
+           ++distance) {
+        const int lower = int(oldIndex) - distance;
+        const int upper = int(oldIndex) + distance;
+
+        if (lower >= 0) {
+          Layer* candidate = m_rows[lower].layer();
+
+          if (!isTimelineLayerEffectivelyHidden(candidate)) {
+            layerToSelect = candidate;
+            break;
+          }
+        }
+
+        if (upper < int(m_rows.size())) {
+          Layer* candidate = m_rows[upper].layer();
+
+          if (!isTimelineLayerEffectivelyHidden(candidate)) {
+            layerToSelect = candidate;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  clearAndInvalidateRange();
+
+  bool regeneratedBySetLayer = false;
+
+  if (layerToSelect && layerToSelect != m_layer) {
+    setLayer(layerToSelect);
+    regeneratedBySetLayer = true;
+  }
+
+  if (!regeneratedBySetLayer)
+    regenerateRows();
+
+  showCurrentCel();
+  invalidate();
+}
+
+void Timeline::showRestoreTimelineLayersDialog()
+{
+  if (!m_document || !m_sprite)
+    return;
+
+  pruneTimelineHiddenLayers();
+
+  auto docIt =
+    m_hiddenTimelineLayersByDocument.find(m_document);
+
+  if (docIt == m_hiddenTimelineLayersByDocument.end() ||
+      docIt->second.empty()) {
+    ui::Alert::show(
+      "Restore Timeline Layers"
+      "<<There are no hidden timeline rows."
+      "||&OK");
+    return;
+  }
+
+  std::vector<std::pair<std::string, doc::ObjectId>> entries;
+
+  for (const doc::ObjectId id : docIt->second) {
+    Layer* layer = doc::get<Layer>(id);
+
+    if (!layer || layer->sprite() != m_sprite)
+      continue;
+
+    std::vector<std::string> pathParts;
+
+    Layer* current = layer;
+
+    while (current && current != m_sprite->root()) {
+      pathParts.push_back(current->name());
+      current = current->parent();
+    }
+
+    std::reverse(pathParts.begin(), pathParts.end());
+
+    std::string path;
+
+    for (size_t i = 0; i < pathParts.size(); ++i) {
+      if (i > 0)
+        path += " > ";
+
+      path += pathParts[i];
+    }
+
+    entries.emplace_back(path, id);
+  }
+
+  std::sort(
+    entries.begin(),
+    entries.end(),
+    [](const auto& a, const auto& b) {
+      return a.first < b.first;
+    });
+
+  ui::AlertPtr alert =
+    ui::Alert::create("Restore Timeline Layers");
+
+  std::vector<std::pair<doc::ObjectId, ui::CheckBox*>>
+    checkBoxes;
+
+  for (const auto& entry : entries) {
+    ui::CheckBox* check =
+      alert->addCheckBox(entry.first);
+
+    checkBoxes.emplace_back(entry.second, check);
+  }
+
+  alert->addButton("&Restore");
+  alert->addButton("Restore &All");
+  alert->addButton("&Cancel");
+
+  const int result = alert->show();
+
+  bool changed = false;
+
+  if (result == 1) {
+    for (const auto& entry : checkBoxes) {
+      if (entry.second->isSelected()) {
+        if (docIt->second.erase(entry.first) > 0)
+          changed = true;
+      }
+    }
+  }
+  else if (result == 2) {
+    if (!docIt->second.empty()) {
+      docIt->second.clear();
+      changed = true;
+    }
+  }
+  else {
+    return;
+  }
+
+  if (!changed)
+    return;
+
+  regenerateRows();
+  showCurrentCel();
+  invalidate();
 }
 
 void Timeline::setFrame(col_t frame, bool byUser)
@@ -1731,6 +2024,15 @@ void Timeline::onInitTheme(ui::InitThemeEvent& ev)
     m_confPopup->initTheme();
 
   m_separator_w = guiscale();
+
+  m_hideTimelineLayersButton.setTransparent(true);
+  m_restoreTimelineLayersButton.setTransparent(true);
+
+  m_hideTimelineLayersButton.setStyle(
+    theme->styles.miniButton());
+
+  m_restoreTimelineLayersButton.setStyle(
+    theme->styles.miniButton());
 }
 
 void Timeline::onInvalidateRegion(const gfx::Region& region)
@@ -1763,16 +2065,59 @@ void Timeline::onResize(ui::ResizeEvent& ev)
     controlsW,
     oneTagHeight()));
 
-  // Layer/group opacity slider, placed to the right of the animation controls.
-  // It can extend into the frame area instead of being limited to the layer panel.
-  const int opacityGap = 2 * guiscale();
-  const int opacityX = rc.x + controlsW + opacityGap;
-  const int availableOpacityW = std::max(0, rc.x + rc.w - opacityX);
-  const int opacityW = std::min(120 * guiscale(), availableOpacityW);
+  // Layer/group opacity slider + timeline-only Hide/Restore buttons.
+  const int controlGap = 2 * guiscale();
+
+  const int hideButtonW = 44 * guiscale();
+  const int restoreButtonW = 60 * guiscale();
+
+  const int opacityX =
+    rc.x + controlsW + controlGap;
+
+  const int reservedButtonsW =
+    controlGap +
+    hideButtonW +
+    controlGap +
+    restoreButtonW;
+
+  const int availableOpacityW =
+    std::max(
+      0,
+      rc.x + rc.w -
+        opacityX -
+        reservedButtonsW);
+
+  const int opacityW =
+    std::min(
+      120 * guiscale(),
+      availableOpacityW);
+
   m_layerOpacitySlider.setBounds(gfx::Rect(
     opacityX,
     topY,
     opacityW,
+    oneTagHeight()));
+
+  const int hideButtonX =
+    opacityX +
+    opacityW +
+    controlGap;
+
+  m_hideTimelineLayersButton.setBounds(gfx::Rect(
+    hideButtonX,
+    topY,
+    hideButtonW,
+    oneTagHeight()));
+
+  const int restoreButtonX =
+    hideButtonX +
+    hideButtonW +
+    controlGap;
+
+  m_restoreTimelineLayersButton.setBounds(gfx::Rect(
+    restoreButtonX,
+    topY,
+    restoreButtonW,
     oneTagHeight()));
 
   updateScrollBars();
@@ -1984,6 +2329,8 @@ void Timeline::onActiveSiteChange(const Site& site)
 
 void Timeline::onRemoveDocument(Doc* document)
 {
+  m_hiddenTimelineLayersByDocument.erase(document);
+
   if (document == m_document) {
     detachDocument();
   }
@@ -3552,9 +3899,19 @@ void Timeline::regenerateRows()
   ASSERT(m_document);
   ASSERT(m_sprite);
 
+  pruneTimelineHiddenLayers();
+
   size_t nlayers = 0;
-  for_each_expanded_layer(m_sprite->root(),
-                          [&nlayers](Layer* layer, int level, LayerFlags flags) { ++nlayers; });
+
+  for_each_expanded_layer(
+    m_sprite->root(),
+    [this, &nlayers](
+      Layer* layer,
+      int level,
+      LayerFlags flags) {
+      if (!isTimelineLayerEffectivelyHidden(layer))
+        ++nlayers;
+    });
 
   if (m_rows.size() != nlayers) {
     if (nlayers > 0)
@@ -3564,12 +3921,32 @@ void Timeline::regenerateRows()
   }
 
   size_t i = 0;
-  for_each_expanded_layer(m_sprite->root(), [&i, this](Layer* layer, int level, LayerFlags flags) {
-    m_rows[i++] = Row(layer, level, flags);
-  });
+
+  for_each_expanded_layer(
+    m_sprite->root(),
+    [this, &i](
+      Layer* layer,
+      int level,
+      LayerFlags flags) {
+      if (isTimelineLayerEffectivelyHidden(layer))
+        return;
+
+      m_rows[i++] =
+        Row(layer, level, flags);
+    });
 
   regenerateTagBands();
   updateScrollBars();
+
+  m_hideTimelineLayersButton.setEnabled(
+    !m_rows.empty());
+
+  const auto hiddenIt =
+    m_hiddenTimelineLayersByDocument.find(m_document);
+
+  m_restoreTimelineLayersButton.setEnabled(
+    hiddenIt != m_hiddenTimelineLayersByDocument.end() &&
+    !hiddenIt->second.empty());
 }
 
 void Timeline::regenerateTagBands()

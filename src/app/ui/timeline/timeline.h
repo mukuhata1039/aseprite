@@ -30,13 +30,16 @@
 #include "gfx/color.h"
 #include "obs/connection.h"
 #include "obs/observable.h"
+#include "ui/button.h"
 #include "ui/scroll_bar.h"
 #include "ui/timer.h"
 #include "ui/widget.h"
 #include "view/range.h"
 #include "view/timeline_adapter.h"
 
+#include <map>
 #include <memory>
+#include <set>
 #include <vector>
 
 namespace doc {
@@ -288,6 +291,14 @@ private:
   void updateLayerOpacitySlider();
   void onLayerOpacitySliderChange();
   void onLayerOpacitySliderReleased();
+
+  // Timeline-only layer hiding. This never changes Layer visibility.
+  bool isTimelineLayerDirectlyHidden(const Layer* layer) const;
+  bool isTimelineLayerEffectivelyHidden(const Layer* layer) const;
+  void pruneTimelineHiddenLayers();
+  void hideSelectedTimelineLayers();
+  void showRestoreTimelineLayersDialog();
+
   void setFrame(col_t frame, bool byUser);
   bool allLayersVisible();
   bool allLayersInvisible();
@@ -491,9 +502,17 @@ private:
   bool m_fromTimeline;
 
   AniControls m_aniControls;
+
+  ui::Button m_hideTimelineLayersButton;
+  ui::Button m_restoreTimelineLayersButton;
+
   AlphaSlider m_layerOpacitySlider;
   int m_layerOpacityStart = 255;
   bool m_layerOpacityEditing = false;
+
+  // Only layers explicitly hidden by the user are stored here.
+  // Children hidden because their parent is hidden are not added.
+  std::map<Doc*, std::set<doc::ObjectId>> m_hiddenTimelineLayersByDocument;
 
   // Data used for thumbnails.
   bool m_thumbnailsOverlayVisible;
