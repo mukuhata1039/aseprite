@@ -770,7 +770,6 @@ Layer* DocApi::duplicateLayerAfter(Layer* sourceLayer,
   ASSERT(parent);
   Layer* newLayerPtr = copyLayerForSprite(sourceLayer, parent->sprite(), shareTilesets);
 
-  newLayerPtr->setName(Strings::general_copy_of(newLayerPtr->name()));
 
   addLayer(parent, newLayerPtr, afterLayer);
 
