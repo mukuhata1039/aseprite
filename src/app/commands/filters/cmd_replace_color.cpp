@@ -243,7 +243,7 @@ private:
 class LayerRecolorWindow : public FilterWindow {
 public:
   LayerRecolorWindow(LayerRecolorFilter& filter, FilterManagerImpl& mgr)
-    : FilterWindow("Recolor Layer",
+    : FilterWindow(Strings::replace_color_layer_title().c_str(),
                    "RecolorLayer",
                    &mgr,
                    WithoutChannelsSelector,
