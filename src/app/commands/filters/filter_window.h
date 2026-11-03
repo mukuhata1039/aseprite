@@ -56,7 +56,11 @@ protected:
   ui::Widget* getContainer() { return &m_container; }
   // Layer-wide recolor has a fixed target; do not show the usual
   // selected/all-cels switch in its dialog.
-  void hideTargetButtons() { m_targetButton.setVisible(false); }
+  void hideTargetButtons()
+  {
+    m_targetButton.setVisible(false);
+    m_fixedTarget = true;
+  }
 
   void apply();
 
