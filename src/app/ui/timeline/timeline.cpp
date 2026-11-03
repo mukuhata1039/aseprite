@@ -627,7 +627,7 @@ void Timeline::updateFpsSlider()
   // the active frame, while editing makes all frame durations uniform.
   const frame_t f = (m_editor ? m_editor->frame() : frame_t(0));
   const int msecs = m_sprite->frameDuration(f);
-  m_fpsSlider.setValue(std::clamp(int(1000.0 / std::max(1, msecs) + 0.5), 1, 120));
+  m_fpsSlider.setFromFrameDurationMs(msecs);
 }
 
 void Timeline::onFpsSliderChange()
@@ -642,7 +642,7 @@ void Timeline::onFpsSliderChange()
     m_fpsEditing = true;
   }
 
-  const int millis = std::max(1, int(1000.0 / m_fpsSlider.getValue() + 0.5));
+  const int millis = m_fpsSlider.frameDurationMs();
   m_sprite->setDurationForAllFrames(millis);
   update_screen_for_document(m_document);
   invalidate();
@@ -659,7 +659,7 @@ void Timeline::onFpsSliderReleased()
     return;
 
   m_fpsEditing = false;
-  const int millis = std::max(1, int(1000.0 / m_fpsSlider.getValue() + 0.5));
+  const int millis = m_fpsSlider.frameDurationMs();
   bool changed = false;
   for (frame_t f = 0; f < m_sprite->totalFrames(); ++f) {
     const int old = m_fpsStartDurations[size_t(f)];
