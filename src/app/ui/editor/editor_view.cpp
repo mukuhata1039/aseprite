@@ -110,6 +110,16 @@ void EditorView::onScrollRegion(ui::ScrollRegionEvent& ev)
   Editor* editor = this->editor();
   ASSERT(editor);
   if (editor) {
+    if (editor->viewRotation() != 0.0) {
+      // ui::View normally reuses old screen pixels by translating
+      // them during scrolling. A rotated editor has no axis-aligned
+      // 1:1 scroll translation, so the reused pixels appear as torn
+      // strips until another repaint. Reject all reusable pixels;
+      // View will invalidate and repaint the entire viewport.
+      region.clear();
+      return;
+    }
+
     gfx::Region invalidRegion;
     editor->getInvalidDecoratoredRegion(invalidRegion);
     region.createSubtraction(region, invalidRegion);

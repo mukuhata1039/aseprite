@@ -3136,6 +3136,40 @@ void Editor::setZoomAndCenterInMouse(const Zoom& zoom,
   Projection proj = m_proj;
   proj.setZoom(zoom);
 
+  // With view rotation, the mouse position is in *rotated display*
+  // coordinates. The normal axis-aligned zoom routine mixes those
+  // coordinates with unrotated projection values, so the sprite
+  // point below the cursor drifts on each wheel step. Preserve the
+  // exact sprite-space point, then solve the inverse rotation for
+  // the scroll needed to keep that point at the same screen pixel.
+  if (m_viewRotationDegrees != 0.0) {
+    const gfx::Point screenAnchor =
+      (zoomBehavior == ZoomBehavior::CENTER ? vp.center() : mousePos);
+    const gfx::PointF spriteAnchor = screenToEditorF(screenAnchor);
+
+    setZoom(zoom);
+    updateEditor(false);
+
+    // Zooming can change scrollbar visibility and therefore the
+    // viewport's size/pivot. Resolve the new viewport after relayout
+    // instead of reusing the previous rotation center.
+    vp = view->viewportBounds();
+    m_padding = calcExtraPadding(m_proj);
+    const gfx::Point targetScreen =
+      (zoomBehavior == ZoomBehavior::CENTER ? vp.center() : screenAnchor);
+    const gfx::PointF unrotated = rotateViewPoint(
+      gfx::PointF(targetScreen.x, targetScreen.y), true);
+
+    const gfx::Point scroll(
+      int(std::lround(vp.x + m_padding.x +
+                      m_proj.applyX<double>(spriteAnchor.x) - unrotated.x)),
+      int(std::lround(vp.y + m_padding.y +
+                      m_proj.applyY<double>(spriteAnchor.y) - unrotated.y)));
+    setEditorScroll(scroll);
+    invalidate();
+    return;
+  }
+
   gfx::Point screenPos;
   gfx::Point spritePos;
   gfx::PointT<double> subpixelPos(0.5, 0.5);
