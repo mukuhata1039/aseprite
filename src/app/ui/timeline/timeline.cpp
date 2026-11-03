@@ -616,6 +616,57 @@ void Timeline::onLayerOpacitySliderReleased()
 }
 
 
+bool Timeline::FpsSlider::onProcessMessage(ui::Message* msg)
+{
+  switch (msg->type()) {
+    case kMouseDownMessage: {
+      auto* mouseMsg = static_cast<ui::MouseMessage*>(msg);
+      const bool startFineDrag = mouseMsg->left() && isEnabled() && !isReadOnly();
+
+      // Preserve the native Aseprite behavior on the first click:
+      // jump near the clicked FPS value and capture the mouse.
+      const bool processed = ui::Slider::onProcessMessage(msg);
+      if (startFineDrag && hasCapture()) {
+        m_fineLeftDrag = true;
+        m_fineDragAnchorX = mouseMsg->positionForDisplay(display()).x;
+        m_fineDragAnchorTick = getValue();
+      }
+      return processed;
+    }
+    case kMouseMoveMessage:
+      if (m_fineLeftDrag && hasCapture()) {
+        const auto* mouseMsg = static_cast<ui::MouseMessage*>(msg);
+        const int mouseX = mouseMsg->positionForDisplay(display()).x;
+        const int nextTick = std::clamp(
+          m_fineDragAnchorTick + mouseX - m_fineDragAnchorX,
+          getMinValue(),
+          getMaxValue());
+
+        if (nextTick != getValue()) {
+          setValue(nextTick);
+          onChange();
+        }
+        return true;
+      }
+      break;
+
+    case kMouseUpMessage:
+      m_fineLeftDrag = false;
+      break;
+
+    case kFocusLeaveMessage:
+      if (!hasCapture())
+        m_fineLeftDrag = false;
+      break;
+
+    default: break;
+  }
+
+  // Mouse wheel, keyboard, right-drag, and mouse-up/undo commit all
+  // retain their original Slider behavior.
+  return ui::Slider::onProcessMessage(msg);
+}
+
 void Timeline::updateFpsSlider()
 {
   if (m_fpsEditing)
