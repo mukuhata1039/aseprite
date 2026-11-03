@@ -2575,6 +2575,61 @@ void Editor::onResize(ui::ResizeEvent& ev)
     m_state->onEditorResize(this);
 }
 
+// Draw a full, padded editor scene and rotate the composited view.
+// The extra diagonal padding allows pixels outside the unrotated
+// viewport to remain visible near the four corners at any angle.
+// No pixels in the sprite/document are transformed.
+void Editor::drawRotatedView(ui::Graphics* g)
+{
+  const gfx::Rect rc = clientBounds();
+  if (rc.w <= 0 || rc.h <= 0)
+    return;
+
+  const int side = int(std::ceil(std::hypot(double(rc.w), double(rc.h)))) + 4;
+  const int padX = (side - rc.w) / 2;
+  const int padY = (side - rc.h) / 2;
+
+  if (!m_rotationSurface ||
+      m_rotationSurface->width() != side ||
+      m_rotationSurface->height() != side) {
+    m_rotationSurface =
+      os::System::instance()->makeRgbaSurface(side, side, m_document->osColorSpace());
+  }
+
+  // The Graphics origin offset keeps the original sprite/editor draw
+  // routines in screen coordinates, but broadens the clip bounds.
+  ui::Graphics offscreen(nullptr, m_rotationSurface, padX, padY);
+  const auto theme = SkinTheme::get(this);
+  offscreen.fillRect(theme->colors.editorFace(),
+                     gfx::Rect(-padX, -padY, side, side));
+
+  {
+    base::ScopedValue drawingBuffer(m_renderingRotationSurface, true);
+    drawBackground(&offscreen);
+    drawSpriteUnclippedRect(&offscreen, m_sprite->bounds());
+  }
+
+  const auto center = rotationCenterInDisplay();
+  const auto localCenter = gfx::PointF(
+    center.x - bounds().x, center.y - bounds().y);
+  gfx::Matrix transform;
+  transform.setRotate(
+    float(m_viewRotationDegrees),
+    float(localCenter.x + g->getInternalDeltaX()),
+    float(localCenter.y + g->getInternalDeltaY()));
+
+  os::Paint paint;
+  paint.blendMode(os::BlendMode::Src);
+  g->save();
+  g->concat(transform);
+  g->drawSurface(m_rotationSurface.get(),
+                 gfx::Rect(0, 0, side, side),
+                 gfx::Rect(-padX, -padY, side, side),
+                 os::Sampling(os::Sampling::Filter::Nearest),
+                 &paint);
+  g->restore();
+}
+
 void Editor::onPaint(ui::PaintEvent& ev)
 {
   std::unique_ptr<HideBrushPreview> hide;
@@ -2607,10 +2662,17 @@ void Editor::onPaint(ui::PaintEvent& ev)
       // sprite) to avoid locking the UI.
       DocReader documentReader(m_document, 0);
 
-      // Draw the sprite in the editor
+      // Draw the sprite in the editor. At nonzero view angles the
+      // entire scene (including selection/grid/guide decorations)
+      // is rendered once into a padded surface and rotated.
       renderChrono.reset();
-      drawBackground(g);
-      drawSpriteUnclippedRect(g, m_sprite->bounds());
+      if (m_viewRotationDegrees == 0.0) {
+        drawBackground(g);
+        drawSpriteUnclippedRect(g, m_sprite->bounds());
+      }
+      else {
+        drawRotatedView(g);
+      }
       renderElapsed = renderChrono.elapsed();
 
 #if ENABLE_DEVMODE
@@ -2632,9 +2694,11 @@ void Editor::onPaint(ui::PaintEvent& ev)
       }
 #endif // ENABLE_DEVMODE
 
-      // Draw the mask boundaries
+      // Mask boundaries are already part of the rotated offscreen
+      // scene. Do not draw them again with unrotated coordinates.
       if (m_document->hasMaskBoundaries()) {
-        drawMask(g);
+        if (m_viewRotationDegrees == 0.0)
+          drawMask(g);
         m_antsTimer.start();
       }
       else {
