@@ -2531,7 +2531,11 @@ bool Editor::onProcessMessage(Message* msg)
         auto rotateKey = shortcuts->action(KeyAction::RotateCanvasView, KeyContext::Normal);
         if (rotateKey && rotateKey->isPressed(msg, KeyContext::Normal)) {
           m_brushPreview.hide();
-          setViewRotationPivot(mousePosInDisplay());
+          // The native KeyMessage repeat count is zero only on the
+          // initial press. Auto-repeat must not move the rotation
+          // pivot while the shortcut is held.
+          if (static_cast<KeyMessage*>(msg)->repeat() == 0)
+            setViewRotationPivot(mousePosInDisplay());
           setCursor(mousePosInDisplay());
           return true;
         }
