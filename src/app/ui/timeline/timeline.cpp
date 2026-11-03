@@ -13,6 +13,7 @@
 
 #include "app/app.h"
 #include "app/app_menus.h"
+#include "app/cmd/set_layer_flags.h"
 #include "app/cmd/set_layer_opacity.h"
 #include "app/cmd/set_tag_range.h"
 #include "app/cmd_transaction.h"
@@ -99,6 +100,7 @@ enum {
   PART_ROW_PADLOCK_ICON,
   PART_ROW_CONTINUOUS_ICON,
   PART_ROW_COLOR_LOCK,
+  PART_ROW_CLIPPING,
   PART_ROW_TEXT,
   PART_CEL,
   PART_RANGE_OUTLINE,
@@ -1386,6 +1388,46 @@ bool Timeline::onProcessMessage(Message* msg)
               if (ColorBar* colorBar = ColorBar::instance()) {
                 colorBar->toggleLayerColorLock(m_document, layer);
                 invalidate();
+              }
+            }
+          }
+          break;
+        }
+
+        case PART_ROW_CLIPPING: {
+          if (validLayer(m_clk.layer) && mouseMsg->left()) {
+            Layer* layer = m_rows[m_clk.layer].layer();
+            const Layer* below = layer ? layer->getPrevious() : nullptr;
+            const bool canClip = layer && layer->isImage() && !layer->isTilemap() &&
+                                 !layer->isBackground() && below && below->isImage() &&
+                                 !below->isTilemap();
+
+            // Allow disabling an existing clip even if its base was
+            // deleted or moved; enabling still requires a raster base.
+            if (canClip || (layer && layer->isClipped())) {
+              const int clippedBit = int(LayerFlags::Clipped);
+              const int inheritedBit = int(LayerFlags::ClipInherited);
+              const int flags = int(layer->flags());
+              int nextFlags = flags & ~(clippedBit | inheritedBit);
+
+              if (!layer->isClipped() && canClip)
+                nextFlags |= clippedBit;                // Off -> Chain
+              else if (layer->isClipped() && !layer->isClipInherited() && canClip)
+                nextFlags |= clippedBit | inheritedBit; // Chain -> Inherit
+              // Inherit -> Off (or invalid mask -> Off).
+
+              if (nextFlags != flags) {
+                try {
+                  ContextWriter writer(m_context);
+                  Tx tx(writer, "Set Layer Clipping");
+                  tx(new cmd::SetLayerFlags(layer, LayerFlags(nextFlags)));
+                  tx.commit();
+                  m_document->notifyGeneralUpdate();
+                  invalidate();
+                }
+                catch (const std::exception& e) {
+                  Console::showException(e);
+                }
               }
             }
           }
@@ -3119,6 +3161,45 @@ void Timeline::drawLayer(ui::Graphics* g, const int layerIdx)
     }
   }
 
+  // Compact three-state clipping control beside the drawing-color lock:
+  // empty = off, C = chain/intersection, I = inherit the original base.
+  bounds = getPartBounds(Hit(PART_ROW_CLIPPING, layerIdx));
+  const Layer* clipBase = layer->getPrevious();
+  const bool canClip = layer->isImage() && !layer->isTilemap() &&
+                       !layer->isBackground() && clipBase &&
+                       clipBase->isImage() && !clipBase->isTilemap();
+  const bool clickedClip = clklayer && m_clk.part == PART_ROW_CLIPPING;
+  drawPart(g,
+           bounds,
+           nullptr,
+           styles.timelineBox(),
+           is_active || clickedClip,
+           hotlayer && m_hot.part == PART_ROW_CLIPPING,
+           clickedClip,
+           !canClip && !layer->isClipped());
+
+  if (layer->isClipped()) {
+    const gfx::Color ink =
+      (is_active ? skinTheme()->colors.timelineClickedText() :
+                   skinTheme()->colors.timelineNormalText());
+    const int s = guiscale();
+    const int cx = bounds.x + bounds.w / 2;
+    const int cy = bounds.y + bounds.h / 2;
+
+    if (layer->isClipInherited()) {
+      // Pixel-art 'I' indicates inherited clipping.
+      g->fillRect(ink, gfx::Rect(cx - 3 * s, cy - 3 * s, 6 * s, s));
+      g->fillRect(ink, gfx::Rect(cx - s, cy - 2 * s, 2 * s, 4 * s));
+      g->fillRect(ink, gfx::Rect(cx - 3 * s, cy + 2 * s, 6 * s, s));
+    }
+    else {
+      // Pixel-art 'C' indicates chained clipping.
+      g->fillRect(ink, gfx::Rect(cx - 2 * s, cy - 3 * s, 4 * s, s));
+      g->fillRect(ink, gfx::Rect(cx - 3 * s, cy - 2 * s, s, 4 * s));
+      g->fillRect(ink, gfx::Rect(cx - 2 * s, cy + 2 * s, 4 * s, s));
+    }
+  }
+
   // Get the layer's name bounds.
   bounds = getPartBounds(Hit(PART_ROW_TEXT, layerIdx));
 
@@ -3961,9 +4042,19 @@ gfx::Rect Timeline::getPartBounds(const Hit& hit) const
       }
       break;
 
+    case PART_ROW_CLIPPING:
+      if (validLayer(hit.layer)) {
+        return gfx::Rect(bounds.x + 4 * headerBoxWidth(),
+                         bounds.y + y + headerBoxHeight() +
+                           layerBoxHeight() * (lastLayer() - hit.layer) - viewScroll().y,
+                         headerBoxWidth(),
+                         layerBoxHeight());
+      }
+      break;
+
     case PART_ROW_TEXT:
       if (validLayer(hit.layer)) {
-        int x = headerBoxWidth() * 4;
+        int x = headerBoxWidth() * 5;
         return gfx::Rect(bounds.x + x,
                          bounds.y + y + headerBoxHeight() +
                            layerBoxHeight() * (lastLayer() - hit.layer) - viewScroll().y,
@@ -4530,6 +4621,8 @@ Timeline::Hit Timeline::hitTest(ui::Message* msg, const gfx::Point& mousePos)
         hit.part = PART_ROW_CONTINUOUS_ICON;
       else if (getPartBounds(Hit(PART_ROW_COLOR_LOCK, hit.layer)).contains(mousePos))
         hit.part = PART_ROW_COLOR_LOCK;
+      else if (getPartBounds(Hit(PART_ROW_CLIPPING, hit.layer)).contains(mousePos))
+        hit.part = PART_ROW_CLIPPING;
       else if (getPartBounds(Hit(PART_ROW_TEXT, hit.layer)).contains(mousePos))
         hit.part = PART_ROW_TEXT;
       else
@@ -4729,6 +4822,18 @@ void Timeline::updateStatusBar(ui::Message* msg)
                                                                   "prefer individual cels/frames"));
           else if (layer->isGroup())
             sb->setStatusText(0, fmt::format("Group '{}'", layer->name()));
+          return;
+        }
+        break;
+
+      case PART_ROW_CLIPPING:
+        if (layer) {
+          sb->setStatusText(
+            0,
+            fmt::format("Clipping '{}': {} (click: Off > Chain > Inherit > Off)",
+                        layer->name(),
+                        layer->isClipInherited() ? "Inherit (original base)" :
+                        layer->isClipped() ? "Chain (all masks)" : "Off"));
           return;
         }
         break;

@@ -302,10 +302,16 @@ private:
               !layer->isBackground() && newClipped != layer->isClipped()) {
             const Layer* below = layer->getPrevious();
             if (!newClipped || (below && below->isImage() && !below->isTilemap())) {
-              const int bit = int(LayerFlags::Clipped);
+              const int clippedBit = int(LayerFlags::Clipped);
+              const int inheritedBit = int(LayerFlags::ClipInherited);
               const int flags = int(layer->flags());
-              tx(new cmd::SetLayerFlags(layer,
-                                        LayerFlags(newClipped ? (flags | bit) : (flags & ~bit))));
+              // The properties checkbox remains a simple on/off switch:
+              // turning it off clears both clipping modes; turning it on
+              // starts in chain mode. The timeline cycles through all three.
+              tx(new cmd::SetLayerFlags(
+                layer,
+                LayerFlags(newClipped ? (flags | clippedBit) :
+                                        (flags & ~(clippedBit | inheritedBit)))));
             }
           }
 
