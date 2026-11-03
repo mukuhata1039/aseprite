@@ -184,8 +184,9 @@ std::string FilterTargetButtons::getCelsTargetText() const
 std::string FilterTargetButtons::getCelsTargetTooltip() const
 {
   switch (m_celsTarget) {
-    case CelsTarget::Selected: return Strings::filters_selected_cels_tooltip();
-    case CelsTarget::All:      return Strings::filters_all_cels_tooltip();
+    case CelsTarget::Selected:    return Strings::filters_selected_cels_tooltip();
+    case CelsTarget::All:         return Strings::filters_all_cels_tooltip();
+    case CelsTarget::ActiveLayer: return "Only the current layer (all frames)";
   }
   return std::string();
 }
