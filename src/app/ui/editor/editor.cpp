@@ -1144,6 +1144,11 @@ void Editor::drawSpriteUnclippedRect(ui::Graphics* g, const gfx::Rect& _rc)
 
 void Editor::drawSpriteClipped(const gfx::Region& updateRegion)
 {
+  if (m_viewRotationDegrees != 0.0) {
+    invalidate();
+    return;
+  }
+
   Region screenRegion;
   getDrawableRegion(screenRegion, kCutTopWindows);
 
@@ -1198,6 +1203,11 @@ void Editor::drawMaskBoundaries(ui::Graphics* g, doc::MaskBoundaries& segs, cons
 
 void Editor::drawMaskSafe()
 {
+  if (m_viewRotationDegrees != 0.0) {
+    invalidate();
+    return;
+  }
+
   if (((m_flags & kShowMask) == 0 && !hasSelectionToolMask()) || !(isVisible() && m_document))
     return;
 
@@ -2300,6 +2310,18 @@ bool Editor::onProcessMessage(Message* msg)
           return true;
         }
 
+        // Temporary view rotation takes priority over the active brush,
+        // shape or selection tool, so dragging here never paints pixels.
+        if (mouseMsg->left() && !hasCapture() && isRotateViewShortcutPressed()) {
+          m_brushPreview.hide();
+          m_rotatingView = true;
+          m_viewRotationMouseStart = mouseMsg->position();
+          m_viewRotationStartDegrees = m_viewRotationDegrees;
+          captureMouse();
+          setCursor(mouseMsg->position());
+          return true;
+        }
+
         // If we're going to start drawing, we cancel the flashing
         // layer.
         if (m_flashing != Flashing::None) {
@@ -2339,6 +2361,12 @@ bool Editor::onProcessMessage(Message* msg)
       break;
 
     case kMouseMoveMessage:
+      if (m_rotatingView) {
+        const auto* mouseMsg = static_cast<MouseMessage*>(msg);
+        const int dx = mouseMsg->position().x - m_viewRotationMouseStart.x;
+        setViewRotation(m_viewRotationStartDegrees + dx * 0.5);
+        return true;
+      }
       if (m_sprite) {
         EditorStatePtr holdState(m_state);
         MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
@@ -2352,6 +2380,13 @@ bool Editor::onProcessMessage(Message* msg)
 
     case kMouseUpMessage:
       if (m_sprite) {
+        if (m_rotatingView) {
+          m_rotatingView = false;
+          if (hasCapture())
+            releaseMouse();
+          setCursor(static_cast<MouseMessage*>(msg)->position());
+          return true;
+        }
         if (m_swallowModalColorPickMouseUp) {
           m_swallowModalColorPickMouseUp = false;
           return true;
@@ -2406,6 +2441,24 @@ bool Editor::onProcessMessage(Message* msg)
       break;
 
     case kKeyDownMessage:
+      // Both shortcuts are regular editable Action Modifiers in
+      // Edit > Keyboard Shortcuts. They are active only in the canvas.
+      if (m_sprite && hasMouse() && !m_modalColorPickCallback) {
+        auto* shortcuts = KeyboardShortcuts::instance();
+        auto resetKey = shortcuts->action(KeyAction::ResetCanvasView, KeyContext::Normal);
+        if (resetKey && resetKey->isPressed(msg, KeyContext::Normal)) {
+          setViewRotation(0.0);
+          setCursor(mousePosInDisplay());
+          return true;
+        }
+
+        auto rotateKey = shortcuts->action(KeyAction::RotateCanvasView, KeyContext::Normal);
+        if (rotateKey && rotateKey->isPressed(msg, KeyContext::Normal)) {
+          m_brushPreview.hide();
+          setCursor(mousePosInDisplay());
+          return true;
+        }
+      }
 #if ENABLE_DEVMODE
       // Switch renderer
       if (msg->modifiers() == 0 && static_cast<KeyMessage*>(msg)->scancode() == kKeyF1) {
@@ -2880,6 +2933,13 @@ void Editor::onBeforeCommitTransaction(DocEvent& ev)
 void Editor::setCursor(const gfx::Point& mouseDisplayPos)
 {
   bool used = false;
+  if (m_rotatingView || isRotateViewShortcutPressed()) {
+    m_brushPreview.hide();
+    auto theme = SkinTheme::get(this);
+    ui::set_mouse_cursor(kCustomCursor, theme->cursors.rotateNw());
+    return;
+  }
+
   if (m_sprite)
     used = m_state->onSetCursor(this, mouseDisplayPos);
 
@@ -3363,6 +3423,14 @@ void Editor::showMouseCursor(CursorType cursorType, const Cursor* cursor)
 
 void Editor::showBrushPreview(const gfx::Point& screenPos)
 {
+  if (m_viewRotationDegrees != 0.0 || m_rotatingView) {
+    // The built-in brush-preview UI layer isn't affine transformed.
+    // Keep painting accurate via the inverse mouse transform, and
+    // don't display a misleading unrotated brush outline.
+    m_brushPreview.hide();
+    ui::set_mouse_cursor(kCrosshairCursor);
+    return;
+  }
   m_brushPreview.show(screenPos);
 }
 
@@ -3414,6 +3482,14 @@ void Editor::invalidateCanvas()
 {
   if (!isVisible())
     return;
+
+  if (m_viewRotationDegrees != 0.0) {
+    // Rotation changes the invalidated pixel bounds; redraw the
+    // entire transformed view instead of only the old axis-aligned
+    // sprite rectangle.
+    invalidate();
+    return;
+  }
 
   if (m_sprite)
     invalidateRect(editorToScreen(getVisibleSpriteBounds()));
