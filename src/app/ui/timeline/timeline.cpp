@@ -1470,12 +1470,27 @@ bool Timeline::onProcessMessage(Message* msg)
           break;
         }
         case PART_ROW_COLOR_LOCK: {
-          if (validLayer(m_clk.layer) && mouseMsg->left()) {
+          if (validLayer(m_clk.layer)) {
             Layer* layer = m_rows[m_clk.layer].layer();
-
-            if (layer && layer->isImage()) {
-              if (ColorBar* colorBar = ColorBar::instance()) {
-                colorBar->toggleLayerColorLock(m_document, layer);
+            if (layer && layer->isImage() && !layer->isTilemap()) {
+              if (mouseMsg->left()) {
+                if (ColorBar* colorBar = ColorBar::instance()) {
+                  colorBar->toggleLayerColorLock(m_document, layer);
+                  invalidate();
+                }
+              }
+              else if (mouseMsg->right()) {
+                // Right-click opens the recolor preview; only left-click
+                // toggles the lock. Releasing capture is important before
+                // entering the modal filter window.
+                setLayer(layer);
+                cleanClk();
+                releaseMouse();
+                m_state = STATE_STANDBY;
+                Command* command = Commands::instance()->byId(CommandId::ReplaceColor());
+                Params params;
+                params.set("layerRecolor", "true");
+                m_context->executeCommand(command, params);
                 invalidate();
               }
             }
