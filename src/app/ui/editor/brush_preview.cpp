@@ -51,6 +51,7 @@
 
 #include <array>
 #include <cmath>
+#include <exception>
 
 namespace app {
 
@@ -635,7 +636,15 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
 
   os::SurfaceRef surface = m_uiLayer->surface();
   if (!surface || surface->width() != w || surface->height() != h) {
-    surface = os::System::instance()->makeRgbaSurface(w, h);
+    try {
+      surface = os::System::instance()->makeRgbaSurface(w, h);
+    }
+    catch (const std::exception&) {
+      // Like the viewport rotation buffer, cursor allocation can
+      // fail at extreme zoom. Keep the native crosshair usable.
+      ui::set_mouse_cursor(ui::kCrosshairCursor);
+      return;
+    }
     m_uiLayer->setSurface(surface);
   }
   surface->clear();
