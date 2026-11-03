@@ -11,6 +11,7 @@
 
 #include "app/app.h"
 #include "app/cmd/set_layer_blend_mode.h"
+#include "app/cmd/set_layer_flags.h"
 #include "app/cmd/set_layer_name.h"
 #include "app/cmd/set_layer_opacity.h"
 #include "app/cmd/set_layer_tileset.h"
@@ -125,6 +126,7 @@ public:
     name()->Change.connect([this] { onStartTimer(); });
     mode()->Change.connect([this] { onStartTimer(); });
     opacity()->Change.connect([this] { onStartTimer(); });
+    clipToBelow()->Click.connect([this] { onStartTimer(); });
     m_timer.Tick.connect([this] { onCommitChange(); });
     userData()->Click.connect([this] { onToggleUserData(); });
     tileset()->Click.connect([this] { onTileset(); });
@@ -257,13 +259,15 @@ private:
     int newOpacity = opacityValue();
     const doc::UserData newUserData = m_userDataView.userData();
     doc::BlendMode newBlendMode = blendModeValue();
+    const bool newClipped = clipToBelow()->isSelected();
 
     if ((count > 1) ||
         (count == 1 && m_layer &&
          (newName != m_layer->name() || newUserData != m_layer->userData() ||
           (m_layer->isImage() ||
            (m_layer->isGroup() && Preferences::instance().experimental.composeGroups())) ||
-          (newOpacity != m_layer->opacity() || newBlendMode != m_layer->blendMode())))) {
+          (newOpacity != m_layer->opacity() || newBlendMode != m_layer->blendMode() ||
+           newClipped != m_layer->isClipped())))) {
       try {
         ContextWriter writer(UIContext::instance());
         Tx tx(writer, "Set Layer Properties");
@@ -282,6 +286,7 @@ private:
 
         const bool nameChanged = (newName != m_layer->name());
         const bool userDataChanged = (newUserData != m_layer->userData());
+        const bool clippingChanged = (newClipped != m_layer->isClipped());
         const bool opacityChanged = (shouldChangeProperties && newOpacity != m_layer->opacity());
         const bool blendModeChanged = (shouldChangeProperties &&
                                        newBlendMode != m_layer->blendMode());
@@ -292,6 +297,17 @@ private:
 
           if (userDataChanged && newUserData != layer->userData())
             tx(new cmd::SetUserData(layer, newUserData, m_document));
+
+          if (clippingChanged && layer->isImage() && !layer->isTilemap() &&
+              !layer->isBackground() && newClipped != layer->isClipped()) {
+            const Layer* below = layer->getPrevious();
+            if (!newClipped || (below && below->isImage() && !below->isTilemap())) {
+              const int bit = int(LayerFlags::Clipped);
+              const int flags = int(layer->flags());
+              tx(new cmd::SetLayerFlags(layer,
+                                        LayerFlags(newClipped ? (flags | bit) : (flags & ~bit))));
+            }
+          }
 
           if (layer->isImage() ||
               (layer->isGroup() && Preferences::instance().experimental.composeGroups())) {
@@ -463,6 +479,15 @@ private:
         opacity()->setEnabled(!m_layer->isBackground());
       }
 
+      const Layer* below = m_layer->getPrevious();
+      const bool canClip = m_layer->isImage() && !m_layer->isTilemap() &&
+                           !m_layer->isBackground() && below &&
+                           below->isImage() && !below->isTilemap();
+      clipToBelow()->setSelected(m_layer->isClipped());
+      clipToBelow()->setVisible(m_layer->isImage() && !m_layer->isTilemap() &&
+                                !m_layer->isBackground());
+      clipToBelow()->setEnabled(canClip || m_layer->isClipped());
+
       modeLabel()->setVisible(imageProps);
       mode()->setVisible(imageProps);
       opacityLabel()->setVisible(imageProps);
@@ -479,6 +504,7 @@ private:
       mode()->setEnabled(false);
       opacity()->setEnabled(false);
       m_userDataView.setVisible(false, false);
+      clipToBelow()->setVisible(false);
     }
 
     bool uuidVisible = m_document && m_document->sprite() && m_document->sprite()->useLayerUuids();
