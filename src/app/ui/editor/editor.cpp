@@ -2443,7 +2443,7 @@ bool Editor::onProcessMessage(Message* msg)
     case kKeyDownMessage:
       // Both shortcuts are regular editable Action Modifiers in
       // Edit > Keyboard Shortcuts. They are active only in the canvas.
-      if (m_sprite && hasMouse() && !m_modalColorPickCallback) {
+      if (m_sprite && hasMouse() && !hasCapture() && !m_modalColorPickCallback) {
         auto* shortcuts = KeyboardShortcuts::instance();
         auto resetKey = shortcuts->action(KeyAction::ResetCanvasView, KeyContext::Normal);
         if (resetKey && resetKey->isPressed(msg, KeyContext::Normal)) {
