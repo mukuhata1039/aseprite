@@ -510,21 +510,42 @@ private:
 
   AniControls m_aniControls;
 
-  // Display the units directly on each slider; no separate FPS label.
+  // The generic UI slider stores integers. Represent FPS in 0.3
+  // increments instead of pretending it can store floating values:
+  // tick 1 = 0.3 FPS, tick 40 = 12.0 FPS, tick 400 = 120.0 FPS.
   class FpsSlider final : public ui::Slider, public ui::SliderDelegate {
   public:
-    FpsSlider() : ui::Slider(1, 120, 12, this) {}
+    FpsSlider() : ui::Slider(1, 400, 40, this) {}
+
+    // Convert to Aseprite's integer-millisecond frame duration.
+    // The nearest millisecond is used; at high FPS, this necessarily
+    // limits the precision of playback even if UI uses 0.3 FPS ticks.
+    int frameDurationMs() const
+    {
+      const int denominator = 3 * getValue();
+      return std::max(1, (10000 + denominator / 2) / denominator);
+    }
+
+    void setFromFrameDurationMs(int millis)
+    {
+      const int denominator = 3 * std::max(1, millis);
+      setValue(std::clamp((10000 + denominator / 2) / denominator, 1, 400));
+    }
 
   private:
     std::string onGetTextFromValue(int value) override
     {
-      return "FPS " + std::to_string(value);
+      const int tenths = value * 3;
+      return "FPS " + std::to_string(tenths / 10) + "." +
+             std::to_string(tenths % 10);
     }
+
     int onGetValueFromText(const std::string& text) override
     {
       const std::string digits =
         (text.compare(0, 3, "FPS") == 0 ? text.substr(3) : text);
-      return std::strtol(digits.c_str(), nullptr, 10);
+      const double fps = std::strtod(digits.c_str(), nullptr);
+      return std::clamp(int(fps / 0.3 + 0.5), 1, 400);
     }
   };
 
