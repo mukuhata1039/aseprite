@@ -2192,6 +2192,9 @@ bool Editor::onProcessMessage(Message* msg)
         MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
 
         if (m_modalColorPickCallback) {
+          // Every swallowed press needs its matching release swallowed
+          // too, including clicks on transparent pixels or right-click.
+          m_swallowModalColorPickMouseUp = true;
           if (mouseMsg->left()) {
             // Read the composited canvas color before ordinary editor
             // state handlers can paint or move any cels.
@@ -2199,7 +2202,6 @@ bool Editor::onProcessMessage(Message* msg)
             if (picked.getType() != app::Color::MaskType && picked.getAlpha() > 0) {
               auto callback = std::move(m_modalColorPickCallback);
               m_modalColorPickCallback = nullptr;
-              m_swallowModalColorPickMouseUp = true;
               callback(picked);
             }
           }
