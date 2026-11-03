@@ -42,6 +42,8 @@
 #include "app/ui/editor/editor_decorator.h"
 #include "app/ui/editor/editor_render.h"
 #include "app/ui/editor/glue.h"
+#include "app/ui/key.h"
+#include "app/ui/keyboard_shortcuts.h"
 #include "app/ui/editor/moving_pixels_state.h"
 #include "app/ui/editor/pixels_movement.h"
 #include "app/ui/editor/play_state.h"
@@ -63,7 +65,9 @@
 #include "doc/mask_boundaries.h"
 #include "doc/slice.h"
 #include "fmt/format.h"
+#include "gfx/matrix.h"
 #include "os/color_space.h"
+#include "os/paint.h"
 #include "os/sampling.h"
 #include "os/surface.h"
 #include "os/system.h"
@@ -605,6 +609,50 @@ void Editor::setEditorScroll(const gfx::Point& scroll)
 void Editor::setEditorZoom(const render::Zoom& zoom)
 {
   setZoomAndCenterInMouse(zoom, mousePosInDisplay(), Editor::ZoomBehavior::CENTER);
+}
+
+gfx::PointF Editor::rotationCenterInDisplay() const
+{
+  const auto vp = View::getView(this)->viewportBounds();
+  return gfx::PointF(vp.x + 0.5 * vp.w, vp.y + 0.5 * vp.h);
+}
+
+// Forward mapping for overlay/widget geometry; inverse for mouse input.
+// Both use the same visible-viewport pivot as the rotated painter.
+gfx::PointF Editor::rotateViewPoint(const gfx::PointF& point, bool inverse) const
+{
+  if (m_renderingRotationSurface || m_viewRotationDegrees == 0.0)
+    return point;
+  const auto center = rotationCenterInDisplay();
+  const double radians = (inverse ? -1.0 : 1.0) *
+    m_viewRotationDegrees * 3.14159265358979323846 / 180.0;
+  const double cs = std::cos(radians), sn = std::sin(radians);
+  const double x = point.x - center.x, y = point.y - center.y;
+  return gfx::PointF(center.x + cs*x - sn*y, center.y + sn*x + cs*y);
+}
+
+bool Editor::isRotateViewShortcutPressed() const
+{
+  if (!m_sprite || !hasMouse())
+    return false;
+  auto shortcut = KeyboardShortcuts::instance()->action(
+    KeyAction::RotateCanvasView, KeyContext::Normal);
+  return shortcut && shortcut->isPressed();
+}
+
+void Editor::setViewRotation(double degrees)
+{
+  degrees = std::fmod(degrees, 360.0);
+  if (std::abs(degrees) < 0.000001)
+    degrees = 0.0;
+  if (degrees == m_viewRotationDegrees)
+    return;
+
+  m_brushPreview.hide();
+  m_viewRotationDegrees = degrees;
+  if (degrees == 0.0)
+    m_rotationSurface.reset();
+  invalidate();
 }
 
 void Editor::updateEditor(const bool restoreScrollPos)
