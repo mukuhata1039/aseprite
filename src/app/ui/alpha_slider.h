@@ -18,7 +18,7 @@ class AlphaSlider : public ui::Slider,
 public:
   enum Type { ALPHA, OPACITY };
 
-  AlphaSlider(int value, Type type);
+  AlphaSlider(int value, Type type, std::string label = {});
 
   void getSliderThemeInfo(int* min, int* max, int* value) const override;
   void updateValue(int value) override;
@@ -35,6 +35,7 @@ private:
   int onGetValueFromText(const std::string& text) override;
 
   Type m_type;
+  std::string m_label;
 };
 
 } // namespace app

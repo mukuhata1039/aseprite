@@ -266,11 +266,7 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   , m_scroll(false)
   , m_fromTimeline(false)
   , m_aniControls(tooltipManager)
-  , m_hideTimelineLayersButton("Hide")
-  , m_restoreTimelineLayersButton("Restore")
-  , m_layerOpacitySlider(255, AlphaSlider::OPACITY)
-  , m_fpsLabel("FPS")
-  , m_fpsSlider(1, 120, 12)
+  , m_layerOpacitySlider(255, AlphaSlider::OPACITY, "不透明度")
 {
   enableFlags(CTRL_RIGHT_CLICK | ALLOW_DROP);
 
@@ -282,10 +278,7 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   setDoubleBuffered(true);
   addChild(&m_aniControls);
   addChild(&m_layerOpacitySlider);
-  addChild(&m_fpsLabel);
   addChild(&m_fpsSlider);
-  addChild(&m_hideTimelineLayersButton);
-  addChild(&m_restoreTimelineLayersButton);
   addChild(&m_hbar);
   addChild(&m_vbar);
 
@@ -301,15 +294,6 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   m_fpsSlider.Change.connect([this] { onFpsSliderChange(); });
   m_fpsSlider.SliderReleased.connect([this] { onFpsSliderReleased(); });
   m_fpsSlider.setEnabled(false);
-
-  m_hideTimelineLayersButton.Click.connect(
-    [this] { hideSelectedTimelineLayers(); });
-
-  m_restoreTimelineLayersButton.Click.connect(
-    [this] { showRestoreTimelineLayersDialog(); });
-
-  m_hideTimelineLayersButton.setEnabled(false);
-  m_restoreTimelineLayersButton.setEnabled(false);
 
   initTheme();
 }
@@ -465,9 +449,6 @@ void Timeline::detachDocument()
   // anymore (because the document might be deleted soon).
   m_sprite = nullptr;
   m_layer = nullptr;
-
-  m_hideTimelineLayersButton.setEnabled(false);
-  m_restoreTimelineLayersButton.setEnabled(false);
 
   if (m_editor) {
     if (DocView* view = m_editor->getDocView())
@@ -2403,15 +2384,7 @@ void Timeline::onInitTheme(ui::InitThemeEvent& ev)
 
   m_separator_w = guiscale();
 
-  m_hideTimelineLayersButton.setTransparent(true);
-  m_restoreTimelineLayersButton.setTransparent(true);
-
-  m_hideTimelineLayersButton.setStyle(
-    theme->styles.miniButton());
-
-  m_restoreTimelineLayersButton.setStyle(
-    theme->styles.miniButton());
-}
+ }
 
 void Timeline::onInvalidateRegion(const gfx::Region& region)
 {
@@ -2443,76 +2416,20 @@ void Timeline::onResize(ui::ResizeEvent& ev)
     controlsW,
     oneTagHeight()));
 
-  // Layer/group opacity slider + timeline-only Hide/Restore buttons.
+  // The Hide/Restore controls are gone: divide the extra horizontal
+  // space between two clearly labeled sliders.
   const int controlGap = 2 * guiscale();
-
-  const int hideButtonW = 44 * guiscale();
-  const int restoreButtonW = 60 * guiscale();
-
-  const int opacityX =
-    rc.x + controlsW + controlGap;
-
-  const int fpsLabelW = 24 * guiscale();
-  const int fpsSliderW = 64 * guiscale();
-
-  const int reservedButtonsW =
-    controlGap + fpsLabelW +
-    controlGap + fpsSliderW +
-    controlGap + hideButtonW +
-    controlGap + restoreButtonW;
-
-  const int availableOpacityW =
-    std::max(
-      0,
-      rc.x + rc.w -
-        opacityX -
-        reservedButtonsW);
-
-  const int opacityW =
-    std::min(
-      120 * guiscale(),
-      availableOpacityW);
+  const int opacityX = rc.x + controlsW + controlGap;
+  const int availableW = std::max(0, rc.x + rc.w - opacityX - controlGap);
+  const int spacing = std::min(controlGap, availableW);
+  const int totalSliderW = availableW - spacing;
+  const int opacityW = std::min(200 * guiscale(), totalSliderW / 2);
+  const int fpsW = std::min(200 * guiscale(), totalSliderW - opacityW);
 
   m_layerOpacitySlider.setBounds(gfx::Rect(
-    opacityX,
-    topY,
-    opacityW,
-    oneTagHeight()));
-
-  const int fpsLabelX =
-    opacityX + opacityW + controlGap;
-
-  m_fpsLabel.setBounds(gfx::Rect(
-    fpsLabelX,
-    topY,
-    fpsLabelW,
-    oneTagHeight()));
-
-  const int fpsSliderX = fpsLabelX + fpsLabelW + controlGap;
+    opacityX, topY, opacityW, oneTagHeight()));
   m_fpsSlider.setBounds(gfx::Rect(
-    fpsSliderX,
-    topY,
-    fpsSliderW,
-    oneTagHeight()));
-
-  const int hideButtonX = fpsSliderX + fpsSliderW + controlGap;
-
-  m_hideTimelineLayersButton.setBounds(gfx::Rect(
-    hideButtonX,
-    topY,
-    hideButtonW,
-    oneTagHeight()));
-
-  const int restoreButtonX =
-    hideButtonX +
-    hideButtonW +
-    controlGap;
-
-  m_restoreTimelineLayersButton.setBounds(gfx::Rect(
-    restoreButtonX,
-    topY,
-    restoreButtonW,
-    oneTagHeight()));
+    opacityX + opacityW + spacing, topY, fpsW, oneTagHeight()));
 
   updateScrollBars();
 }
@@ -4471,16 +4388,6 @@ void Timeline::regenerateRows()
 
   regenerateTagBands();
   updateScrollBars();
-
-  m_hideTimelineLayersButton.setEnabled(
-    !m_rows.empty());
-
-  const auto hiddenIt =
-    m_hiddenTimelineLayersByDocument.find(m_document);
-
-  m_restoreTimelineLayersButton.setEnabled(
-    hiddenIt != m_hiddenTimelineLayersByDocument.end() &&
-    !hiddenIt->second.empty());
 
   // Keep the per-document preference synchronized with the
   // current layer hierarchy. ObjectId itself is runtime-only,

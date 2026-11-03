@@ -99,8 +99,10 @@ FilterWindow::~FilterWindow()
   // Save "Preview" check status.
   set_config_bool(m_cfgSection, "Preview", m_showPreview.isSelected());
 
-  // Save cels target button
-  Preferences::instance().filters.celsTarget(m_targetButton.celsTarget());
+  // The dedicated layer recolor dialog has a fixed target and must
+  // not alter the normal filter cels-target preference.
+  if (!m_fixedTarget)
+    Preferences::instance().filters.celsTarget(m_targetButton.celsTarget());
 }
 
 bool FilterWindow::doModal()

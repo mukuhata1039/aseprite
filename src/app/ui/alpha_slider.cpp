@@ -12,13 +12,17 @@
 #include "ui/message.h"
 
 #include <algorithm>
+#include <utility>
 
 using namespace ui;
 using namespace app::gen;
 
 namespace app {
 
-AlphaSlider::AlphaSlider(int value, Type type) : ui::Slider(0, 255, value, this), m_type(type)
+AlphaSlider::AlphaSlider(int value, Type type, std::string label)
+  : ui::Slider(0, 255, value, this)
+  , m_type(type)
+  , m_label(std::move(label))
 {
 }
 
@@ -49,6 +53,13 @@ void AlphaSlider::updateValue(int value)
 std::string AlphaSlider::onGetTextFromValue(int value)
 {
   char buf[128];
+  if (!m_label.empty()) {
+    // Force readable percentage units only for the Timeline's labeled
+    // opacity slider, even when 8-bit opacity is configured elsewhere.
+    const int percent = (getAlphaRange() == AlphaRange::PERCENTAGE ?
+                         value : (value * 100 + 127) / 255);
+    return m_label + " " + std::to_string(percent) + "%";
+  }
   const char* format = "%d";
   if (getAlphaRange() == AlphaRange::PERCENTAGE)
     format = "%d%%";
@@ -60,9 +71,17 @@ std::string AlphaSlider::onGetTextFromValue(int value)
 int AlphaSlider::onGetValueFromText(const std::string& text)
 {
   std::string str = text;
+  if (!m_label.empty()) {
+    if (str.compare(0, m_label.size(), m_label) == 0)
+      str.erase(0, m_label.size());
+    str.erase(std::remove(str.begin(), str.end(), '%'), str.end());
+    const int percent = std::strtol(str.c_str(), nullptr, 10);
+    return (getAlphaRange() == AlphaRange::PERCENTAGE ?
+            percent : (percent * 255 + 50) / 100);
+  }
+
   if (getAlphaRange() == AlphaRange::PERCENTAGE)
     str.erase(std::remove(str.begin(), str.end(), '%'), str.end());
-
   return std::strtol(str.c_str(), nullptr, 10);
 }
 
