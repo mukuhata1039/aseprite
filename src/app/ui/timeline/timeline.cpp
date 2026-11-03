@@ -1451,38 +1451,19 @@ bool Timeline::onProcessMessage(Message* msg)
           break;
         }
         case PART_ROW_COLOR_LOCK: {
-          if (validLayer(m_clk.layer)) {
+          if (validLayer(m_clk.layer) && mouseMsg->left()) {
             Layer* layer = m_rows[m_clk.layer].layer();
             if (layer && layer->isImage() && !layer->isTilemap()) {
-              if (mouseMsg->left()) {
-                if (ColorBar* colorBar = ColorBar::instance()) {
-                  colorBar->toggleLayerColorLock(m_document, layer);
-                  invalidate();
-                }
-              }
-              else if (mouseMsg->right()) {
-                // Right-click opens the recolor preview; only left-click
-                // toggles the lock. Releasing capture is important before
-                // entering the modal filter window.
-                setLayer(layer);
-                // Preview requires an active cel. When the selected
-                // frame is empty, jump to an occupied frame on this
-                // layer so all its cels can still be recolored.
-                if (m_editor && !layer->cel(m_editor->frame()) &&
-                    !layer->cels().empty()) {
-                  setFrame(m_adapter->toColFrame(fr_t(layer->cels().front()->frame())), true);
-                }
-                cleanClk();
-                releaseMouse();
-                m_state = STATE_STANDBY;
-                Command* command = Commands::instance()->byId(CommandId::ReplaceColor());
-                Params params;
-                params.set("layerRecolor", "true");
-                m_context->executeCommand(command, params);
+              if (ColorBar* colorBar = ColorBar::instance()) {
+                colorBar->toggleLayerColorLock(m_document, layer);
                 invalidate();
               }
             }
           }
+          // Right-click opens the modal on MouseUp, not MouseDown.
+          // The OS must deliver the button-release event to Timeline
+          // before opening the modal to avoid a stuck drag/capture
+          // (including the left-side palette splitter).
           break;
         }
 
@@ -1956,6 +1937,41 @@ bool Timeline::onProcessMessage(Message* msg)
         if (m_state == STATE_SCROLLING) {
           m_state = STATE_STANDBY;
           releaseMouse();
+          return true;
+        }
+
+        // Open the color-lock recolor dialog only after the right
+        // button has been fully released and the Timeline has
+        // relinquished capture. Do not open it from MouseDown.
+        if (m_clk.part == PART_ROW_COLOR_LOCK && mouseMsg->right()) {
+          const Hit releaseHit =
+            hitTest(msg, mouseMsg->position() - bounds().origin());
+          Layer* layer = nullptr;
+          if (releaseHit.part == PART_ROW_COLOR_LOCK &&
+              releaseHit.layer == m_clk.layer &&
+              validLayer(m_clk.layer)) {
+            layer = m_rows[m_clk.layer].layer();
+          }
+
+          cleanClk();
+          m_state = STATE_STANDBY;
+          releaseMouse();
+          invalidate();
+
+          if (layer && layer->isImage() && !layer->isTilemap()) {
+            setLayer(layer);
+            // The filter preview needs an occupied active frame.
+            if (m_editor && !layer->cel(m_editor->frame()) &&
+                !layer->cels().empty()) {
+              setFrame(m_adapter->toColFrame(fr_t(layer->cels().front()->frame())), true);
+            }
+            if (m_editor && layer->cel(m_editor->frame())) {
+              Command* command = Commands::instance()->byId(CommandId::ReplaceColor());
+              Params params;
+              params.set("layerRecolor", "true");
+              m_context->executeCommand(command, params);
+            }
+          }
           return true;
         }
 

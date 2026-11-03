@@ -39,6 +39,7 @@
 #include "ui/timer.h"
 #include "ui/widget.h"
 
+#include <functional>
 #include <memory>
 #include <set>
 
@@ -327,6 +328,11 @@ public:
   // key is pressed to cancel the active selection.
   void cancelSelections();
 
+  // One-shot eyedropper for modal recolor dialogs. A click is handled
+  // before normal tool input, so the sprite is never drawn on.
+  void beginModalColorPick(std::function<void(const app::Color&)> callback);
+  void cancelModalColorPick();
+
   // Properties to show information in the status bar
   bool showAutoCelGuides() const { return m_showAutoCelGuides; }
 
@@ -510,6 +516,8 @@ private:
 
   bool m_secondaryButton;
   Flashing m_flashing;
+  std::function<void(const app::Color&)> m_modalColorPickCallback;
+  bool m_swallowModalColorPickMouseUp = false;
 
   // Animation speed multiplier.
   double m_aniSpeed;

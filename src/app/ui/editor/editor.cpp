@@ -76,6 +76,7 @@
 #include <cstdio>
 #include <limits>
 #include <memory>
+#include <utility>
 
 namespace app {
 
@@ -1991,6 +1992,17 @@ app::Color Editor::getColorByPosition(const gfx::Point& mousePos)
     return app::Color::fromMask();
 }
 
+void Editor::beginModalColorPick(std::function<void(const app::Color&)> callback)
+{
+  m_modalColorPickCallback = std::move(callback);
+}
+
+void Editor::cancelModalColorPick()
+{
+  m_modalColorPickCallback = nullptr;
+  m_swallowModalColorPickMouseUp = false;
+}
+
 doc::tile_t Editor::getTileByPosition(const gfx::Point& mousePos)
 {
   Site site = getSite();
@@ -2179,6 +2191,23 @@ bool Editor::onProcessMessage(Message* msg)
       if (m_sprite) {
         MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
 
+        if (m_modalColorPickCallback) {
+          // Every swallowed press needs its matching release swallowed
+          // too, including clicks on transparent pixels or right-click.
+          m_swallowModalColorPickMouseUp = true;
+          if (mouseMsg->left()) {
+            // Read the composited canvas color before ordinary editor
+            // state handlers can paint or move any cels.
+            app::Color picked = getColorByPosition(mouseMsg->position());
+            if (picked.getType() != app::Color::MaskType && picked.getAlpha() > 0) {
+              auto callback = std::move(m_modalColorPickCallback);
+              m_modalColorPickCallback = nullptr;
+              callback(picked);
+            }
+          }
+          return true;
+        }
+
         // If we're going to start drawing, we cancel the flashing
         // layer.
         if (m_flashing != Flashing::None) {
@@ -2231,6 +2260,10 @@ bool Editor::onProcessMessage(Message* msg)
 
     case kMouseUpMessage:
       if (m_sprite) {
+        if (m_swallowModalColorPickMouseUp) {
+          m_swallowModalColorPickMouseUp = false;
+          return true;
+        }
         EditorStatePtr holdState(m_state);
         MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
         bool result = m_state->onMouseUp(this, mouseMsg);
@@ -2368,7 +2401,14 @@ bool Editor::onProcessMessage(Message* msg)
       }
       break;
 
-    case kSetCursorMessage: setCursor(static_cast<MouseMessage*>(msg)->position()); return true;
+    case kSetCursorMessage:
+      if (m_modalColorPickCallback) {
+        auto theme = skin::SkinTheme::get(this);
+        ui::set_mouse_cursor(kCustomCursor, theme->cursors.eyedropper());
+        return true;
+      }
+      setCursor(static_cast<MouseMessage*>(msg)->position());
+      return true;
   }
 
   bool result = Widget::onProcessMessage(msg);
