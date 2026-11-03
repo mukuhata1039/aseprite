@@ -94,6 +94,7 @@ private:
   ui::Button m_cancelButton;
   FilterPreview m_preview;
   FilterTargetButtons m_targetButton;
+  bool m_fixedTarget = false;
   ui::CheckBox m_showPreview;
   ui::CheckBox* m_tiledCheck;
 };
