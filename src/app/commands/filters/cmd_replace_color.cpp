@@ -30,6 +30,7 @@
 #include "app/ui/color_bar.h"
 #include "app/ui/color_button.h"
 #include "app/ui/color_tint_shade_tone.h"
+#include "app/ui/editor/editor.h"
 #include "app/ui/keyboard_shortcuts.h"
 #include "app/ui/timeline/timeline.h"
 #include "app/ui_context.h"
@@ -254,6 +255,7 @@ public:
     , m_filter(filter)
     , m_label(Strings::replace_color_layer_new_color())
     , m_colorButton(filter.color(), mgr.pixelFormat(), ColorButtonOptions())
+    , m_pickButton(Strings::replace_color_layer_pick_from_canvas())
   {
     // The layer recolor window is modal. Embed the same HSV
     // saturation/value square + hue strip used in the sidebar, so
@@ -263,6 +265,7 @@ public:
     getContainer()->addChild(&m_colorRow);
     m_colorRow.addChild(&m_label);
     m_colorRow.addChild(&m_colorButton);
+    m_colorRow.addChild(&m_pickButton);
     getContainer()->addChild(&m_colorSelector);
     m_colorSelector.setSizeHint(196 * ui::guiscale(), 156 * ui::guiscale());
     m_colorSelector.setExpansive(true);
@@ -279,6 +282,34 @@ public:
       if (!m_syncingColor)
         changePreviewColor(newColor, false);
     });
+
+    m_pickButton.Click.connect([this] {
+      if (m_pickEditor) {
+        m_pickEditor->cancelModalColorPick();
+        m_pickEditor = nullptr;
+        m_pickButton.setText(Strings::replace_color_layer_pick_from_canvas());
+        return;
+      }
+
+      Editor* editor = Editor::activeEditor();
+      if (!editor)
+        return;
+
+      m_pickEditor = editor;
+      m_pickButton.setText(Strings::replace_color_layer_pick_on_canvas());
+      editor->beginModalColorPick([this](const app::Color& picked) {
+        m_pickEditor = nullptr;
+        m_pickButton.setText(Strings::replace_color_layer_pick_from_canvas());
+        changePreviewColor(picked, false);
+      });
+    });
+  }
+
+  ~LayerRecolorWindow() override
+  {
+    // Clear a pending one-shot picker even on Cancel / window close.
+    if (m_pickEditor)
+      m_pickEditor->cancelModalColorPick();
   }
 
 private:
@@ -306,7 +337,9 @@ private:
   ui::HBox m_colorRow;
   ui::Label m_label;
   ColorButton m_colorButton;
+  ui::Button m_pickButton;
   ColorTintShadeTone m_colorSelector;
+  Editor* m_pickEditor = nullptr;
   bool m_syncingColor = false;
 };
 
