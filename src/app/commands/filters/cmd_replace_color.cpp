@@ -29,6 +29,7 @@
 #include "app/site.h"
 #include "app/ui/color_bar.h"
 #include "app/ui/color_button.h"
+#include "app/ui/color_tint_shade_tone.h"
 #include "app/ui/keyboard_shortcuts.h"
 #include "app/ui/timeline/timeline.h"
 #include "app/ui_context.h"
@@ -254,27 +255,61 @@ public:
     , m_label(Strings::replace_color_layer_new_color())
     , m_colorButton(filter.color(), mgr.pixelFormat(), ColorButtonOptions())
   {
-    // This dialog always targets the active layer's complete timeline.
-    // Hide the normal selected/all-cels choice to avoid affecting other
-    // layers or changing the user's ordinary Replace Color preferences.
+    // The layer recolor window is modal. Embed the same HSV
+    // saturation/value square + hue strip used in the sidebar, so
+    // color picking does not need to escape the modal dialog.
     mgr.setCelsTarget(CelsTarget::ActiveLayer);
     hideTargetButtons();
     getContainer()->addChild(&m_colorRow);
     m_colorRow.addChild(&m_label);
     m_colorRow.addChild(&m_colorButton);
+    getContainer()->addChild(&m_colorSelector);
+    m_colorSelector.setSizeHint(196 * ui::guiscale(), 156 * ui::guiscale());
+    m_colorSelector.setExpansive(true);
+    m_colorSelector.selectColor(m_filter.lockColor());
+
+    m_colorSelector.ColorChange.connect(
+      [this](const app::Color& newColor, ui::MouseButton button) {
+        if (button == ui::kButtonRight)
+          return; // A secondary pick must not accidentally change the target.
+        changePreviewColor(newColor, true);
+      });
 
     m_colorButton.Change.connect([this](const app::Color& newColor) {
-      stopPreview();
-      m_filter.setColor(newColor);
-      restartPreview();
+      if (!m_syncingColor)
+        changePreviewColor(newColor, false);
     });
   }
 
 private:
+  void changePreviewColor(const app::Color& newColor, bool fromSelector)
+  {
+    if (newColor.getType() == app::Color::MaskType)
+      return;
+
+    stopPreview();
+    m_filter.setColor(newColor);
+    const app::Color chosen = m_filter.lockColor();
+
+    // The embedded HSV picker and the numeric/color swatch control
+    // always show the same target. Only one preview restart per edit.
+    if (fromSelector) {
+      m_syncingColor = true;
+      m_colorButton.setColor(chosen);
+      m_syncingColor = false;
+    }
+    else {
+      m_colorSelector.selectColor(chosen);
+    }
+    restartPreview();
+  }
+
   LayerRecolorFilter& m_filter;
   ui::HBox m_colorRow;
   ui::Label m_label;
   ColorButton m_colorButton;
+  ColorTintShadeTone m_colorSelector;
+  bool m_syncingColor = false;
 };
 
 class ReplaceColorCommand : public CommandWithNewParams<ReplaceColorParams> {
