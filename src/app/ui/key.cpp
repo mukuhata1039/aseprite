@@ -114,6 +114,14 @@ const std::vector<KeyShortcutAction>& actions()
        I18N_KEY(corner_radius),
        app::KeyAction::CornerRadius,
        app::KeyContext::ShapeTool            },
+      { "RotateCanvasView",
+       I18N_KEY(rotate_canvas_view),
+       app::KeyAction::RotateCanvasView,
+       app::KeyContext::Normal               },
+      { "ResetCanvasView",
+       I18N_KEY(reset_canvas_view),
+       app::KeyAction::ResetCanvasView,
+       app::KeyContext::Normal               },
       { "LeftMouseButton",
        I18N_KEY(trigger_left_mouse_button),
        app::KeyAction::LeftMouseButton,
@@ -397,6 +405,8 @@ Key::Key(const KeyAction action, const KeyContext keyContext)
     case KeyAction::LeftMouseButton:
     case KeyAction::RightMouseButton:          m_keycontext = KeyContext::Any; break;
     case KeyAction::CornerRadius:              m_keycontext = KeyContext::ShapeTool; break;
+    case KeyAction::RotateCanvasView:
+    case KeyAction::ResetCanvasView:          m_keycontext = KeyContext::Normal; break;
   }
 }
 

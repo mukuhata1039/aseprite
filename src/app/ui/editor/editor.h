@@ -30,6 +30,7 @@
 #include "filters/tiled_mode.h"
 #include "gfx/fwd.h"
 #include "obs/connection.h"
+#include "os/surface.h"
 #include "os/color_space.h"
 #include "render/projection.h"
 #include "render/zoom.h"
@@ -166,6 +167,9 @@ public:
   void setScrollAndZoomToFitScreen();
   void setEditorScroll(const gfx::Point& scroll);
   void setEditorZoom(const render::Zoom& zoom);
+  // Rotates only the editor display; never changes sprite pixels.
+  double viewRotation() const { return m_viewRotationDegrees; }
+  void setViewRotation(double degrees);
 
   // Updates the Editor's view.
   void updateEditor(const bool restoreScrollPos);
@@ -426,6 +430,10 @@ private:
   gfx::Rect getCelScreenBounds(const Cel* cel);
 
   void setCursor(const gfx::Point& mouseDisplayPos);
+  bool isRotateViewShortcutPressed() const;
+  gfx::PointF rotateViewPoint(const gfx::PointF& pt, bool inverse) const;
+  gfx::PointF rotationCenterInDisplay() const;
+  void drawRotatedView(ui::Graphics* graphics);
 
   // Draws the specified portion of sprite in the editor.  Warning:
   // You should setup the clip of the screen before calling this
@@ -463,6 +471,14 @@ private:
   CustomPlaybackMode m_customPlaybackMode;
 
   render::Projection m_proj; // Zoom/pixel ratio in the editor
+
+  // Per-editor canvas view angle / rotation gesture.
+  double m_viewRotationDegrees = 0.0;
+  bool m_rotatingView = false;
+  gfx::Point m_viewRotationMouseStart;
+  double m_viewRotationStartDegrees = 0.0;
+  bool m_renderingRotationSurface = false;
+  os::SurfaceRef m_rotationSurface;
   DocumentPreferences& m_docPref;
   // Helper functions affected by the current Tiled Mode.
   app::TiledModeHelper m_tiledModeHelper;

@@ -42,6 +42,8 @@
 #include "app/ui/editor/editor_decorator.h"
 #include "app/ui/editor/editor_render.h"
 #include "app/ui/editor/glue.h"
+#include "app/ui/key.h"
+#include "app/ui/keyboard_shortcuts.h"
 #include "app/ui/editor/moving_pixels_state.h"
 #include "app/ui/editor/pixels_movement.h"
 #include "app/ui/editor/play_state.h"
@@ -63,7 +65,9 @@
 #include "doc/mask_boundaries.h"
 #include "doc/slice.h"
 #include "fmt/format.h"
+#include "gfx/matrix.h"
 #include "os/color_space.h"
+#include "os/paint.h"
 #include "os/sampling.h"
 #include "os/surface.h"
 #include "os/system.h"
@@ -607,6 +611,50 @@ void Editor::setEditorZoom(const render::Zoom& zoom)
   setZoomAndCenterInMouse(zoom, mousePosInDisplay(), Editor::ZoomBehavior::CENTER);
 }
 
+gfx::PointF Editor::rotationCenterInDisplay() const
+{
+  const auto vp = View::getView(this)->viewportBounds();
+  return gfx::PointF(vp.x + 0.5 * vp.w, vp.y + 0.5 * vp.h);
+}
+
+// Forward mapping for overlay/widget geometry; inverse for mouse input.
+// Both use the same visible-viewport pivot as the rotated painter.
+gfx::PointF Editor::rotateViewPoint(const gfx::PointF& point, bool inverse) const
+{
+  if (m_renderingRotationSurface || m_viewRotationDegrees == 0.0)
+    return point;
+  const auto center = rotationCenterInDisplay();
+  const double radians = (inverse ? -1.0 : 1.0) *
+    m_viewRotationDegrees * 3.14159265358979323846 / 180.0;
+  const double cs = std::cos(radians), sn = std::sin(radians);
+  const double x = point.x - center.x, y = point.y - center.y;
+  return gfx::PointF(center.x + cs*x - sn*y, center.y + sn*x + cs*y);
+}
+
+bool Editor::isRotateViewShortcutPressed() const
+{
+  if (!m_sprite || !hasMouse())
+    return false;
+  auto shortcut = KeyboardShortcuts::instance()->action(
+    KeyAction::RotateCanvasView, KeyContext::Normal);
+  return shortcut && shortcut->isPressed();
+}
+
+void Editor::setViewRotation(double degrees)
+{
+  degrees = std::fmod(degrees, 360.0);
+  if (std::abs(degrees) < 0.000001)
+    degrees = 0.0;
+  if (degrees == m_viewRotationDegrees)
+    return;
+
+  m_brushPreview.hide();
+  m_viewRotationDegrees = degrees;
+  if (degrees == 0.0)
+    m_rotationSurface.reset();
+  invalidate();
+}
+
 void Editor::updateEditor(const bool restoreScrollPos)
 {
   View::getView(this)->updateView(restoreScrollPos);
@@ -1096,6 +1144,14 @@ void Editor::drawSpriteUnclippedRect(ui::Graphics* g, const gfx::Rect& _rc)
 
 void Editor::drawSpriteClipped(const gfx::Region& updateRegion)
 {
+  if (m_viewRotationDegrees != 0.0) {
+    // A document exposure callback can happen during a rotated paint.
+    // Avoid scheduling the same paint recursively in that case.
+    if (!m_renderingRotationSurface)
+      invalidate();
+    return;
+  }
+
   Region screenRegion;
   getDrawableRegion(screenRegion, kCutTopWindows);
 
@@ -1150,6 +1206,14 @@ void Editor::drawMaskBoundaries(ui::Graphics* g, doc::MaskBoundaries& segs, cons
 
 void Editor::drawMaskSafe()
 {
+  if (m_viewRotationDegrees != 0.0) {
+    // A document exposure callback can happen during a rotated paint.
+    // Avoid scheduling the same paint recursively in that case.
+    if (!m_renderingRotationSurface)
+      invalidate();
+    return;
+  }
+
   if (((m_flags & kShowMask) == 0 && !hasSelectionToolMask()) || !(isVisible() && m_document))
     return;
 
@@ -1659,62 +1723,106 @@ bool Editor::isAutoSelectLayer()
 
 gfx::Point Editor::screenToEditor(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return gfx::Point(m_proj.removeX(pt.x - vp.x + scroll.x - m_padding.x),
-                    m_proj.removeY(pt.y - vp.y + scroll.y - m_padding.y));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  return gfx::Point(
+    m_proj.removeX(int(std::floor(unrotated.x)) - vp.x + scroll.x - m_padding.x),
+    m_proj.removeY(int(std::floor(unrotated.y)) - vp.y + scroll.y - m_padding.y));
 }
 
 gfx::Point Editor::screenToEditorCeiling(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return gfx::Point(m_proj.removeXCeiling(pt.x - vp.x + scroll.x - m_padding.x),
-                    m_proj.removeYCeiling(pt.y - vp.y + scroll.y - m_padding.y));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  return gfx::Point(
+    m_proj.removeXCeiling(int(std::ceil(unrotated.x)) - vp.x + scroll.x - m_padding.x),
+    m_proj.removeYCeiling(int(std::ceil(unrotated.y)) - vp.y + scroll.y - m_padding.y));
 }
 
 gfx::PointF Editor::screenToEditorF(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return gfx::PointF(m_proj.removeX<double>(pt.x - vp.x + scroll.x - m_padding.x),
-                     m_proj.removeY<double>(pt.y - vp.y + scroll.y - m_padding.y));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  return gfx::PointF(
+    m_proj.removeX<double>(unrotated.x - vp.x + scroll.x - m_padding.x),
+    m_proj.removeY<double>(unrotated.y - vp.y + scroll.y - m_padding.y));
 }
 
 Point Editor::editorToScreen(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return Point((vp.x - scroll.x + m_padding.x + m_proj.applyX(pt.x)),
-               (vp.y - scroll.y + m_padding.y + m_proj.applyY(pt.y)));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = gfx::PointF(
+    vp.x - scroll.x + m_padding.x + m_proj.applyX(pt.x),
+    vp.y - scroll.y + m_padding.y + m_proj.applyY(pt.y));
+  const auto result = rotateViewPoint(unrotated, false);
+  return Point(int(std::lround(result.x)), int(std::lround(result.y)));
 }
 
 gfx::PointF Editor::editorToScreenF(const gfx::PointF& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return PointF((vp.x - scroll.x + m_padding.x + m_proj.applyX<double>(pt.x)),
-                (vp.y - scroll.y + m_padding.y + m_proj.applyY<double>(pt.y)));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  return rotateViewPoint(
+    gfx::PointF(
+      vp.x - scroll.x + m_padding.x + m_proj.applyX<double>(pt.x),
+      vp.y - scroll.y + m_padding.y + m_proj.applyY<double>(pt.y)), false);
 }
 
 Rect Editor::screenToEditor(const Rect& rc) const
 {
-  return gfx::Rect(screenToEditor(rc.origin()), screenToEditorCeiling(rc.point2()));
+  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+    return gfx::Rect(screenToEditor(rc.origin()), screenToEditorCeiling(rc.point2()));
+
+  const auto a = screenToEditorF(rc.origin());
+  const auto b = screenToEditorF(gfx::Point(rc.x2(), rc.y));
+  const auto c = screenToEditorF(gfx::Point(rc.x, rc.y2()));
+  const auto d = screenToEditorF(rc.point2());
+  const double x0 = std::floor(std::min({a.x, b.x, c.x, d.x}));
+  const double y0 = std::floor(std::min({a.y, b.y, c.y, d.y}));
+  const double x1 = std::ceil(std::max({a.x, b.x, c.x, d.x}));
+  const double y1 = std::ceil(std::max({a.y, b.y, c.y, d.y}));
+  return gfx::Rect(int(x0), int(y0), int(x1-x0), int(y1-y0));
 }
 
 Rect Editor::editorToScreen(const Rect& rc) const
 {
-  return gfx::Rect(editorToScreen(rc.origin()), editorToScreen(rc.point2()));
+  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+    return gfx::Rect(editorToScreen(rc.origin()), editorToScreen(rc.point2()));
+
+  const auto a = editorToScreenF(gfx::PointF(rc.x, rc.y));
+  const auto b = editorToScreenF(gfx::PointF(rc.x2(), rc.y));
+  const auto c = editorToScreenF(gfx::PointF(rc.x, rc.y2()));
+  const auto d = editorToScreenF(gfx::PointF(rc.x2(), rc.y2()));
+  const double x0 = std::floor(std::min({a.x, b.x, c.x, d.x}));
+  const double y0 = std::floor(std::min({a.y, b.y, c.y, d.y}));
+  const double x1 = std::ceil(std::max({a.x, b.x, c.x, d.x}));
+  const double y1 = std::ceil(std::max({a.y, b.y, c.y, d.y}));
+  return gfx::Rect(int(x0), int(y0), int(x1-x0), int(y1-y0));
 }
 
 gfx::RectF Editor::editorToScreenF(const gfx::RectF& rc) const
 {
-  return gfx::RectF(editorToScreenF(rc.origin()), editorToScreenF(rc.point2()));
+  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+    return gfx::RectF(editorToScreenF(rc.origin()), editorToScreenF(rc.point2()));
+
+  const auto a = editorToScreenF(rc.origin());
+  const auto b = editorToScreenF(gfx::PointF(rc.x2(), rc.y));
+  const auto c = editorToScreenF(gfx::PointF(rc.x, rc.y2()));
+  const auto d = editorToScreenF(rc.point2());
+  const double x0 = std::min({a.x, b.x, c.x, d.x});
+  const double y0 = std::min({a.y, b.y, c.y, d.y});
+  const double x1 = std::max({a.x, b.x, c.x, d.x});
+  const double y1 = std::max({a.y, b.y, c.y, d.y});
+  return gfx::RectF(x0, y0, x1-x0, y1-y0);
 }
 
 void Editor::add_observer(EditorObserver* observer)
@@ -2208,6 +2316,18 @@ bool Editor::onProcessMessage(Message* msg)
           return true;
         }
 
+        // Temporary view rotation takes priority over the active brush,
+        // shape or selection tool, so dragging here never paints pixels.
+        if (mouseMsg->left() && !hasCapture() && isRotateViewShortcutPressed()) {
+          m_brushPreview.hide();
+          m_rotatingView = true;
+          m_viewRotationMouseStart = mouseMsg->position();
+          m_viewRotationStartDegrees = m_viewRotationDegrees;
+          captureMouse();
+          setCursor(mouseMsg->position());
+          return true;
+        }
+
         // If we're going to start drawing, we cancel the flashing
         // layer.
         if (m_flashing != Flashing::None) {
@@ -2247,6 +2367,12 @@ bool Editor::onProcessMessage(Message* msg)
       break;
 
     case kMouseMoveMessage:
+      if (m_rotatingView) {
+        const auto* mouseMsg = static_cast<MouseMessage*>(msg);
+        const int dx = mouseMsg->position().x - m_viewRotationMouseStart.x;
+        setViewRotation(m_viewRotationStartDegrees + dx * 0.5);
+        return true;
+      }
       if (m_sprite) {
         EditorStatePtr holdState(m_state);
         MouseMessage* mouseMsg = static_cast<MouseMessage*>(msg);
@@ -2260,6 +2386,13 @@ bool Editor::onProcessMessage(Message* msg)
 
     case kMouseUpMessage:
       if (m_sprite) {
+        if (m_rotatingView) {
+          m_rotatingView = false;
+          if (hasCapture())
+            releaseMouse();
+          setCursor(static_cast<MouseMessage*>(msg)->position());
+          return true;
+        }
         if (m_swallowModalColorPickMouseUp) {
           m_swallowModalColorPickMouseUp = false;
           return true;
@@ -2314,6 +2447,24 @@ bool Editor::onProcessMessage(Message* msg)
       break;
 
     case kKeyDownMessage:
+      // Both shortcuts are regular editable Action Modifiers in
+      // Edit > Keyboard Shortcuts. They are active only in the canvas.
+      if (m_sprite && hasMouse() && !hasCapture() && !m_modalColorPickCallback) {
+        auto* shortcuts = KeyboardShortcuts::instance();
+        auto resetKey = shortcuts->action(KeyAction::ResetCanvasView, KeyContext::Normal);
+        if (resetKey && resetKey->isPressed(msg, KeyContext::Normal)) {
+          setViewRotation(0.0);
+          setCursor(mousePosInDisplay());
+          return true;
+        }
+
+        auto rotateKey = shortcuts->action(KeyAction::RotateCanvasView, KeyContext::Normal);
+        if (rotateKey && rotateKey->isPressed(msg, KeyContext::Normal)) {
+          m_brushPreview.hide();
+          setCursor(mousePosInDisplay());
+          return true;
+        }
+      }
 #if ENABLE_DEVMODE
       // Switch renderer
       if (msg->modifiers() == 0 && static_cast<KeyMessage*>(msg)->scancode() == kKeyF1) {
@@ -2483,6 +2634,61 @@ void Editor::onResize(ui::ResizeEvent& ev)
     m_state->onEditorResize(this);
 }
 
+// Draw a full, padded editor scene and rotate the composited view.
+// The extra diagonal padding allows pixels outside the unrotated
+// viewport to remain visible near the four corners at any angle.
+// No pixels in the sprite/document are transformed.
+void Editor::drawRotatedView(ui::Graphics* g)
+{
+  const gfx::Rect rc = clientBounds();
+  if (rc.w <= 0 || rc.h <= 0)
+    return;
+
+  const int side = int(std::ceil(std::hypot(double(rc.w), double(rc.h)))) + 4;
+  const int padX = (side - rc.w) / 2;
+  const int padY = (side - rc.h) / 2;
+
+  if (!m_rotationSurface ||
+      m_rotationSurface->width() != side ||
+      m_rotationSurface->height() != side) {
+    m_rotationSurface =
+      os::System::instance()->makeRgbaSurface(side, side, m_document->osColorSpace());
+  }
+
+  // The Graphics origin offset keeps the original sprite/editor draw
+  // routines in screen coordinates, but broadens the clip bounds.
+  ui::Graphics offscreen(nullptr, m_rotationSurface, padX, padY);
+  const auto theme = SkinTheme::get(this);
+  offscreen.fillRect(theme->colors.editorFace(),
+                     gfx::Rect(-padX, -padY, side, side));
+
+  {
+    base::ScopedValue drawingBuffer(m_renderingRotationSurface, true);
+    drawBackground(&offscreen);
+    drawSpriteUnclippedRect(&offscreen, m_sprite->bounds());
+  }
+
+  const auto center = rotationCenterInDisplay();
+  const auto localCenter = gfx::PointF(
+    center.x - bounds().x, center.y - bounds().y);
+  gfx::Matrix transform;
+  transform.setRotate(
+    float(m_viewRotationDegrees),
+    float(localCenter.x + g->getInternalDeltaX()),
+    float(localCenter.y + g->getInternalDeltaY()));
+
+  os::Paint paint;
+  paint.blendMode(os::BlendMode::Src);
+  g->save();
+  g->concat(transform);
+  g->drawSurface(m_rotationSurface.get(),
+                 gfx::Rect(0, 0, side, side),
+                 gfx::Rect(-padX, -padY, side, side),
+                 os::Sampling(os::Sampling::Filter::Nearest),
+                 &paint);
+  g->restore();
+}
+
 void Editor::onPaint(ui::PaintEvent& ev)
 {
   std::unique_ptr<HideBrushPreview> hide;
@@ -2515,10 +2721,17 @@ void Editor::onPaint(ui::PaintEvent& ev)
       // sprite) to avoid locking the UI.
       DocReader documentReader(m_document, 0);
 
-      // Draw the sprite in the editor
+      // Draw the sprite in the editor. At nonzero view angles the
+      // entire scene (including selection/grid/guide decorations)
+      // is rendered once into a padded surface and rotated.
       renderChrono.reset();
-      drawBackground(g);
-      drawSpriteUnclippedRect(g, m_sprite->bounds());
+      if (m_viewRotationDegrees == 0.0) {
+        drawBackground(g);
+        drawSpriteUnclippedRect(g, m_sprite->bounds());
+      }
+      else {
+        drawRotatedView(g);
+      }
       renderElapsed = renderChrono.elapsed();
 
 #if ENABLE_DEVMODE
@@ -2540,9 +2753,11 @@ void Editor::onPaint(ui::PaintEvent& ev)
       }
 #endif // ENABLE_DEVMODE
 
-      // Draw the mask boundaries
+      // Mask boundaries are already part of the rotated offscreen
+      // scene. Do not draw them again with unrotated coordinates.
       if (m_document->hasMaskBoundaries()) {
-        drawMask(g);
+        if (m_viewRotationDegrees == 0.0)
+          drawMask(g);
         m_antsTimer.start();
       }
       else {
@@ -2724,6 +2939,13 @@ void Editor::onBeforeCommitTransaction(DocEvent& ev)
 void Editor::setCursor(const gfx::Point& mouseDisplayPos)
 {
   bool used = false;
+  if (m_rotatingView || isRotateViewShortcutPressed()) {
+    m_brushPreview.hide();
+    auto theme = SkinTheme::get(this);
+    ui::set_mouse_cursor(kCustomCursor, theme->cursors.rotateNw());
+    return;
+  }
+
   if (m_sprite)
     used = m_state->onSetCursor(this, mouseDisplayPos);
 
@@ -3207,6 +3429,14 @@ void Editor::showMouseCursor(CursorType cursorType, const Cursor* cursor)
 
 void Editor::showBrushPreview(const gfx::Point& screenPos)
 {
+  if (m_viewRotationDegrees != 0.0 || m_rotatingView) {
+    // The built-in brush-preview UI layer isn't affine transformed.
+    // Keep painting accurate via the inverse mouse transform, and
+    // don't display a misleading unrotated brush outline.
+    m_brushPreview.hide();
+    ui::set_mouse_cursor(kCrosshairCursor);
+    return;
+  }
   m_brushPreview.show(screenPos);
 }
 
@@ -3258,6 +3488,15 @@ void Editor::invalidateCanvas()
 {
   if (!isVisible())
     return;
+
+  if (m_viewRotationDegrees != 0.0) {
+    // Rotation changes the invalidated pixel bounds; redraw the
+    // entire transformed view instead of only the old axis-aligned
+    // sprite rectangle.
+    if (!m_renderingRotationSurface)
+      invalidate();
+    return;
+  }
 
   if (m_sprite)
     invalidateRect(editorToScreen(getVisibleSpriteBounds()));

@@ -188,7 +188,9 @@
         <param name="target" value="foreground" />
         <param name="change" value="decrement-index" />
       </key>
-      <key command="ChangeColor" shortcut="0">
+      <!-- 0 resets the canvas view while the editor has focus.
+           Palette color index increment can be rebound if needed. -->
+      <key command="ChangeColor">
         <param name="target" value="foreground" />
         <param name="change" value="increment-index" />
       </key>
@@ -619,8 +621,10 @@
       <key tool="contour" shortcut="D" />
       <key tool="polygon" shortcut="Shift+D" />
 
-      <key tool="blur" shortcut="R" />
-      <key tool="jumble" shortcut="R" />
+      <!-- R now defaults to temporary canvas-view rotation.
+           Blur/Jumble can still be assigned in Keyboard Shortcuts. -->
+      <key tool="blur" />
+      <key tool="jumble" />
 
       <key tool="text" shortcut="T" />
     </tools>
@@ -685,6 +689,11 @@
       <!-- Modifiers for two-or-more-points tools -->
       <key action="MoveOrigin" shortcut="Space" />
       <key action="RotateShape" shortcut="Alt" />
+
+      <!-- Editor-only view rotation: customizable in Keyboard Shortcuts.
+           This rotates the display, never the sprite data. -->
+      <key action="RotateCanvasView" shortcut="R" context="Normal" />
+      <key action="ResetCanvasView" shortcut="0" context="Normal" />
 
       <!-- Without default shortcuts -->
       <key action="LeftMouseButton" />

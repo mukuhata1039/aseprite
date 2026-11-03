@@ -65,6 +65,8 @@ enum class KeyAction {
   RotateShape = 0x00020000,
   FineControl = 0x00040000,
   CornerRadius = 0x00080000,
+  RotateCanvasView = 0x00100000,
+  ResetCanvasView = 0x00200000,
 };
 
 enum class WheelAction {
