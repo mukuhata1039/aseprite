@@ -819,6 +819,10 @@ void Editor::drawOneSpriteUnclippedRect(ui::Graphics* g,
   // Convert the render to a os::Surface
   static os::SurfaceRef rendered = nullptr; // TODO move this to other centralized place
   const auto& renderProperties = m_renderEngine->properties();
+  // Renderer extra images store raw pointers to the preview image/cel.
+  // After Undo may delete or replace those objects, so always clear
+  // the previous render's extra image before touching the document.
+  m_renderEngine->removeExtraImage();
   try {
     // Generate a "expose sprite pixels" notification. This is used by
     // tool managers that need to validate this region (copy pixels from
@@ -909,6 +913,9 @@ void Editor::drawOneSpriteUnclippedRect(ui::Graphics* g,
       m_docPref.bg.forceSection();
   }
   catch (const std::exception& e) {
+    // If renderSprite() throws, its extra cel pointers must not be
+    // reused on the next repaint (Undo can already have freed them).
+    m_renderEngine->removeExtraImage();
     Console::showException(e);
   }
 

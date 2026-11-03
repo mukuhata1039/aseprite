@@ -26,10 +26,40 @@
 #include "doc/sprite.h"
 #include "ui/manager.h"
 
-#include <memory>
 #include <vector>
 
 namespace app {
+
+// Keep all live brush patches off the document during Undo/Redo.
+// This guard is constructed BEFORE ContextWriter, so its lifetime
+// encloses the write lock. No redraw/preview restoration is performed
+// when the command unwinds; the next mouse movement refreshes it.
+class ScopedUndoPreviewSuspension {
+public:
+  ScopedUndoPreviewSuspension(Context* context, Doc* document)
+  {
+    if (!document || !context->isUIAvailable())
+      return;
+    auto* uiContext = UIContext::instance();
+    if (!uiContext)
+      return;
+
+    for (Editor* editor : uiContext->getAllEditorsIncludingPreview(document)) {
+      BrushPreview& preview = editor->brushPreview();
+      preview.suspend();
+      m_previews.push_back(&preview);
+    }
+  }
+
+  ~ScopedUndoPreviewSuspension()
+  {
+    for (BrushPreview* preview : m_previews)
+      preview->resume();
+  }
+
+private:
+  std::vector<BrushPreview*> m_previews;
+};
 
 class UndoCommand : public Command {
 public:
@@ -60,28 +90,16 @@ bool UndoCommand::onEnabled(Context* context)
 
 void UndoCommand::onExecute(Context* context)
 {
+  // Remove preview data BEFORE acquiring the document's writer lock.
+  // Keep previews suspended through all onUndo/onRedo callbacks and
+  // timeline changes; don't recreate a cursor patch from half-updated
+  // cel data while this command is running.
+  ScopedUndoPreviewSuspension suspendPreviews(context, context->activeDocument());
   ContextWriter writer(context);
   Doc* document(writer.document());
   DocUndo* undo = document->undoHistory();
 
   auto editor = Editor::activeEditor();
-
-  // The preview's extra cel is part of the document render state, but
-  // not part of its undo history. Undo/redo can replace the source cel
-  // or delete its layer while the preview is still active. Remove all
-  // cursor previews for this document before the undo transaction and
-  // restore them only after the model and active site are consistent.
-  std::vector<std::unique_ptr<HideBrushPreview>> hiddenPreviews;
-  if (context->isUIAvailable()) {
-    if (auto* uiContext = UIContext::instance()) {
-      for (Editor* docEditor : uiContext->getAllEditorsIncludingPreview(document)) {
-        if (docEditor->brushPreview().onScreen())
-          hiddenPreviews.emplace_back(
-            std::make_unique<HideBrushPreview>(docEditor->brushPreview()));
-      }
-    }
-  }
-
   Sprite* sprite = document->sprite();
   SpritePosition spritePosition;
   const bool gotoModified = (Preferences::instance().undo.gotoModified() &&
@@ -100,12 +118,18 @@ void UndoCommand::onExecute(Context* context)
         editor->setLayer(selectLayer);
       editor->setFrame(spritePosition.frame());
 
-      // Draw the current layer/frame (which is not undone yet) so the
-      // user can see the doUndo/doRedo effect.
-      editor->drawSpriteClipped(gfx::Region(sprite->bounds()));
-
-      editor->display()->flipDisplay();
-      base::this_thread::sleep_for(0.01);
+      // The direct draw+flip path only works for an axis-aligned
+      // editor. A rotated/mirrored editor draws via an offscreen
+      // surface; never flip the display from inside the undo write
+      // lock when that view needs a complete deferred repaint.
+      if (editor->viewRotation() == 0.0 && !editor->viewMirrored()) {
+        editor->drawSpriteClipped(gfx::Region(sprite->bounds()));
+        editor->display()->flipDisplay();
+        base::this_thread::sleep_for(0.01);
+      }
+      else {
+        editor->invalidateCanvas();
+      }
     }
   }
 
