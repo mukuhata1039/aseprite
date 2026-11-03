@@ -293,13 +293,11 @@ private:
 
     // The embedded HSV picker and the numeric/color swatch control
     // always show the same target. Only one preview restart per edit.
+    m_colorSelector.selectColor(chosen);
     if (fromSelector) {
       m_syncingColor = true;
       m_colorButton.setColor(chosen);
       m_syncingColor = false;
-    }
-    else {
-      m_colorSelector.selectColor(chosen);
     }
     restartPreview();
   }
