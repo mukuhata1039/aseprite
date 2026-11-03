@@ -12,7 +12,8 @@ namespace app {
 
 enum class CelsTarget {
   Selected, // Selected cels in the timeline
-  All       // All cels in the sprite
+  All,       // All cels in the sprite
+  ActiveLayer // All cels in the current raster layer, for layer recoloring
 };
 
 } // namespace app
