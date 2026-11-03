@@ -522,7 +522,9 @@ private:
     }
     int onGetValueFromText(const std::string& text) override
     {
-      return std::strtol(text.c_str(), nullptr, 10);
+      const std::string digits =
+        (text.compare(0, 3, "FPS") == 0 ? text.substr(3) : text);
+      return std::strtol(digits.c_str(), nullptr, 10);
     }
   };
 
