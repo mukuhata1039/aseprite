@@ -1707,62 +1707,106 @@ bool Editor::isAutoSelectLayer()
 
 gfx::Point Editor::screenToEditor(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return gfx::Point(m_proj.removeX(pt.x - vp.x + scroll.x - m_padding.x),
-                    m_proj.removeY(pt.y - vp.y + scroll.y - m_padding.y));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  return gfx::Point(
+    m_proj.removeX(int(std::floor(unrotated.x)) - vp.x + scroll.x - m_padding.x),
+    m_proj.removeY(int(std::floor(unrotated.y)) - vp.y + scroll.y - m_padding.y));
 }
 
 gfx::Point Editor::screenToEditorCeiling(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return gfx::Point(m_proj.removeXCeiling(pt.x - vp.x + scroll.x - m_padding.x),
-                    m_proj.removeYCeiling(pt.y - vp.y + scroll.y - m_padding.y));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  return gfx::Point(
+    m_proj.removeXCeiling(int(std::ceil(unrotated.x)) - vp.x + scroll.x - m_padding.x),
+    m_proj.removeYCeiling(int(std::ceil(unrotated.y)) - vp.y + scroll.y - m_padding.y));
 }
 
 gfx::PointF Editor::screenToEditorF(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return gfx::PointF(m_proj.removeX<double>(pt.x - vp.x + scroll.x - m_padding.x),
-                     m_proj.removeY<double>(pt.y - vp.y + scroll.y - m_padding.y));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  return gfx::PointF(
+    m_proj.removeX<double>(unrotated.x - vp.x + scroll.x - m_padding.x),
+    m_proj.removeY<double>(unrotated.y - vp.y + scroll.y - m_padding.y));
 }
 
 Point Editor::editorToScreen(const gfx::Point& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return Point((vp.x - scroll.x + m_padding.x + m_proj.applyX(pt.x)),
-               (vp.y - scroll.y + m_padding.y + m_proj.applyY(pt.y)));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  const auto unrotated = gfx::PointF(
+    vp.x - scroll.x + m_padding.x + m_proj.applyX(pt.x),
+    vp.y - scroll.y + m_padding.y + m_proj.applyY(pt.y));
+  const auto result = rotateViewPoint(unrotated, false);
+  return Point(int(std::lround(result.x)), int(std::lround(result.y)));
 }
 
 gfx::PointF Editor::editorToScreenF(const gfx::PointF& pt) const
 {
-  View* view = View::getView(this);
-  Rect vp = view->viewportBounds();
-  Point scroll = view->viewScroll();
-  return PointF((vp.x - scroll.x + m_padding.x + m_proj.applyX<double>(pt.x)),
-                (vp.y - scroll.y + m_padding.y + m_proj.applyY<double>(pt.y)));
+  const auto view = View::getView(this);
+  const auto vp = view->viewportBounds();
+  const auto scroll = view->viewScroll();
+  return rotateViewPoint(
+    gfx::PointF(
+      vp.x - scroll.x + m_padding.x + m_proj.applyX<double>(pt.x),
+      vp.y - scroll.y + m_padding.y + m_proj.applyY<double>(pt.y)), false);
 }
 
 Rect Editor::screenToEditor(const Rect& rc) const
 {
-  return gfx::Rect(screenToEditor(rc.origin()), screenToEditorCeiling(rc.point2()));
+  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+    return gfx::Rect(screenToEditor(rc.origin()), screenToEditorCeiling(rc.point2()));
+
+  const auto a = screenToEditorF(rc.origin());
+  const auto b = screenToEditorF(gfx::Point(rc.x2(), rc.y));
+  const auto c = screenToEditorF(gfx::Point(rc.x, rc.y2()));
+  const auto d = screenToEditorF(rc.point2());
+  const double x0 = std::floor(std::min({a.x, b.x, c.x, d.x}));
+  const double y0 = std::floor(std::min({a.y, b.y, c.y, d.y}));
+  const double x1 = std::ceil(std::max({a.x, b.x, c.x, d.x}));
+  const double y1 = std::ceil(std::max({a.y, b.y, c.y, d.y}));
+  return gfx::Rect(int(x0), int(y0), int(x1-x0), int(y1-y0));
 }
 
 Rect Editor::editorToScreen(const Rect& rc) const
 {
-  return gfx::Rect(editorToScreen(rc.origin()), editorToScreen(rc.point2()));
+  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+    return gfx::Rect(editorToScreen(rc.origin()), editorToScreen(rc.point2()));
+
+  const auto a = editorToScreenF(gfx::PointF(rc.x, rc.y));
+  const auto b = editorToScreenF(gfx::PointF(rc.x2(), rc.y));
+  const auto c = editorToScreenF(gfx::PointF(rc.x, rc.y2()));
+  const auto d = editorToScreenF(gfx::PointF(rc.x2(), rc.y2()));
+  const double x0 = std::floor(std::min({a.x, b.x, c.x, d.x}));
+  const double y0 = std::floor(std::min({a.y, b.y, c.y, d.y}));
+  const double x1 = std::ceil(std::max({a.x, b.x, c.x, d.x}));
+  const double y1 = std::ceil(std::max({a.y, b.y, c.y, d.y}));
+  return gfx::Rect(int(x0), int(y0), int(x1-x0), int(y1-y0));
 }
 
 gfx::RectF Editor::editorToScreenF(const gfx::RectF& rc) const
 {
-  return gfx::RectF(editorToScreenF(rc.origin()), editorToScreenF(rc.point2()));
+  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+    return gfx::RectF(editorToScreenF(rc.origin()), editorToScreenF(rc.point2()));
+
+  const auto a = editorToScreenF(rc.origin());
+  const auto b = editorToScreenF(gfx::PointF(rc.x2(), rc.y));
+  const auto c = editorToScreenF(gfx::PointF(rc.x, rc.y2()));
+  const auto d = editorToScreenF(rc.point2());
+  const double x0 = std::min({a.x, b.x, c.x, d.x});
+  const double y0 = std::min({a.y, b.y, c.y, d.y});
+  const double x1 = std::max({a.x, b.x, c.x, d.x});
+  const double y1 = std::max({a.y, b.y, c.y, d.y});
+  return gfx::RectF(x0, y0, x1-x0, y1-y0);
 }
 
 void Editor::add_observer(EditorObserver* observer)
