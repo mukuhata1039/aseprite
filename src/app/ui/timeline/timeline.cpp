@@ -1484,6 +1484,13 @@ bool Timeline::onProcessMessage(Message* msg)
                 // toggles the lock. Releasing capture is important before
                 // entering the modal filter window.
                 setLayer(layer);
+                // Preview requires an active cel. When the selected
+                // frame is empty, jump to an occupied frame on this
+                // layer so all its cels can still be recolored.
+                if (m_editor && !layer->cel(m_editor->frame()) &&
+                    !layer->cels().empty()) {
+                  setFrame(m_adapter->toColFrame(fr_t(layer->cels().front()->frame())), true);
+                }
                 cleanClk();
                 releaseMouse();
                 m_state = STATE_STANDBY;
