@@ -38,10 +38,12 @@
 #include "view/range.h"
 #include "view/timeline_adapter.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <map>
 #include <memory>
 #include <set>
+#include <string>
 #include <vector>
 
 namespace doc {
@@ -545,7 +547,7 @@ private:
       const std::string digits =
         (text.compare(0, 3, "FPS") == 0 ? text.substr(3) : text);
       const double fps = std::strtod(digits.c_str(), nullptr);
-      return std::clamp(int(fps / 0.3 + 0.5), 1, 400);
+      return int(std::clamp(fps / 0.3 + 0.5, 1.0, 400.0));
     }
   };
 
