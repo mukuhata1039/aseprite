@@ -30,6 +30,7 @@
 #include "app/ui/color_bar.h"
 #include "app/ui/color_button.h"
 #include "app/ui/keyboard_shortcuts.h"
+#include "app/ui/timeline/timeline.h"
 #include "app/ui_context.h"
 #include "doc/image.h"
 #include "doc/layer.h"
