@@ -44,6 +44,7 @@ enum class LayerFlags {
   Collapsed = 32,  // Prefer to show this group layer collapsed
   Reference = 64,  // Is a reference layer
   Clipped = 128,   // Clip this layer against the layer immediately below
+  ClipInherited = 256, // Reuse the first unclipped sibling's alpha mask
 
   PersistentFlagsMask = 0xffff,
   Internal_WasVisible = 0x10000, // Was visible in the alternative state (Alt+click)
@@ -52,7 +53,7 @@ enum class LayerFlags {
 
   // Flags that change the modified flag of the document
   // (e.g. created by undoable actions).
-  StructuralFlagsMask = Background | Reference | Clipped,
+  StructuralFlagsMask = Background | Reference | Clipped | ClipInherited,
 };
 LAF_ENUM_FLAGS(LayerFlags);
 
@@ -107,6 +108,7 @@ public:
   bool isExpanded() const { return !hasFlags(LayerFlags::Collapsed); }
   bool isReference() const { return hasFlags(LayerFlags::Reference); }
   bool isClipped() const { return hasFlags(LayerFlags::Clipped); }
+  bool isClipInherited() const { return isClipped() && hasFlags(LayerFlags::ClipInherited); }
 
   bool isVisibleHierarchy() const;
   bool isEditableHierarchy() const;
@@ -121,7 +123,12 @@ public:
   void setContinuous(bool state) { switchFlags(LayerFlags::Continuous, state); }
   void setCollapsed(bool state) { switchFlags(LayerFlags::Collapsed, state); }
   void setReference(bool state) { switchFlags(LayerFlags::Reference, state); }
-  void setClipped(bool state) { switchFlags(LayerFlags::Clipped, state); }
+  void setClipped(bool state)
+  {
+    switchFlags(LayerFlags::Clipped, state);
+    if (!state)
+      switchFlags(LayerFlags::ClipInherited, false);
+  }
 
   LayerFlags flags() const { return m_flags; }
 
