@@ -31,6 +31,8 @@
 #include "obs/connection.h"
 #include "obs/observable.h"
 #include "ui/button.h"
+#include "ui/label.h"
+#include "ui/slider.h"
 #include "ui/scroll_bar.h"
 #include "ui/timer.h"
 #include "ui/widget.h"
@@ -291,6 +293,9 @@ private:
   void updateLayerOpacitySlider();
   void onLayerOpacitySliderChange();
   void onLayerOpacitySliderReleased();
+  void updateFpsSlider();
+  void onFpsSliderChange();
+  void onFpsSliderReleased();
 
   // Timeline-only layer hiding. This never changes Layer visibility.
   bool isTimelineLayerDirectlyHidden(const Layer* layer) const;
@@ -509,6 +514,10 @@ private:
   ui::Button m_restoreTimelineLayersButton;
 
   AlphaSlider m_layerOpacitySlider;
+  ui::Label m_fpsLabel;
+  ui::Slider m_fpsSlider;
+  std::vector<int> m_fpsStartDurations;
+  bool m_fpsEditing = false;
   int m_layerOpacityStart = 255;
   bool m_layerOpacityEditing = false;
 
