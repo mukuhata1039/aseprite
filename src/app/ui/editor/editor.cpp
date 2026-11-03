@@ -2655,17 +2655,15 @@ void Editor::drawRotatedView(ui::Graphics* g)
 
   const gfx::Rect viewportLocal(
     vp.x - bounds().x, vp.y - bounds().y, vp.w, vp.h);
-  const double angle =
-    m_viewRotationDegrees * 3.14159265358979323846 / 180.0;
-  const double cs = std::abs(std::cos(angle));
-  const double sn = std::abs(std::sin(angle));
-
-  // Bounding box of the viewport *before* the final rotation.
-  // This also avoids allocating a full diagonal square at small
-  // angles (which would waste memory).
+  // One viewport-diagonal square safely covers the inverse-rotated
+  // viewport at ANY angle. Its size is independent of zoom *and*
+  // angle, so dragging the rotation never reallocates an offscreen
+  // buffer for each fractional-degree movement.
   constexpr int margin = 4;
-  const double width = std::ceil(cs * vp.w + sn * vp.h) + margin;
-  const double height = std::ceil(sn * vp.w + cs * vp.h) + margin;
+  const double side =
+    std::ceil(std::hypot(double(vp.w), double(vp.h))) + margin;
+  const double width = side;
+  const double height = side;
 
   // Protect against unusually large desktop/viewports and failures
   // inside Skia's bitmap allocation. The fallback restores the
