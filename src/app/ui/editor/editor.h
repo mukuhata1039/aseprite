@@ -431,6 +431,9 @@ private:
 
   void setCursor(const gfx::Point& mouseDisplayPos);
   bool isRotateViewShortcutPressed() const;
+  // The rotation pivot is the cursor position when the user presses
+  // the configurable Rotate Canvas View key.
+  void setViewRotationPivot(const gfx::Point& displayPos);
   gfx::PointF rotateViewPoint(const gfx::PointF& pt, bool inverse) const;
   gfx::PointF rotationCenterInDisplay() const;
   void drawRotatedView(ui::Graphics* graphics);
@@ -475,8 +478,14 @@ private:
   // Per-editor canvas view angle / rotation gesture.
   double m_viewRotationDegrees = 0.0;
   bool m_rotatingView = false;
-  gfx::Point m_viewRotationMouseStart;
-  double m_viewRotationStartDegrees = 0.0;
+  // Offset relative to the viewport, not the zoom-scaled editor
+  // widget: scrolling and zooming must not move the rotation axis.
+  gfx::Point m_viewRotationPivotOffset;
+  bool m_viewRotationPivotSet = false;
+  // Angular mouse drag around that axis. No arbitrary horizontal
+  // mouse-distance-to-angle conversion.
+  bool m_viewRotationDragHasAngle = false;
+  double m_viewRotationDragLastAngle = 0.0;
   bool m_renderingRotationSurface = false;
   os::SurfaceRef m_rotationSurface;
   DocumentPreferences& m_docPref;
