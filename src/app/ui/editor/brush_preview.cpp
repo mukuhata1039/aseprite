@@ -157,10 +157,11 @@ void BrushPreview::show(const gfx::Point& screenPos)
   if (m_onScreen)
     hide();
 
-  if (m_editor->viewRotation() != 0.0 || m_editor->viewMirrored()) {
-    showRotated(screenPos);
-    return;
-  }
+  // Always build the native extra-cel preview first. Previously
+  // rotated/mirrored views returned here, leaving only a hollow outline
+  // even when the cursor was configured for a full color preview.
+  const bool transformedView =
+    (m_editor->viewRotation() != 0.0 || m_editor->viewMirrored());
 
   Doc* document = m_editor->document();
   Sprite* sprite = m_editor->sprite();
@@ -436,6 +437,18 @@ void BrushPreview::show(const gfx::Point& screenPos)
     m_withRealPreview = true;
   }
 
+  if (transformedView) {
+    // The real brush preview is composed into the editor's transformed
+    // scene, while its lightweight boundary stays a screen-space layer.
+    // Mark it visible even if the boundary allocation falls back to a
+    // native crosshair, so hide() can always clean up the extra cel.
+    m_onScreen = true;
+    m_lastLayer = site.layer();
+    m_lastTilemapMode = tilemapMode;
+    showRotated(screenPos);
+    return;
+  }
+
   // Save area and draw the cursor
   if (!(m_type & NATIVE_CROSSHAIR) || (m_type & BRUSH_BOUNDARIES)) {
     ui::Display* display = m_editor->display();
@@ -685,14 +698,16 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
   // rotated editor's huge scrollable bounds. Hiding/redrawing this
   // small layer is enough to follow the mouse in real time.
   m_editor->getDrawableRegion(m_clippingRegion, ui::Widget::kCutTopWindows);
-  m_clippingRegion.createSubtraction(m_clippingRegion, m_editor->getUpdateRegion());
+  // A full brush preview invalidates the whole transformed viewport.
+  // Subtracting that pending update would make this cursor layer vanish.
   m_uiLayer->setPosition(surfacePos);
   m_uiLayer->setClipRegion(m_clippingRegion);
   m_editor->display()->addLayer(m_uiLayer);
   m_layerAdded = true;
 
   m_type = BRUSH_BOUNDARIES;
-  m_withRealPreview = false;
+  // Keep m_withRealPreview from show(): the extra cel is what paints
+  // the filled brush, not the transparent boundary overlay.
   m_onScreen = true;
   m_editorPosition = spritePos;
   m_lastLayer = site.layer();

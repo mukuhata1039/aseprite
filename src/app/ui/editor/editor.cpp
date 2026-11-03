@@ -2591,7 +2591,9 @@ bool Editor::onProcessMessage(Message* msg)
         auto* shortcuts = KeyboardShortcuts::instance();
         auto resetKey = shortcuts->action(KeyAction::ResetCanvasView, KeyContext::Normal);
         if (resetKey && resetKey->isPressed(msg, KeyContext::Normal)) {
+          // The 0 shortcut resets the entire non-destructive canvas view.
           setViewRotation(0.0);
+          setViewMirrored(false);
           setCursor(mousePosInDisplay());
           return true;
         }
@@ -2841,6 +2843,7 @@ void Editor::drawRotatedView(ui::Graphics* g)
       width > 8192 || height > 8192 ||
       width * height > maxPixels) {
     setViewRotation(0.0);
+    setViewMirrored(false);
     drawBackground(g);
     drawSpriteUnclippedRect(g, m_sprite->bounds());
     return;
@@ -2875,6 +2878,7 @@ void Editor::drawRotatedView(ui::Graphics* g)
       // rotation gracefully. Avoid retrying the same failing Skia
       // allocation on every paint and flooding the error console.
       setViewRotation(0.0);
+      setViewMirrored(false);
       drawBackground(g);
       drawSpriteUnclippedRect(g, m_sprite->bounds());
       return;
@@ -2942,9 +2946,12 @@ void Editor::onPaint(ui::PaintEvent& ev)
     if (ev.isTransparentBg()) {
       m_brushPreview.discardBrushPreview();
     }
-    else {
+    else if (m_viewRotationDegrees == 0.0 && !m_viewMirrored) {
       hide.reset(new HideBrushPreview(m_brushPreview));
     }
+    // In transformed views, the filled brush preview lives in an extra
+    // cel that must remain attached while the offscreen scene renders.
+    // The cursor outline is a separate UI layer, so it needs no hiding.
   }
 
   Graphics* g = ev.graphics();
