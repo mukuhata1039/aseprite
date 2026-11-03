@@ -54,6 +54,9 @@ protected:
 
   // Returns the container where derived classes should put controls.
   ui::Widget* getContainer() { return &m_container; }
+  // Layer-wide recolor has a fixed target; do not show the usual
+  // selected/all-cels switch in its dialog.
+  void hideTargetButtons() { m_targetButton.setVisible(false); }
 
   void apply();
 
