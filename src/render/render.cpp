@@ -1242,6 +1242,12 @@ void Render::renderCel(Image* dst_image,
     std::vector<MaskSource> masks;
 
     const Layer* below = cel_layer->getPrevious();
+    if (cel_layer->isClipInherited()) {
+      // Inheritance shares the original base mask, bypassing clipped
+      // intermediates. The chain mode below instead intersects all masks.
+      while (below && below->isClipped())
+        below = below->getPrevious();
+    }
     if (!below)
       return;
 
