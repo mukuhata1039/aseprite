@@ -25,6 +25,7 @@
 #include "gfx/region.h"
 
 #include <cmath>
+#include <vector>
 
 #define TRACE_RENDER_CEL(...) // TRACE
 
@@ -1223,6 +1224,131 @@ void Render::renderCel(Image* dst_image,
                        const int opacity,
                        const BlendMode blendMode)
 {
+
+  // Clipping is non-destructive: modify only a temporary render image, not the cel.
+  // Layers are stored bottom-to-top. Each clipped layer uses its previous sibling
+  // as a mask, including a chain of clipped siblings (nested clipping).
+  ImageRef clippedImage;
+  const Image* drawImage = cel_image;
+  CompositeImageFunc drawComposite = compositeImage;
+  if (cel_layer && cel_layer->isClipped() && !cel_layer->isTilemap() &&
+      cel_image->pixelFormat() != IMAGE_TILEMAP) {
+    struct MaskSource {
+      const Image* image;
+      gfx::RectF bounds;
+      int opacity;
+      bool background;
+    };
+    std::vector<MaskSource> masks;
+
+    const Layer* below = cel_layer->getPrevious();
+    if (!below)
+      return;
+
+    for (; below; below = (below->isClipped() ? below->getPrevious() : nullptr)) {
+      // The initial implementation only clips against raster layers within
+      // the same group; unsupported/missing masks result in an empty clip.
+      if (!below->isImage() || below->isTilemap() || !below->isVisibleHierarchy())
+        return;
+
+      const Cel* maskCel = below->cel(cel->frame());
+      if (!maskCel || !maskCel->image())
+        return;
+
+      const Image* maskImage = maskCel->image();
+      gfx::RectF maskBounds = (below->isReference() ? maskCel->boundsF() :
+                                                      gfx::RectF(maskCel->bounds()));
+      if (m_previewImage && checkIfWeShouldUsePreview(maskCel)) {
+        maskImage = m_previewImage;
+        maskBounds = gfx::RectF(m_previewPos.x,
+                                m_previewPos.y,
+                                maskImage->width(),
+                                maskImage->height());
+      }
+
+      int maskOpacity = (maskCel->opacity() * below->opacity() + 127) / 255;
+      masks.push_back({ maskImage, maskBounds, maskOpacity, below->isBackground() });
+    }
+
+    clippedImage.reset(Image::create(IMAGE_RGB, cel_image->width(), cel_image->height()));
+    for (int y = 0; y < cel_image->height(); ++y) {
+      const double canvasY = celBounds.y +
+                             (double(y) + 0.5) * celBounds.h / cel_image->height();
+      for (int x = 0; x < cel_image->width(); ++x) {
+        const color_t pixel = cel_image->getPixel(x, y);
+        color_t color = 0;
+        switch (cel_image->pixelFormat()) {
+          case IMAGE_RGB:
+            color = pixel;
+            break;
+          case IMAGE_GRAYSCALE: {
+            const uint8_t gray = graya_getv(pixel);
+            color = rgba(gray, gray, gray, graya_geta(pixel));
+            break;
+          }
+          case IMAGE_INDEXED:
+            color = (pixel == m_sprite->transparentColor() ?
+                     0 : (pixel < pal->size() ? pal->getEntry(pixel) : 0));
+            break;
+          default:
+            return;
+        }
+
+        int alpha = rgba_geta(color);
+        if (alpha != 0) {
+          const double canvasX = celBounds.x +
+                                 (double(x) + 0.5) * celBounds.w / cel_image->width();
+          for (const MaskSource& mask : masks) {
+            if (mask.bounds.w <= 0 || mask.bounds.h <= 0 || mask.opacity == 0) {
+              alpha = 0;
+              break;
+            }
+
+            const int mx = int(std::floor((canvasX - mask.bounds.x) *
+                                          mask.image->width() / mask.bounds.w));
+            const int my = int(std::floor((canvasY - mask.bounds.y) *
+                                          mask.image->height() / mask.bounds.h));
+            if (mx < 0 || my < 0 || mx >= mask.image->width() || my >= mask.image->height()) {
+              alpha = 0;
+              break;
+            }
+
+            const color_t maskPixel = mask.image->getPixel(mx, my);
+            int maskAlpha = 0;
+            switch (mask.image->pixelFormat()) {
+              case IMAGE_RGB:
+                maskAlpha = rgba_geta(maskPixel);
+                break;
+              case IMAGE_GRAYSCALE:
+                maskAlpha = graya_geta(maskPixel);
+                break;
+              case IMAGE_INDEXED:
+                maskAlpha = (mask.background || maskPixel != m_sprite->transparentColor()) ?
+                             (maskPixel < pal->size() ?
+                                rgba_geta(pal->getEntry(maskPixel)) : 0) : 0;
+                break;
+              default:
+                maskAlpha = 0;
+                break;
+            }
+            if (mask.background)
+              maskAlpha = 255;
+            alpha = (alpha * maskAlpha + 127) / 255;
+            alpha = (alpha * mask.opacity + 127) / 255;
+            if (alpha == 0)
+              break;
+          }
+        }
+
+        clippedImage->putPixel(x, y, rgba_seta(color, uint8_t(alpha)));
+      }
+    }
+    drawImage = clippedImage.get();
+    drawComposite = getImageComposition(dst_image->pixelFormat(), IMAGE_RGB, cel_layer);
+    if (!drawComposite)
+      return;
+  }
+
   TRACE_RENDER_CEL(
     "dstImage=(%d %d) celImage=(%d %d) celBounds=(%d %d %d %d) clipArea=(src=%d %d dst=%d %d %d %d)\n",
     dst_image->width(),
@@ -1327,7 +1453,7 @@ void Render::renderCel(Image* dst_image,
     }
   }
   else {
-    renderImage(dst_image, cel_image, pal, celBounds, area, compositeImage, opacity, blendMode);
+    renderImage(dst_image, drawImage, pal, celBounds, area, drawComposite, opacity, blendMode);
   }
 }
 
