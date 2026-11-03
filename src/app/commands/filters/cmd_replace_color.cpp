@@ -228,8 +228,9 @@ public:
   void applyToIndexed(filters::FilterManager* filterMgr) override
   {
     const auto transparent = m_layer->sprite()->transparentColor();
+    const bool background = m_layer->isBackground();
     FILTER_LOOP_THROUGH_ROW_BEGIN(uint8_t)
-      if (*src_address != transparent)
+      if (background || *src_address != transparent)
         *dst_address = uint8_t(m_pixel);
     FILTER_LOOP_THROUGH_ROW_END()
   }
