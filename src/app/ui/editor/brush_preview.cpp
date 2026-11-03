@@ -629,7 +629,7 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
 
   const int w = int(width);
   const int h = int(height);
-  const gfx::Point surfacePos(int(left), int(top));
+  const gfx::Point surfacePos{int(left), int(top)};
 
   if (!m_uiLayer)
     m_uiLayer = ui::UILayer::Make();
