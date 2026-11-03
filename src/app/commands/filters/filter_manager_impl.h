@@ -23,7 +23,9 @@
 #include "gfx/rect.h"
 
 #include <cstring>
+#include <functional>
 #include <memory>
+#include <utility>
 #include <vector>
 
 namespace doc {
@@ -85,6 +87,11 @@ public:
 
   void setTarget(Target target);
   void setCelsTarget(CelsTarget celsTarget);
+  // Optional hooks used by layer recoloring: add a layer-property change
+  // to the same undo transaction after all pixel edits, then refresh UI
+  // only once the transaction has committed successfully.
+  void setAfterApplyHook(std::function<void(Tx&)> hook) { m_afterApplyHook = std::move(hook); }
+  void setAfterCommitHook(std::function<void()> hook) { m_afterCommitHook = std::move(hook); }
 
   void begin();
   void beginForPreview();
@@ -146,6 +153,9 @@ private:
   void applyToPaletteIfNeeded();
 
   void redrawColorPalette();
+
+  std::function<void(Tx&)> m_afterApplyHook;
+  std::function<void()> m_afterCommitHook;
 
   ContextReader m_reader;
   std::unique_ptr<ContextWriter> m_writer;

@@ -269,6 +269,8 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   , m_hideTimelineLayersButton("Hide")
   , m_restoreTimelineLayersButton("Restore")
   , m_layerOpacitySlider(255, AlphaSlider::OPACITY)
+  , m_fpsLabel("FPS")
+  , m_fpsSlider(1, 120, 12)
 {
   enableFlags(CTRL_RIGHT_CLICK | ALLOW_DROP);
 
@@ -280,6 +282,8 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   setDoubleBuffered(true);
   addChild(&m_aniControls);
   addChild(&m_layerOpacitySlider);
+  addChild(&m_fpsLabel);
+  addChild(&m_fpsSlider);
   addChild(&m_hideTimelineLayersButton);
   addChild(&m_restoreTimelineLayersButton);
   addChild(&m_hbar);
@@ -293,6 +297,10 @@ Timeline::Timeline(TooltipManager* tooltipManager)
   m_layerOpacitySlider.SliderReleased.connect(
     [this] { onLayerOpacitySliderReleased(); });
   m_layerOpacitySlider.setEnabled(false);
+
+  m_fpsSlider.Change.connect([this] { onFpsSliderChange(); });
+  m_fpsSlider.SliderReleased.connect([this] { onFpsSliderReleased(); });
+  m_fpsSlider.setEnabled(false);
 
   m_hideTimelineLayersButton.Click.connect(
     [this] { hideSelectedTimelineLayers(); });
@@ -423,10 +431,21 @@ void Timeline::updateUsingEditor(Editor* editor)
     setViewScroll(view->timelineScroll());
 
   showCurrentCel();
+  updateFpsSlider();
 }
 
 void Timeline::detachDocument()
 {
+  // A drag-preview must not leave uncommitted frame durations behind
+  // if its document is detached before the pointer is released.
+  if (m_fpsEditing && m_sprite &&
+      m_fpsStartDurations.size() == size_t(m_sprite->totalFrames())) {
+    for (frame_t f = 0; f < m_sprite->totalFrames(); ++f)
+      m_sprite->setFrameDuration(f, m_fpsStartDurations[size_t(f)]);
+  }
+  m_fpsEditing = false;
+  m_fpsStartDurations.clear();
+  m_fpsSlider.setEnabled(false);
   resetAllRanges();
 
   if (m_confPopup && m_confPopup->isVisible())
@@ -604,6 +623,75 @@ void Timeline::onLayerOpacitySliderReleased()
   tx.commit();
 
   update_screen_for_document(writer.document());
+}
+
+
+void Timeline::updateFpsSlider()
+{
+  if (m_fpsEditing)
+    return;
+  m_fpsSlider.setEnabled(m_sprite && m_sprite->totalFrames() > 0);
+  if (!m_sprite)
+    return;
+  // Aseprite stores per-frame durations; the displayed value follows
+  // the active frame, while editing makes all frame durations uniform.
+  const frame_t f = (m_editor ? m_editor->frame() : frame_t(0));
+  const int msecs = m_sprite->frameDuration(f);
+  m_fpsSlider.setValue(std::clamp(int(1000.0 / std::max(1, msecs) + 0.5), 1, 120));
+}
+
+void Timeline::onFpsSliderChange()
+{
+  if (!m_document || !m_sprite)
+    return;
+
+  if (!m_fpsEditing) {
+    m_fpsStartDurations.clear();
+    for (frame_t f = 0; f < m_sprite->totalFrames(); ++f)
+      m_fpsStartDurations.push_back(m_sprite->frameDuration(f));
+    m_fpsEditing = true;
+  }
+
+  const int millis = std::max(1, int(1000.0 / m_fpsSlider.getValue() + 0.5));
+  m_sprite->setDurationForAllFrames(millis);
+  update_screen_for_document(m_document);
+  invalidate();
+
+  // Keyboard edits don't generate SliderReleased. Commit each keypress
+  // so the change is undoable without needing to drag the slider.
+  if (!m_fpsSlider.isSelected())
+    onFpsSliderReleased();
+}
+
+void Timeline::onFpsSliderReleased()
+{
+  if (!m_fpsEditing || !m_document || !m_sprite)
+    return;
+
+  m_fpsEditing = false;
+  const int millis = std::max(1, int(1000.0 / m_fpsSlider.getValue() + 0.5));
+  bool changed = false;
+  for (frame_t f = 0; f < m_sprite->totalFrames(); ++f) {
+    const int old = m_fpsStartDurations[size_t(f)];
+    if (old != millis)
+      changed = true;
+    m_sprite->setFrameDuration(f, old);
+  }
+  m_fpsStartDurations.clear();
+  if (!changed)
+    return;
+
+  try {
+    ContextWriter writer(m_context);
+    Tx tx(writer, "Set Animation FPS");
+    DocApi api = writer.document()->getApi(tx);
+    api.setFrameRangeDuration(m_sprite, frame_t(0), m_sprite->lastFrame(), millis);
+    tx.commit();
+    update_screen_for_document(writer.document());
+  }
+  catch (const std::exception& e) {
+    Console::showException(e);
+  }
 }
 
 bool Timeline::isTimelineLayerDirectlyHidden(const Layer* layer) const
@@ -1122,6 +1210,7 @@ void Timeline::setFrame(col_t frame, bool byUser)
       m_editor->stop();
 
     m_editor->setFrame(realFrame);
+    updateFpsSlider();
 
     if (isPlaying)
       m_editor->play(false,
@@ -1381,12 +1470,34 @@ bool Timeline::onProcessMessage(Message* msg)
           break;
         }
         case PART_ROW_COLOR_LOCK: {
-          if (validLayer(m_clk.layer) && mouseMsg->left()) {
+          if (validLayer(m_clk.layer)) {
             Layer* layer = m_rows[m_clk.layer].layer();
-
-            if (layer && layer->isImage()) {
-              if (ColorBar* colorBar = ColorBar::instance()) {
-                colorBar->toggleLayerColorLock(m_document, layer);
+            if (layer && layer->isImage() && !layer->isTilemap()) {
+              if (mouseMsg->left()) {
+                if (ColorBar* colorBar = ColorBar::instance()) {
+                  colorBar->toggleLayerColorLock(m_document, layer);
+                  invalidate();
+                }
+              }
+              else if (mouseMsg->right()) {
+                // Right-click opens the recolor preview; only left-click
+                // toggles the lock. Releasing capture is important before
+                // entering the modal filter window.
+                setLayer(layer);
+                // Preview requires an active cel. When the selected
+                // frame is empty, jump to an occupied frame on this
+                // layer so all its cels can still be recolored.
+                if (m_editor && !layer->cel(m_editor->frame()) &&
+                    !layer->cels().empty()) {
+                  setFrame(m_adapter->toColFrame(fr_t(layer->cels().front()->frame())), true);
+                }
+                cleanClk();
+                releaseMouse();
+                m_state = STATE_STANDBY;
+                Command* command = Commands::instance()->byId(CommandId::ReplaceColor());
+                Params params;
+                params.set("layerRecolor", "true");
+                m_context->executeCommand(command, params);
                 invalidate();
               }
             }
@@ -2341,11 +2452,14 @@ void Timeline::onResize(ui::ResizeEvent& ev)
   const int opacityX =
     rc.x + controlsW + controlGap;
 
+  const int fpsLabelW = 24 * guiscale();
+  const int fpsSliderW = 64 * guiscale();
+
   const int reservedButtonsW =
-    controlGap +
-    hideButtonW +
-    controlGap +
-    restoreButtonW;
+    controlGap + fpsLabelW +
+    controlGap + fpsSliderW +
+    controlGap + hideButtonW +
+    controlGap + restoreButtonW;
 
   const int availableOpacityW =
     std::max(
@@ -2365,10 +2479,23 @@ void Timeline::onResize(ui::ResizeEvent& ev)
     opacityW,
     oneTagHeight()));
 
-  const int hideButtonX =
-    opacityX +
-    opacityW +
-    controlGap;
+  const int fpsLabelX =
+    opacityX + opacityW + controlGap;
+
+  m_fpsLabel.setBounds(gfx::Rect(
+    fpsLabelX,
+    topY,
+    fpsLabelW,
+    oneTagHeight()));
+
+  const int fpsSliderX = fpsLabelX + fpsLabelW + controlGap;
+  m_fpsSlider.setBounds(gfx::Rect(
+    fpsSliderX,
+    topY,
+    fpsSliderW,
+    oneTagHeight()));
+
+  const int hideButtonX = fpsSliderX + fpsSliderW + controlGap;
 
   m_hideTimelineLayersButton.setBounds(gfx::Rect(
     hideButtonX,
@@ -2576,6 +2703,7 @@ void Timeline::onAfterCommandExecution(CommandExecutionEvent& ev)
 {
   if (!m_document)
     return;
+  updateFpsSlider();
 
   // TODO Improve this: check if the structure of layers/frames has changed
   const doc::ObjectVersion currentVersion = m_document->sprite()->version();
@@ -2605,6 +2733,7 @@ void Timeline::onRemoveDocument(Doc* document)
 
 void Timeline::onGeneralUpdate(DocEvent& ev)
 {
+  updateFpsSlider();
   invalidate();
 }
 

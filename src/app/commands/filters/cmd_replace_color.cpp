@@ -14,6 +14,7 @@
 #include "app/app.h"
 #include "app/color.h"
 #include "app/color_utils.h"
+#include "app/cmd/set_user_data.h"
 #include "app/commands/command.h"
 #include "app/commands/commands.h"
 #include "app/commands/filters/filter_manager_impl.h"
@@ -31,9 +32,16 @@
 #include "app/ui/keyboard_shortcuts.h"
 #include "app/ui_context.h"
 #include "doc/image.h"
+#include "doc/layer.h"
+#include "doc/palette.h"
+#include "doc/user_data.h"
 #include "doc/mask.h"
 #include "doc/sprite.h"
 #include "filters/replace_color_filter.h"
+#include "filters/filter_manager.h"
+#include "filters/filter.h"
+#include "ui/label.h"
+#include "ui/box.h"
 #include "ui/ui.h"
 
 namespace app {
@@ -44,6 +52,7 @@ struct ReplaceColorParams : public NewParams {
   Param<app::Color> from{ this, app::Color(), "from" };
   Param<app::Color> to{ this, app::Color(), "to" };
   Param<int> tolerance{ this, 0, "tolerance" };
+  Param<bool> layerRecolor{ this, false, "layerRecolor" };
 };
 
 // Wrapper for ReplaceColorFilter to handle colors in an easy way
@@ -148,6 +157,125 @@ private:
   ui::Slider* m_toleranceSlider;
 };
 
+
+//////////////////////////////////////////////////////////////////////
+// Quick layer recoloring via the timeline color-lock indicator.
+//
+// Unlike Replace Color (which changes a matching source color), this
+// changes the RGB/gray/index of every nontransparent pixel in the
+// active raster layer, preserving each pixel's existing alpha.
+class LayerRecolorFilter : public filters::Filter {
+public:
+  LayerRecolorFilter(Layer* layer, const app::Color& color)
+    : m_layer(layer)
+  {
+    setColor(color);
+  }
+
+  void setColor(const app::Color& color)
+  {
+    if (color.getType() == app::Color::MaskType ||
+        (color.getType() != app::Color::IndexType && color.getAlpha() == 0))
+      return;
+
+    const doc::color_t pixel = color_utils::color_for_layer(color, m_layer);
+    if (m_layer->sprite()->pixelFormat() == IMAGE_INDEXED &&
+        pixel == m_layer->sprite()->transparentColor())
+      return;
+
+    m_pixel = pixel;
+    m_color = color;
+  }
+
+  app::Color color() const { return m_color; }
+
+  app::Color lockColor() const
+  {
+    switch (m_layer->sprite()->pixelFormat()) {
+      case IMAGE_RGB:
+        return app::Color::fromRgb(rgba_getr(m_pixel), rgba_getg(m_pixel), rgba_getb(m_pixel));
+      case IMAGE_GRAYSCALE:
+        return app::Color::fromGray(graya_getv(m_pixel));
+      case IMAGE_INDEXED:
+        return app::Color::fromIndex(int(m_pixel));
+      default:
+        return m_color;
+    }
+  }
+
+  const char* getName() override { return "Recolor Layer"; }
+
+  void applyToRgba(filters::FilterManager* filterMgr) override
+  {
+    FILTER_LOOP_THROUGH_ROW_BEGIN(uint32_t)
+      if (rgba_geta(*src_address) != 0) {
+        *dst_address = rgba(rgba_getr(m_pixel),
+                            rgba_getg(m_pixel),
+                            rgba_getb(m_pixel),
+                            rgba_geta(*src_address));
+      }
+    FILTER_LOOP_THROUGH_ROW_END()
+  }
+
+  void applyToGrayscale(filters::FilterManager* filterMgr) override
+  {
+    FILTER_LOOP_THROUGH_ROW_BEGIN(uint16_t)
+      if (graya_geta(*src_address) != 0)
+        *dst_address = graya(graya_getv(m_pixel), graya_geta(*src_address));
+    FILTER_LOOP_THROUGH_ROW_END()
+  }
+
+  void applyToIndexed(filters::FilterManager* filterMgr) override
+  {
+    const auto transparent = m_layer->sprite()->transparentColor();
+    const bool background = m_layer->isBackground();
+    FILTER_LOOP_THROUGH_ROW_BEGIN(uint8_t)
+      if (background || *src_address != transparent)
+        *dst_address = uint8_t(m_pixel);
+    FILTER_LOOP_THROUGH_ROW_END()
+  }
+
+private:
+  Layer* m_layer;
+  app::Color m_color = app::Color::fromRgb(255, 255, 255);
+  doc::color_t m_pixel = 0;
+};
+
+class LayerRecolorWindow : public FilterWindow {
+public:
+  LayerRecolorWindow(LayerRecolorFilter& filter, FilterManagerImpl& mgr)
+    : FilterWindow(Strings::replace_color_layer_title().c_str(),
+                   "RecolorLayer",
+                   &mgr,
+                   WithoutChannelsSelector,
+                   WithoutTiledCheckBox)
+    , m_filter(filter)
+    , m_label(Strings::replace_color_layer_new_color())
+    , m_colorButton(filter.color(), mgr.pixelFormat(), ColorButtonOptions())
+  {
+    // This dialog always targets the active layer's complete timeline.
+    // Hide the normal selected/all-cels choice to avoid affecting other
+    // layers or changing the user's ordinary Replace Color preferences.
+    mgr.setCelsTarget(CelsTarget::ActiveLayer);
+    hideTargetButtons();
+    getContainer()->addChild(&m_colorRow);
+    m_colorRow.addChild(&m_label);
+    m_colorRow.addChild(&m_colorButton);
+
+    m_colorButton.Change.connect([this](const app::Color& newColor) {
+      stopPreview();
+      m_filter.setColor(newColor);
+      restartPreview();
+    });
+  }
+
+private:
+  LayerRecolorFilter& m_filter;
+  ui::HBox m_colorRow;
+  ui::Label m_label;
+  ColorButton m_colorButton;
+};
+
 class ReplaceColorCommand : public CommandWithNewParams<ReplaceColorParams> {
 public:
   ReplaceColorCommand();
@@ -172,6 +300,48 @@ void ReplaceColorCommand::onExecute(Context* context)
 {
   const bool ui = (params().ui() && context->isUIAvailable());
   Site site = context->activeSite();
+
+  if (params().layerRecolor()) {
+    Layer* layer = site.layer();
+    if (!ui || !layer || !layer->isImage() || layer->isTilemap() ||
+        layer->isReference() || !layer->canEditPixels())
+      return;
+
+    ColorBar* colorBar = ColorBar::instance();
+    app::Color initialColor = app::Color::fromRgb(255, 255, 255);
+    if (colorBar) {
+      initialColor = (colorBar->isLayerColorLocked(site.document(), layer) ?
+                      colorBar->layerColorLock(site.document(), layer) :
+                      colorBar->getFgColor());
+    }
+    if (initialColor.getType() == app::Color::MaskType ||
+        (initialColor.getType() != app::Color::IndexType &&
+         initialColor.getAlpha() == 0))
+      initialColor = app::Color::fromRgb(255, 255, 255);
+
+    // Source pixels are only changed on OK/Apply. The existing filter
+    // preview renderer draws changes to the active frame without
+    // modifying the document, and Cancel discards uncommitted edits.
+    LayerRecolorFilter layerFilter(layer, initialColor);
+    FilterManagerImpl manager(context, &layerFilter);
+
+    manager.setAfterApplyHook([&layerFilter, layer, doc = manager.document()](Tx& tx) {
+      doc::UserData newData = layer->userData();
+      newData.properties("mukuhata.layer_color_lock")["color"] =
+        layerFilter.lockColor().toString();
+      tx(new cmd::SetUserData(layer, newData, doc));
+    });
+    manager.setAfterCommitHook([] {
+      if (ColorBar* bar = ColorBar::instance())
+        bar->onActiveSiteChange(UIContext::instance()->activeSite());
+      if (App::instance()->timeline())
+        App::instance()->timeline()->invalidate();
+    });
+
+    LayerRecolorWindow window(layerFilter, manager);
+    window.doModal();
+    return;
+  }
 
   ReplaceColorFilterWrapper filter(site.layer());
   FilterManagerImpl filterMgr(context, &filter);
