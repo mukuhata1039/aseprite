@@ -14,6 +14,7 @@
 #include "app/app.h"
 #include "app/cmd/copy_region.h"
 #include "app/cmd/patch_cel.h"
+#include "app/cmd/set_cel_data.h"
 #include "app/cmd/set_palette.h"
 #include "app/cmd/unlink_cel.h"
 #include "app/context_access.h"
@@ -30,6 +31,7 @@
 #include "app/util/cel_ops.h"
 #include "doc/algorithm/shrink_bounds.h"
 #include "doc/cel.h"
+#include "doc/cel_data.h"
 #include "doc/cels_range.h"
 #include "doc/image.h"
 #include "doc/layer.h"
@@ -44,6 +46,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <map>
 #include <set>
 
 namespace app {
@@ -280,9 +283,40 @@ void FilterManagerImpl::applyToTarget()
       }
       break;
     }
+
+    case CelsTarget::ActiveLayer: {
+      Layer* layer = m_site.layer();
+      if (!layer || !layer->isImage() || layer->isTilemap() || !layer->canEditPixels())
+        break;
+
+      // Isolate any cel data shared with other layers without breaking
+      // linked frames inside the layer being recolored.
+      std::map<ObjectId, CelList> linkedGroups;
+      for (Cel* cel : layer->cels())
+        linkedGroups[cel->dataId()].push_back(cel);
+
+      for (const auto& entry : linkedGroups) {
+        const CelList& group = entry.second;
+        if (group.empty())
+          continue;
+
+        if (group.size() < group.front()->data()->refs()) {
+          CelDataRef detached(new CelData(*group.front()->data()));
+          detached->setImage(ImageRef(Image::createCopy(group.front()->image())), layer);
+          detached->setUserData(group.front()->data()->userData());
+          for (Cel* cel : group)
+            (*m_tx)(new cmd::SetCelData(cel, detached));
+        }
+
+        // Only one cel from each link group needs processing: PatchCel
+        // changes the shared image of every linked frame in this layer.
+        cels.push_back(group.front());
+      }
+      break;
+    }
   }
 
-  if (cels.empty() && !paletteChange) {
+  if (cels.empty() && !paletteChange && !m_afterApplyHook) {
     // We don't have images/palette changes to do (there will not be a
     // transaction).
     return;
@@ -318,6 +352,11 @@ void FilterManagerImpl::applyToTarget()
     m_progressBase += m_progressWidth;
   }
 
+  // Put the layer color lock change into the same undo transaction.
+  // If the effect was cancelled, apply() has already rolled back m_tx.
+  if (m_tx && m_afterApplyHook)
+    m_afterApplyHook(*m_tx);
+
   // Reset m_oldPalette to avoid restoring the color palette
   m_oldPalette.reset(nullptr);
 }
@@ -347,6 +386,8 @@ void FilterManagerImpl::commitTransaction()
   m_tx->commit();
   m_writer.reset();
   m_tx.reset();
+  if (m_afterCommitHook)
+    m_afterCommitHook();
 }
 
 void FilterManagerImpl::flush()
