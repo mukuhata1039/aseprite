@@ -2640,27 +2640,83 @@ void Editor::onResize(ui::ResizeEvent& ev)
 // No pixels in the sprite/document are transformed.
 void Editor::drawRotatedView(ui::Graphics* g)
 {
-  const gfx::Rect rc = clientBounds();
-  if (rc.w <= 0 || rc.h <= 0)
+  const auto* view = View::getView(this);
+  if (!view)
     return;
 
-  const int side = int(std::ceil(std::hypot(double(rc.w), double(rc.h)))) + 4;
-  const int padX = (side - rc.w) / 2;
-  const int padY = (side - rc.h) / 2;
+  // clientBounds() is the entire scrollable editor canvas and grows
+  // with the zoom factor.  Using it for the offscreen surface caused
+  // "Cannot create Skia surface" after zooming a rotated view.
+  // Only the *visible viewport* and its inverse-rotated bounding box
+  // are needed. Neither dimension depends on the canvas zoom.
+  const gfx::Rect vp = view->viewportBounds();
+  if (vp.w <= 0 || vp.h <= 0)
+    return;
 
-  if (!m_rotationSurface ||
-      m_rotationSurface->width() != side ||
-      m_rotationSurface->height() != side) {
-    m_rotationSurface =
-      os::System::instance()->makeRgbaSurface(side, side, m_document->osColorSpace());
+  const gfx::Rect viewportLocal(
+    vp.x - bounds().x, vp.y - bounds().y, vp.w, vp.h);
+  const double angle =
+    m_viewRotationDegrees * 3.14159265358979323846 / 180.0;
+  const double cs = std::abs(std::cos(angle));
+  const double sn = std::abs(std::sin(angle));
+
+  // Bounding box of the viewport *before* the final rotation.
+  // This also avoids allocating a full diagonal square at small
+  // angles (which would waste memory).
+  constexpr int margin = 4;
+  const double width = std::ceil(cs * vp.w + sn * vp.h) + margin;
+  const double height = std::ceil(sn * vp.w + cs * vp.h) + margin;
+
+  // Protect against unusually large desktop/viewports and failures
+  // inside Skia's bitmap allocation. The fallback restores the
+  // unrotated view rather than leaving the editor in a broken state.
+  constexpr long long maxPixels = 32LL * 1024 * 1024;
+  if (width <= 0 || height <= 0 ||
+      width > 8192 || height > 8192 ||
+      width * height > maxPixels) {
+    setViewRotation(0.0);
+    drawBackground(g);
+    drawSpriteUnclippedRect(g, m_sprite->bounds());
+    return;
   }
 
-  // The Graphics origin offset keeps the original sprite/editor draw
-  // routines in screen coordinates, but broadens the clip bounds.
-  ui::Graphics offscreen(nullptr, m_rotationSurface, padX, padY);
+  const int surfaceW = int(width);
+  const int surfaceH = int(height);
+  const int padX = (surfaceW - vp.w) / 2;
+  const int padY = (surfaceH - vp.h) / 2;
+  // Surface origin is relative to the visible part of the scrollable
+  // editor, NOT relative to the possibly enormous zoomed widget.
+  const int sourceX = viewportLocal.x - padX;
+  const int sourceY = viewportLocal.y - padY;
+
+  if (!m_rotationSurface ||
+      m_rotationSurface->width() != surfaceW ||
+      m_rotationSurface->height() != surfaceH) {
+    try {
+      m_rotationSurface =
+        os::System::instance()->makeRgbaSurface(
+          surfaceW, surfaceH, m_document->osColorSpace());
+    }
+    catch (const std::exception&) {
+      // If the graphics backend cannot provide this surface, disable
+      // rotation gracefully. Avoid retrying the same failing Skia
+      // allocation on every paint and flooding the error console.
+      setViewRotation(0.0);
+      drawBackground(g);
+      drawSpriteUnclippedRect(g, m_sprite->bounds());
+      return;
+    }
+  }
+
+  // Draw the viewport-sized source in the editor's original (local)
+  // coordinate system. The scroll offset is represented solely in
+  // these origin deltas; zoom does not change the allocation.
+  ui::Graphics offscreen(
+    nullptr, m_rotationSurface, -sourceX, -sourceY);
   const auto theme = SkinTheme::get(this);
-  offscreen.fillRect(theme->colors.editorFace(),
-                     gfx::Rect(-padX, -padY, side, side));
+  offscreen.fillRect(
+    theme->colors.editorFace(),
+    gfx::Rect(sourceX, sourceY, surfaceW, surfaceH));
 
   {
     base::ScopedValue drawingBuffer(m_renderingRotationSurface, true);
@@ -2668,6 +2724,9 @@ void Editor::drawRotatedView(ui::Graphics* g)
     drawSpriteUnclippedRect(&offscreen, m_sprite->bounds());
   }
 
+  // The buffered scene uses unrotated editor coordinates, so rotate
+  // it around exactly the same visible-viewport pivot used for mouse
+  // input and overlay coordinate transformations.
   const auto center = rotationCenterInDisplay();
   const auto localCenter = gfx::PointF(
     center.x - bounds().x, center.y - bounds().y);
@@ -2681,11 +2740,12 @@ void Editor::drawRotatedView(ui::Graphics* g)
   paint.blendMode(os::BlendMode::Src);
   g->save();
   g->concat(transform);
-  g->drawSurface(m_rotationSurface.get(),
-                 gfx::Rect(0, 0, side, side),
-                 gfx::Rect(-padX, -padY, side, side),
-                 os::Sampling(os::Sampling::Filter::Nearest),
-                 &paint);
+  g->drawSurface(
+    m_rotationSurface.get(),
+    gfx::Rect(0, 0, surfaceW, surfaceH),
+    gfx::Rect(sourceX, sourceY, surfaceW, surfaceH),
+    os::Sampling(os::Sampling::Filter::Nearest),
+    &paint);
   g->restore();
 }
 
