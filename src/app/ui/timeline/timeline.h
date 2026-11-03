@@ -31,7 +31,6 @@
 #include "obs/connection.h"
 #include "obs/observable.h"
 #include "ui/button.h"
-#include "ui/label.h"
 #include "ui/slider.h"
 #include "ui/scroll_bar.h"
 #include "ui/timer.h"
@@ -39,6 +38,7 @@
 #include "view/range.h"
 #include "view/timeline_adapter.h"
 
+#include <cstdlib>
 #include <map>
 #include <memory>
 #include <set>
@@ -510,12 +510,24 @@ private:
 
   AniControls m_aniControls;
 
-  ui::Button m_hideTimelineLayersButton;
-  ui::Button m_restoreTimelineLayersButton;
+  // Display the units directly on each slider; no separate FPS label.
+  class FpsSlider final : public ui::Slider, public ui::SliderDelegate {
+  public:
+    FpsSlider() : ui::Slider(1, 120, 12, this) {}
+
+  private:
+    std::string onGetTextFromValue(int value) override
+    {
+      return "FPS " + std::to_string(value);
+    }
+    int onGetValueFromText(const std::string& text) override
+    {
+      return std::strtol(text.c_str(), nullptr, 10);
+    }
+  };
 
   AlphaSlider m_layerOpacitySlider;
-  ui::Label m_fpsLabel;
-  ui::Slider m_fpsSlider;
+  FpsSlider m_fpsSlider;
   std::vector<int> m_fpsStartDurations;
   bool m_fpsEditing = false;
   int m_layerOpacityStart = 255;
