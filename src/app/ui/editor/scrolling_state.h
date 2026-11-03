@@ -37,6 +37,7 @@ public:
 
 private:
   gfx::Point m_oldPos;
+  gfx::PointF m_viewRotationScrollResidual;
 };
 
 } // namespace app
