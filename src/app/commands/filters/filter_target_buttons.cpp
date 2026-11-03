@@ -174,8 +174,9 @@ void FilterTargetButtons::onItemChange(Item* item)
 std::string FilterTargetButtons::getCelsTargetText() const
 {
   switch (m_celsTarget) {
-    case CelsTarget::Selected: return Strings::filters_selected_cels();
-    case CelsTarget::All:      return Strings::filters_all_cels();
+    case CelsTarget::Selected:    return Strings::filters_selected_cels();
+    case CelsTarget::All:         return Strings::filters_all_cels();
+    case CelsTarget::ActiveLayer: return "Current layer";
   }
   return std::string();
 }
