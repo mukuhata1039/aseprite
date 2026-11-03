@@ -614,11 +614,44 @@ void Editor::setEditorZoom(const render::Zoom& zoom)
 gfx::PointF Editor::rotationCenterInDisplay() const
 {
   const auto vp = View::getView(this)->viewportBounds();
+  if (m_viewRotationPivotSet) {
+    return gfx::PointF(vp.x + m_viewRotationPivotOffset.x,
+                       vp.y + m_viewRotationPivotOffset.y);
+  }
   return gfx::PointF(vp.x + 0.5 * vp.w, vp.y + 0.5 * vp.h);
 }
 
+// Called on the actual, user-configurable Rotate Canvas View key
+// press, before any mouse dragging. Keep the canvas visually still
+// when changing rotation pivots while the view is already rotated.
+void Editor::setViewRotationPivot(const gfx::Point& displayPos)
+{
+  View* view = View::getView(this);
+  if (!view)
+    return;
+
+  const gfx::Rect vp = view->viewportBounds();
+  const gfx::PointF imagePoint = screenToEditorF(displayPos);
+  m_viewRotationPivotOffset = displayPos - vp.origin();
+  m_viewRotationPivotSet = true;
+
+  if (m_viewRotationDegrees != 0.0) {
+    // After changing the pivot, its associated image point must still
+    // be drawn at this same display location. Because rotation about
+    // the pivot maps that point to itself, solving for scroll does not
+    // require any further angular approximation.
+    const gfx::Point scroll(
+      int(std::lround(vp.x + m_padding.x +
+                      m_proj.applyX<double>(imagePoint.x) - displayPos.x)),
+      int(std::lround(vp.y + m_padding.y +
+                      m_proj.applyY<double>(imagePoint.y) - displayPos.y)));
+    setEditorScroll(scroll);
+    invalidate();
+  }
+}
+
 // Forward mapping for overlay/widget geometry; inverse for mouse input.
-// Both use the same visible-viewport pivot as the rotated painter.
+// Both use the same user-selected pivot as the rotated painter.
 gfx::PointF Editor::rotateViewPoint(const gfx::PointF& point, bool inverse) const
 {
   if (m_renderingRotationSurface || m_viewRotationDegrees == 0.0)
@@ -2321,8 +2354,20 @@ bool Editor::onProcessMessage(Message* msg)
         if (mouseMsg->left() && !hasCapture() && isRotateViewShortcutPressed()) {
           m_brushPreview.hide();
           m_rotatingView = true;
-          m_viewRotationMouseStart = mouseMsg->position();
-          m_viewRotationStartDegrees = m_viewRotationDegrees;
+          // If the rotate shortcut was pressed outside this editor
+          // (or mouse focus changed), use the drag start as a safe
+          // fallback pivot rather than an unrelated viewport center.
+          if (!m_viewRotationPivotSet)
+            setViewRotationPivot(mouseMsg->position());
+
+          m_viewRotationDragHasAngle = false;
+          const auto pivot = rotationCenterInDisplay();
+          const double vx = mouseMsg->position().x - pivot.x;
+          const double vy = mouseMsg->position().y - pivot.y;
+          if (vx * vx + vy * vy >= 64.0) {
+            m_viewRotationDragLastAngle = std::atan2(vy, vx);
+            m_viewRotationDragHasAngle = true;
+          }
           captureMouse();
           setCursor(mouseMsg->position());
           return true;
@@ -2369,8 +2414,32 @@ bool Editor::onProcessMessage(Message* msg)
     case kMouseMoveMessage:
       if (m_rotatingView) {
         const auto* mouseMsg = static_cast<MouseMessage*>(msg);
-        const int dx = mouseMsg->position().x - m_viewRotationMouseStart.x;
-        setViewRotation(m_viewRotationStartDegrees + dx * 0.5);
+        const auto pivot = rotationCenterInDisplay();
+        const double dx = mouseMsg->position().x - pivot.x;
+        const double dy = mouseMsg->position().y - pivot.y;
+
+        // Below an 8-screen-pixel radius there is no stable angle.
+        // If the drag began exactly on the pivot, the first outward
+        // movement establishes its angle without making the view jump.
+        if (dx * dx + dy * dy < 64.0) {
+          m_viewRotationDragHasAngle = false;
+          return true;
+        }
+
+        const double angle = std::atan2(dy, dx);
+        if (m_viewRotationDragHasAngle) {
+          double delta = angle - m_viewRotationDragLastAngle;
+          constexpr double pi = 3.14159265358979323846;
+          // Unwrap the +/-180-degree atan2 boundary, so a continuous
+          // circular mouse movement yields continuous view rotation.
+          if (delta > pi)
+            delta -= 2.0 * pi;
+          else if (delta < -pi)
+            delta += 2.0 * pi;
+          setViewRotation(m_viewRotationDegrees + delta * (180.0 / pi));
+        }
+        m_viewRotationDragLastAngle = angle;
+        m_viewRotationDragHasAngle = true;
         return true;
       }
       if (m_sprite) {
@@ -2388,6 +2457,7 @@ bool Editor::onProcessMessage(Message* msg)
       if (m_sprite) {
         if (m_rotatingView) {
           m_rotatingView = false;
+          m_viewRotationDragHasAngle = false;
           if (hasCapture())
             releaseMouse();
           setCursor(static_cast<MouseMessage*>(msg)->position());
@@ -2461,6 +2531,7 @@ bool Editor::onProcessMessage(Message* msg)
         auto rotateKey = shortcuts->action(KeyAction::RotateCanvasView, KeyContext::Normal);
         if (rotateKey && rotateKey->isPressed(msg, KeyContext::Normal)) {
           m_brushPreview.hide();
+          setViewRotationPivot(mousePosInDisplay());
           setCursor(mousePosInDisplay());
           return true;
         }
@@ -2653,8 +2724,6 @@ void Editor::drawRotatedView(ui::Graphics* g)
   if (vp.w <= 0 || vp.h <= 0)
     return;
 
-  const gfx::Rect viewportLocal(
-    vp.x - bounds().x, vp.y - bounds().y, vp.w, vp.h);
   // One viewport-diagonal square safely covers the inverse-rotated
   // viewport at ANY angle. Its size is independent of zoom *and*
   // angle, so dragging the rotation never reallocates an offscreen
@@ -2680,12 +2749,19 @@ void Editor::drawRotatedView(ui::Graphics* g)
 
   const int surfaceW = int(width);
   const int surfaceH = int(height);
-  const int padX = (surfaceW - vp.w) / 2;
-  const int padY = (surfaceH - vp.h) / 2;
-  // Surface origin is relative to the visible part of the scrollable
-  // editor, NOT relative to the possibly enormous zoomed widget.
-  const int sourceX = viewportLocal.x - padX;
-  const int sourceY = viewportLocal.y - padY;
+  // A pivot can be anywhere the user pressed the rotation shortcut,
+  // not necessarily at the viewport center. Locate the *inverse*
+  // rotation of the visible viewport center and center the existing
+  // viewport-diagonal buffer there. Buffer size stays zoom/angle/pivot
+  // independent, but the sampled source origin follows the pivot.
+  const gfx::PointF centerOfViewport(vp.x + 0.5 * vp.w,
+                                     vp.y + 0.5 * vp.h);
+  const gfx::PointF unrotatedCenter = rotateViewPoint(
+    centerOfViewport, true);
+  const int sourceX = int(std::lround(
+    unrotatedCenter.x - bounds().x - 0.5 * surfaceW));
+  const int sourceY = int(std::lround(
+    unrotatedCenter.y - bounds().y - 0.5 * surfaceH));
 
   if (!m_rotationSurface ||
       m_rotationSurface->width() != surfaceW ||
@@ -2723,8 +2799,8 @@ void Editor::drawRotatedView(ui::Graphics* g)
   }
 
   // The buffered scene uses unrotated editor coordinates, so rotate
-  // it around exactly the same visible-viewport pivot used for mouse
-  // input and overlay coordinate transformations.
+  // it around the shortcut-selected pivot used for mouse input and
+  // overlay coordinate transformations.
   const auto center = rotationCenterInDisplay();
   const auto localCenter = gfx::PointF(
     center.x - bounds().x, center.y - bounds().y);
