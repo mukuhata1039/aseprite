@@ -82,9 +82,6 @@ public:
   void show(const gfx::Point& screenPos);
   void hide();
   void redraw();
-  // Undo/Redo must not regenerate extra-cel patches during model changes.
-  void suspend();
-  void resume();
   void discardBrushPreview();
 
   void invalidateRegion(const gfx::Region& region);
@@ -124,8 +121,6 @@ private:
   bool m_onScreen = false;
 
   bool m_withRealPreview = false;
-  // Prevent cursor extra-cel recreation while undo/redo is changing the model.
-  int m_suspendCount = 0;
   gfx::Point m_screenPosition; // Position in the screen (view)
   gfx::Point m_editorPosition; // Position in the editor (model)
 

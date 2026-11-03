@@ -394,10 +394,6 @@ void Editor::getInvalidDecoratoredRegion(gfx::Region& region)
 void Editor::setLayer(const Layer* layer)
 {
   const bool changed = (m_layer != layer);
-  // The extra-cel brush preview may still point at the old cel/layer.
-  // Remove it before Undo or any layer switch invalidates that data.
-  if (changed)
-    m_brushPreview.hide();
   const bool gridVisible = (changed && m_docPref.show.grid());
 
   doc::Grid oldGrid, newGrid;
@@ -819,10 +815,6 @@ void Editor::drawOneSpriteUnclippedRect(ui::Graphics* g,
   // Convert the render to a os::Surface
   static os::SurfaceRef rendered = nullptr; // TODO move this to other centralized place
   const auto& renderProperties = m_renderEngine->properties();
-  // Renderer extra images store raw pointers to the preview image/cel.
-  // After Undo may delete or replace those objects, so always clear
-  // the previous render's extra image before touching the document.
-  m_renderEngine->removeExtraImage();
   try {
     // Generate a "expose sprite pixels" notification. This is used by
     // tool managers that need to validate this region (copy pixels from
@@ -913,9 +905,6 @@ void Editor::drawOneSpriteUnclippedRect(ui::Graphics* g,
       m_docPref.bg.forceSection();
   }
   catch (const std::exception& e) {
-    // If renderSprite() throws, its extra cel pointers must not be
-    // reused on the next repaint (Undo can already have freed them).
-    m_renderEngine->removeExtraImage();
     Console::showException(e);
   }
 
@@ -2901,6 +2890,10 @@ void Editor::drawRotatedView(ui::Graphics* g)
   // these origin deltas; zoom does not change the allocation.
   ui::Graphics offscreen(
     nullptr, m_rotationSurface, -sourceX, -sourceY);
+  // A newly constructed offscreen Graphics has no font. Cell auto
+  // guides/tile numbers call drawText() during this render pass; copy
+  // the widget font or TextBlob::MakeWithShaper() dereferences null.
+  offscreen.setFont(g->font());
   const auto theme = SkinTheme::get(this);
   offscreen.fillRect(
     theme->colors.editorFace(),
@@ -3128,8 +3121,6 @@ void Editor::onSpritePixelRatioChanged(DocEvent& ev)
 // TODO similar to ActiveSiteHandler::onBeforeRemoveLayer() and Timeline::onBeforeRemoveLayer()
 void Editor::onBeforeRemoveLayer(DocEvent& ev)
 {
-  // The preview caches pixels from the layer that is about to go away.
-  m_brushPreview.hide();
   m_showGuidesThisCel = nullptr;
 
   // If the layer that was removed is the selected one in the editor,
@@ -3144,8 +3135,6 @@ void Editor::onBeforeRemoveLayer(DocEvent& ev)
 
 void Editor::onBeforeRemoveCel(DocEvent& ev)
 {
-  // Clear any cursor overlay that might reference the removed cel.
-  m_brushPreview.hide();
   m_showGuidesThisCel = nullptr;
 }
 

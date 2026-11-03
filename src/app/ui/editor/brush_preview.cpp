@@ -17,7 +17,6 @@
 #include "app/color.h"
 #include "app/color_utils.h"
 #include "app/doc.h"
-#include "app/doc_undo.h"
 #include "app/snap_to_grid.h"
 #include "app/tools/controller.h"
 #include "app/tools/ink.h"
@@ -155,19 +154,8 @@ color_t BrushPreview::getBrushColor(Sprite* sprite, Layer* layer)
 //      a way to simplify all possibilities
 void BrushPreview::show(const gfx::Point& screenPos)
 {
-  // An Undo/Redo command owns a writer lock while replacing cel data.
-  // Never reconstruct the live cursor patch during that transaction.
-  if (m_suspendCount > 0)
-    return;
-
   if (m_onScreen)
     hide();
-
-  // Undo/redo can destroy or replace the cel/layer backing the cursor.
-  // Never build a new extra-cel preview partway through that operation.
-  Doc* document = m_editor->document();
-  if (document && document->undoHistory()->isUndoing())
-    return;
 
   // Always build the native extra-cel preview first. Previously
   // rotated/mirrored views returned here, leaving only a hollow outline
@@ -175,6 +163,7 @@ void BrushPreview::show(const gfx::Point& screenPos)
   const bool transformedView =
     (m_editor->viewRotation() != 0.0 || m_editor->viewMirrored());
 
+  Doc* document = m_editor->document();
   Sprite* sprite = m_editor->sprite();
   const Site site = m_editor->getSite();
   Layer* layer = (m_editor->layer() && m_editor->layer()->isImage() ? m_editor->layer() : nullptr);
@@ -591,10 +580,8 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
     return;
   }
 
-  // A filled preview (the default FULL/FULLALL modes) uses the regular
-  // cursor, not a brush-mask outline. The previous transformed-view
-  // implementation always added an outline and made filled brushes
-  // look as if they had an unwanted border.
+  // Preserve the ordinary full-color brush preview without forcing
+  // an extra mask outline in rotated or mirrored views.
   if (!(m_type & BRUSH_BOUNDARIES)) {
     if (m_type & NATIVE_CROSSHAIR) {
       ui::set_mouse_cursor(ui::kCrosshairCursor);
@@ -751,14 +738,6 @@ void BrushPreview::hide()
   if (!m_onScreen)
     return;
 
-  // Clear these flags before notifications/layer removal: both can
-  // re-enter editor code, particularly while undoing a cel or layer.
-  const bool hadRealPreview = m_withRealPreview;
-  m_onScreen = false;
-  m_withRealPreview = false;
-  const gfx::Rect lastBounds = m_lastBounds;
-  const doc::frame_t lastFrame = m_lastFrame;
-
   // Don't hide the cursor to avoid flickering, the native mouse
   // cursor will be changed anyway after the hide() by the caller.
   //
@@ -769,26 +748,27 @@ void BrushPreview::hide()
     ui::Display* display = m_editor->display();
 
     // Remove the UI layer to hide the brush preview
-    m_layerAdded = false;
     display->removeLayer(m_uiLayer);
+    m_layerAdded = false;
   }
 
   // Clean pixel/brush preview
-  if (hadRealPreview) {
+  if (m_withRealPreview) {
     Doc* document = m_editor->document();
     doc::Sprite* sprite = m_editor->sprite();
 
     ASSERT(document);
     ASSERT(sprite);
 
-    // Undo and other commands can replace the document's extra cel.
-    // Detach only the one we own, never a newer independent preview.
-    if (document && sprite && document->extraCel() == m_extraCel) {
+    if (document && sprite) {
       document->setExtraCel(ExtraCelRef(nullptr));
-      document->notifySpritePixelsModified(sprite, gfx::Region(lastBounds), lastFrame);
+      document->notifySpritePixelsModified(sprite, gfx::Region(m_lastBounds), m_lastFrame);
     }
+
+    m_withRealPreview = false;
   }
 
+  m_onScreen = false;
   m_clippingRegion.clear();
 }
 
@@ -804,41 +784,11 @@ void BrushPreview::discardBrushPreview()
 
 void BrushPreview::redraw()
 {
-  if (m_onScreen && m_suspendCount == 0) {
+  if (m_onScreen) {
     gfx::Point screenPos = m_screenPosition;
     hide();
     show(screenPos);
   }
-}
-
-void BrushPreview::suspend()
-{
-  if (m_suspendCount++ == 0) {
-    // Invalidate the old cursor while all old layers/cels still exist.
-    hide();
-    // A failed/interrupted preview build may have installed its
-    // extra cel without marking m_withRealPreview yet. Detach it too,
-    // before model transactions can invalidate its underlying data.
-    Doc* document = m_editor->document();
-    if (document && m_extraCel && document->extraCel() == m_extraCel)
-      document->setExtraCel(ExtraCelRef(nullptr));
-
-    // Never recycle a brush patch whose source cel may have been
-    // replaced by Undo/Redo. The next cursor movement creates a fresh
-    // patch from the updated model.
-    m_extraCel.reset();
-  }
-}
-
-void BrushPreview::resume()
-{
-  if (m_suspendCount > 0)
-    --m_suspendCount;
-
-  // Deliberately do NOT regenerate the preview here. Recreating the
-  // extra cel from an UndoCommand destructor can reenter render/update
-  // callbacks before the command stack has unwound. A normal mouse
-  // movement recreates the preview safely.
 }
 
 void BrushPreview::invalidateRegion(const gfx::Region& region)
