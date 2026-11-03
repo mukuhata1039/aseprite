@@ -34,11 +34,14 @@
 #include "doc/image.h"
 #include "doc/layer.h"
 #include "doc/palette.h"
+#include "doc/user_data.h"
 #include "doc/mask.h"
 #include "doc/sprite.h"
 #include "filters/replace_color_filter.h"
 #include "filters/filter_manager.h"
 #include "filters/filter.h"
+#include "ui/label.h"
+#include "ui/box.h"
 #include "ui/ui.h"
 
 namespace app {
@@ -253,6 +256,7 @@ public:
     // Hide the normal selected/all-cels choice to avoid affecting other
     // layers or changing the user's ordinary Replace Color preferences.
     mgr.setCelsTarget(CelsTarget::ActiveLayer);
+    hideTargetButtons();
     getContainer()->addChild(&m_colorRow);
     m_colorRow.addChild(&m_label);
     m_colorRow.addChild(&m_colorButton);
@@ -320,11 +324,11 @@ void ReplaceColorCommand::onExecute(Context* context)
     LayerRecolorFilter layerFilter(layer, initialColor);
     FilterManagerImpl manager(context, &layerFilter);
 
-    manager.setAfterApplyHook([&layerFilter, layer](Tx& tx) {
+    manager.setAfterApplyHook([&layerFilter, layer, doc = manager.document()](Tx& tx) {
       doc::UserData newData = layer->userData();
       newData.properties("mukuhata.layer_color_lock")["color"] =
         layerFilter.lockColor().toString();
-      tx(new cmd::SetUserData(layer, newData, static_cast<Doc*>(layer->sprite()->document())));
+      tx(new cmd::SetUserData(layer, newData, doc));
     });
     manager.setAfterCommitHook([] {
       if (ColorBar* bar = ColorBar::instance())
