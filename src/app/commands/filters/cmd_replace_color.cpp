@@ -249,7 +249,7 @@ public:
                    WithoutChannelsSelector,
                    WithoutTiledCheckBox)
     , m_filter(filter)
-    , m_label("New drawing color:")
+    , m_label(Strings::replace_color_layer_new_color())
     , m_colorButton(filter.color(), mgr.pixelFormat(), ColorButtonOptions())
   {
     // This dialog always targets the active layer's complete timeline.
