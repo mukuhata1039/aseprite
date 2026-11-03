@@ -91,6 +91,11 @@ private:
   static doc::color_t getBrushColor(doc::Sprite* sprite, doc::Layer* layer);
 
   bool createUILayer(const gfx::Rect& brushBounds);
+  // For a rotated editor, draw the genuine brush-mask boundary onto a
+  // small screen-space UI layer with the same rotation as the canvas.
+  // Unlike a full editor redraw on every mouse move, this updates only
+  // the cursor overlay.
+  void showRotated(const gfx::Point& screenPos);
   void createBoundaries(const Site& site, const gfx::Point& spritePos);
 
   // Creates a little native cursor to draw the CROSSHAIR
