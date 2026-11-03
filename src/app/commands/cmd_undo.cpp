@@ -128,7 +128,8 @@ void UndoCommand::onExecute(Context* context)
         base::this_thread::sleep_for(0.01);
       }
       else {
-        editor->invalidateCanvas();
+        // Widget::invalidate() is public; invalidateCanvas() is private.
+        editor->invalidate();
       }
     }
   }
