@@ -122,7 +122,8 @@ void FilterManagerImpl::begin()
   Doc* document = m_site.document();
 
   m_row = 0;
-  m_mask = (document->isMaskVisible() ? document->mask() : nullptr);
+  m_mask = (m_celsTarget == CelsTarget::ActiveLayer ? nullptr :
+            (document->isMaskVisible() ? document->mask() : nullptr));
   m_taskToken = &m_noToken; // Don't use the preview token (which can be canceled)
   updateBounds(m_mask);
 }
@@ -131,7 +132,7 @@ void FilterManagerImpl::beginForPreview()
 {
   Doc* document = m_site.document();
 
-  if (document->isMaskVisible())
+  if (m_celsTarget != CelsTarget::ActiveLayer && document->isMaskVisible())
     m_previewMask.reset(new Mask(*document->mask()));
   else {
     m_previewMask.reset(new Mask());
@@ -300,7 +301,7 @@ void FilterManagerImpl::applyToTarget()
         if (group.empty())
           continue;
 
-        if (group.size() < group.front()->data()->refs()) {
+        if (group.size() < size_t(group.front()->data()->refs())) {
           CelDataRef detached(new CelData(*group.front()->data()));
           detached->setImage(ImageRef(Image::createCopy(group.front()->image())), layer);
           detached->setUserData(group.front()->data()->userData());
@@ -490,7 +491,8 @@ void FilterManagerImpl::init(Cel* cel)
   ASSERT(cel);
 
   Doc* doc = m_site.document();
-  if (!updateBounds(doc->isMaskVisible() ? doc->mask() : nullptr))
+  if (!updateBounds(m_celsTarget == CelsTarget::ActiveLayer ? nullptr :
+                    (doc->isMaskVisible() ? doc->mask() : nullptr)))
     throw InvalidAreaException();
 
   m_cel = cel;
