@@ -415,6 +415,11 @@ void Timeline::updateUsingEditor(Editor* editor)
     setViewScroll(view->timelineScroll());
 
   showCurrentCel();
+  // On initial document/editor attach, the active layer is assigned
+  // directly instead of going through setLayer(). Make sure the
+  // opacity slider reflects that layer immediately, without needing
+  // a later layer change or a recolor dialog to enable it.
+  updateLayerOpacitySlider();
   updateFpsSlider();
 }
 
@@ -430,6 +435,10 @@ void Timeline::detachDocument()
   m_fpsEditing = false;
   m_fpsStartDurations.clear();
   m_fpsSlider.setEnabled(false);
+  // Disable the opacity slider when switching/closing documents so
+  // it never retains an enabled state from the previous editor.
+  m_layerOpacitySlider.setEnabled(false);
+  m_layerOpacityEditing = false;
   resetAllRanges();
 
   if (m_confPopup && m_confPopup->isVisible())
