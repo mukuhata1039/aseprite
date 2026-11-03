@@ -1145,7 +1145,10 @@ void Editor::drawSpriteUnclippedRect(ui::Graphics* g, const gfx::Rect& _rc)
 void Editor::drawSpriteClipped(const gfx::Region& updateRegion)
 {
   if (m_viewRotationDegrees != 0.0) {
-    invalidate();
+    // A document exposure callback can happen during a rotated paint.
+    // Avoid scheduling the same paint recursively in that case.
+    if (!m_renderingRotationSurface)
+      invalidate();
     return;
   }
 
@@ -1204,7 +1207,10 @@ void Editor::drawMaskBoundaries(ui::Graphics* g, doc::MaskBoundaries& segs, cons
 void Editor::drawMaskSafe()
 {
   if (m_viewRotationDegrees != 0.0) {
-    invalidate();
+    // A document exposure callback can happen during a rotated paint.
+    // Avoid scheduling the same paint recursively in that case.
+    if (!m_renderingRotationSurface)
+      invalidate();
     return;
   }
 
@@ -3487,7 +3493,8 @@ void Editor::invalidateCanvas()
     // Rotation changes the invalidated pixel bounds; redraw the
     // entire transformed view instead of only the old axis-aligned
     // sprite rectangle.
-    invalidate();
+    if (!m_renderingRotationSurface)
+      invalidate();
     return;
   }
 
