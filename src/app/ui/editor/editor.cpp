@@ -3651,10 +3651,10 @@ void Editor::showMouseCursor(CursorType cursorType, const Cursor* cursor)
 
 void Editor::showBrushPreview(const gfx::Point& screenPos)
 {
-  if (m_viewRotationDegrees != 0.0 || m_rotatingView) {
-    // The built-in brush-preview UI layer isn't affine transformed.
-    // Keep painting accurate via the inverse mouse transform, and
-    // don't display a misleading unrotated brush outline.
+  if (m_rotatingView) {
+    // During the R rotation gesture, hide the drawing cursor as
+    // with the hand/pan tool. At other angles BrushPreview now draws
+    // its mask silhouette in a rotated screen-space cursor layer.
     m_brushPreview.hide();
     ui::set_mouse_cursor(kCrosshairCursor);
     return;
