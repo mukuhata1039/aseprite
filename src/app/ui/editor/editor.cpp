@@ -394,6 +394,10 @@ void Editor::getInvalidDecoratoredRegion(gfx::Region& region)
 void Editor::setLayer(const Layer* layer)
 {
   const bool changed = (m_layer != layer);
+  // The extra-cel brush preview may still point at the old cel/layer.
+  // Remove it before Undo or any layer switch invalidates that data.
+  if (changed)
+    m_brushPreview.hide();
   const bool gridVisible = (changed && m_docPref.show.grid());
 
   doc::Grid oldGrid, newGrid;
@@ -3117,6 +3121,8 @@ void Editor::onSpritePixelRatioChanged(DocEvent& ev)
 // TODO similar to ActiveSiteHandler::onBeforeRemoveLayer() and Timeline::onBeforeRemoveLayer()
 void Editor::onBeforeRemoveLayer(DocEvent& ev)
 {
+  // The preview caches pixels from the layer that is about to go away.
+  m_brushPreview.hide();
   m_showGuidesThisCel = nullptr;
 
   // If the layer that was removed is the selected one in the editor,
@@ -3131,6 +3137,8 @@ void Editor::onBeforeRemoveLayer(DocEvent& ev)
 
 void Editor::onBeforeRemoveCel(DocEvent& ev)
 {
+  // Clear any cursor overlay that might reference the removed cel.
+  m_brushPreview.hide();
   m_showGuidesThisCel = nullptr;
 }
 
@@ -3773,7 +3781,7 @@ void Editor::invalidateCanvas()
   if (!isVisible())
     return;
 
-  if (m_viewRotationDegrees != 0.0) {
+  if (m_viewRotationDegrees != 0.0 || m_viewMirrored) {
     // Rotation changes the invalidated pixel bounds; redraw the
     // entire transformed view instead of only the old axis-aligned
     // sprite rectangle.

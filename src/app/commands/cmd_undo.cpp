@@ -18,11 +18,16 @@
 #include "app/modules/palettes.h"
 #include "app/pref/preferences.h"
 #include "app/ui/editor/editor.h"
+#include "app/ui/editor/brush_preview.h"
+#include "app/ui_context.h"
 #include "app/ui/status_bar.h"
 #include "app/ui/timeline/timeline.h"
 #include "base/thread.h"
 #include "doc/sprite.h"
 #include "ui/manager.h"
+
+#include <memory>
+#include <vector>
 
 namespace app {
 
@@ -60,6 +65,23 @@ void UndoCommand::onExecute(Context* context)
   DocUndo* undo = document->undoHistory();
 
   auto editor = Editor::activeEditor();
+
+  // The preview's extra cel is part of the document render state, but
+  // not part of its undo history. Undo/redo can replace the source cel
+  // or delete its layer while the preview is still active. Remove all
+  // cursor previews for this document before the undo transaction and
+  // restore them only after the model and active site are consistent.
+  std::vector<std::unique_ptr<HideBrushPreview>> hiddenPreviews;
+  if (context->isUIAvailable()) {
+    if (auto* uiContext = UIContext::instance()) {
+      for (Editor* docEditor : uiContext->getAllEditorsIncludingPreview(document)) {
+        if (docEditor->brushPreview().onScreen())
+          hiddenPreviews.emplace_back(
+            std::make_unique<HideBrushPreview>(docEditor->brushPreview()));
+      }
+    }
+  }
+
   Sprite* sprite = document->sprite();
   SpritePosition spritePosition;
   const bool gotoModified = (Preferences::instance().undo.gotoModified() &&

@@ -17,6 +17,7 @@
 #include "app/color.h"
 #include "app/color_utils.h"
 #include "app/doc.h"
+#include "app/doc_undo.h"
 #include "app/snap_to_grid.h"
 #include "app/tools/controller.h"
 #include "app/tools/ink.h"
@@ -157,13 +158,18 @@ void BrushPreview::show(const gfx::Point& screenPos)
   if (m_onScreen)
     hide();
 
+  // Undo/redo can destroy or replace the cel/layer backing the cursor.
+  // Never build a new extra-cel preview partway through that operation.
+  Doc* document = m_editor->document();
+  if (document && document->undoHistory()->isUndoing())
+    return;
+
   // Always build the native extra-cel preview first. Previously
   // rotated/mirrored views returned here, leaving only a hollow outline
   // even when the cursor was configured for a full color preview.
   const bool transformedView =
     (m_editor->viewRotation() != 0.0 || m_editor->viewMirrored());
 
-  Doc* document = m_editor->document();
   Sprite* sprite = m_editor->sprite();
   const Site site = m_editor->getSite();
   Layer* layer = (m_editor->layer() && m_editor->layer()->isImage() ? m_editor->layer() : nullptr);
@@ -580,6 +586,21 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
     return;
   }
 
+  // A filled preview (the default FULL/FULLALL modes) uses the regular
+  // cursor, not a brush-mask outline. The previous transformed-view
+  // implementation always added an outline and made filled brushes
+  // look as if they had an unwanted border.
+  if (!(m_type & BRUSH_BOUNDARIES)) {
+    if (m_type & NATIVE_CROSSHAIR) {
+      ui::set_mouse_cursor(ui::kCrosshairCursor);
+    }
+    else {
+      ui::Graphics graphics(m_editor->display());
+      createCrosshairCursor(&graphics, color_utils::color_for_ui(pref.cursor.cursorColor()));
+    }
+    return;
+  }
+
   gfx::Point spritePos = m_editor->screenToEditor(screenPos);
   const doc::Grid grid = site.grid();
   const TilemapMode tilemapMode = site.tilemapMode();
@@ -725,6 +746,14 @@ void BrushPreview::hide()
   if (!m_onScreen)
     return;
 
+  // Clear these flags before notifications/layer removal: both can
+  // re-enter editor code, particularly while undoing a cel or layer.
+  const bool hadRealPreview = m_withRealPreview;
+  m_onScreen = false;
+  m_withRealPreview = false;
+  const gfx::Rect lastBounds = m_lastBounds;
+  const doc::frame_t lastFrame = m_lastFrame;
+
   // Don't hide the cursor to avoid flickering, the native mouse
   // cursor will be changed anyway after the hide() by the caller.
   //
@@ -735,27 +764,26 @@ void BrushPreview::hide()
     ui::Display* display = m_editor->display();
 
     // Remove the UI layer to hide the brush preview
-    display->removeLayer(m_uiLayer);
     m_layerAdded = false;
+    display->removeLayer(m_uiLayer);
   }
 
   // Clean pixel/brush preview
-  if (m_withRealPreview) {
+  if (hadRealPreview) {
     Doc* document = m_editor->document();
     doc::Sprite* sprite = m_editor->sprite();
 
     ASSERT(document);
     ASSERT(sprite);
 
-    if (document && sprite) {
+    // Undo and other commands can replace the document's extra cel.
+    // Detach only the one we own, never a newer independent preview.
+    if (document && sprite && document->extraCel() == m_extraCel) {
       document->setExtraCel(ExtraCelRef(nullptr));
-      document->notifySpritePixelsModified(sprite, gfx::Region(m_lastBounds), m_lastFrame);
+      document->notifySpritePixelsModified(sprite, gfx::Region(lastBounds), lastFrame);
     }
-
-    m_withRealPreview = false;
   }
 
-  m_onScreen = false;
   m_clippingRegion.clear();
 }
 
