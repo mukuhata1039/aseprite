@@ -486,6 +486,12 @@ private:
   // mouse-distance-to-angle conversion.
   bool m_viewRotationDragHasAngle = false;
   double m_viewRotationDragLastAngle = 0.0;
+  // Track the shortcut separately from its current modifier mask so
+  // adding Shift while holding R cannot start a freehand straight line.
+  bool m_viewRotationShortcutHeld = false;
+  int m_viewRotationShortcutScancode = -1;
+  bool m_viewRotationShiftSnap = false;
+  double m_viewRotationContinuousDegrees = 0.0;
   bool m_renderingRotationSurface = false;
   os::SurfaceRef m_rotationSurface;
   DocumentPreferences& m_docPref;

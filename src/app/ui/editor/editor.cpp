@@ -2351,9 +2351,13 @@ bool Editor::onProcessMessage(Message* msg)
 
         // Temporary view rotation takes priority over the active brush,
         // shape or selection tool, so dragging here never paints pixels.
-        if (mouseMsg->left() && !hasCapture() && isRotateViewShortcutPressed()) {
+        if (mouseMsg->left() && !hasCapture() &&
+            (m_viewRotationShortcutHeld || isRotateViewShortcutPressed())) {
           m_brushPreview.hide();
           m_rotatingView = true;
+          m_viewRotationContinuousDegrees = m_viewRotationDegrees;
+          m_viewRotationShiftSnap =
+            (mouseMsg->modifiers() & kKeyShiftModifier) != 0;
           // If the rotate shortcut was pressed outside this editor
           // (or mouse focus changed), use the drag start as a safe
           // fallback pivot rather than an unrelated viewport center.
@@ -2436,7 +2440,11 @@ bool Editor::onProcessMessage(Message* msg)
             delta -= 2.0 * pi;
           else if (delta < -pi)
             delta += 2.0 * pi;
-          setViewRotation(m_viewRotationDegrees + delta * (180.0 / pi));
+          m_viewRotationContinuousDegrees += delta * (180.0 / pi);
+          const double shown = m_viewRotationShiftSnap ?
+            std::round(m_viewRotationContinuousDegrees / 15.0) * 15.0 :
+            m_viewRotationContinuousDegrees;
+          setViewRotation(shown);
         }
         m_viewRotationDragLastAngle = angle;
         m_viewRotationDragHasAngle = true;
@@ -2458,6 +2466,7 @@ bool Editor::onProcessMessage(Message* msg)
         if (m_rotatingView) {
           m_rotatingView = false;
           m_viewRotationDragHasAngle = false;
+          m_viewRotationShiftSnap = false;
           if (hasCapture())
             releaseMouse();
           setCursor(static_cast<MouseMessage*>(msg)->position());
@@ -2517,6 +2526,20 @@ bool Editor::onProcessMessage(Message* msg)
       break;
 
     case kKeyDownMessage:
+      // While a temporary canvas rotation modifier is held, Shift is
+      // exclusively the 15-degree snap control. Intercept it *before*
+      // StandbyState can interpret Shift as "draw straight line".
+      if (m_rotatingView || m_viewRotationShortcutHeld) {
+        const auto* keyMsg = static_cast<KeyMessage*>(msg);
+        if (keyMsg->scancode() == kKeyLShift ||
+            keyMsg->scancode() == kKeyRShift) {
+          m_viewRotationShiftSnap = true;
+          if (m_rotatingView)
+            setViewRotation(std::round(m_viewRotationContinuousDegrees / 15.0) * 15.0);
+          return true;
+        }
+      }
+
       // Both shortcuts are regular editable Action Modifiers in
       // Edit > Keyboard Shortcuts. They are active only in the canvas.
       if (m_sprite && hasMouse() && !hasCapture() && !m_modalColorPickCallback) {
@@ -2534,8 +2557,12 @@ bool Editor::onProcessMessage(Message* msg)
           // The native KeyMessage repeat count is zero only on the
           // initial press. Auto-repeat must not move the rotation
           // pivot while the shortcut is held.
-          if (static_cast<KeyMessage*>(msg)->repeat() == 0)
+          if (static_cast<KeyMessage*>(msg)->repeat() == 0) {
+            m_viewRotationShortcutHeld = true;
+            m_viewRotationShortcutScancode =
+              int(static_cast<KeyMessage*>(msg)->scancode());
             setViewRotationPivot(mousePosInDisplay());
+          }
           setCursor(mousePosInDisplay());
           return true;
         }
@@ -2603,6 +2630,28 @@ bool Editor::onProcessMessage(Message* msg)
       break;
 
     case kKeyUpMessage:
+      if (m_viewRotationShortcutHeld &&
+          int(static_cast<KeyMessage*>(msg)->scancode()) ==
+            m_viewRotationShortcutScancode) {
+        m_viewRotationShortcutHeld = false;
+        m_viewRotationShortcutScancode = -1;
+        if (!m_rotatingView) {
+          m_viewRotationShiftSnap = false;
+          setCursor(mousePosInDisplay());
+        }
+        return true;
+      }
+      if (m_rotatingView || m_viewRotationShortcutHeld ||
+          m_viewRotationShiftSnap) {
+        const auto* keyMsg = static_cast<KeyMessage*>(msg);
+        if (keyMsg->scancode() == kKeyLShift ||
+            keyMsg->scancode() == kKeyRShift) {
+          m_viewRotationShiftSnap = false;
+          if (m_rotatingView)
+            setViewRotation(m_viewRotationContinuousDegrees);
+          return true;
+        }
+      }
       if (m_sprite && (isActive() || hasMouse())) {
         EditorStatePtr holdState(m_state);
         bool used = m_state->onKeyUp(this, static_cast<KeyMessage*>(msg));
@@ -3077,7 +3126,8 @@ void Editor::onBeforeCommitTransaction(DocEvent& ev)
 void Editor::setCursor(const gfx::Point& mouseDisplayPos)
 {
   bool used = false;
-  if (m_rotatingView || isRotateViewShortcutPressed()) {
+  if (m_rotatingView || m_viewRotationShortcutHeld ||
+      isRotateViewShortcutPressed()) {
     m_brushPreview.hide();
     auto theme = SkinTheme::get(this);
     ui::set_mouse_cursor(kCustomCursor, theme->cursors.rotateNw());
@@ -3601,10 +3651,10 @@ void Editor::showMouseCursor(CursorType cursorType, const Cursor* cursor)
 
 void Editor::showBrushPreview(const gfx::Point& screenPos)
 {
-  if (m_viewRotationDegrees != 0.0 || m_rotatingView) {
-    // The built-in brush-preview UI layer isn't affine transformed.
-    // Keep painting accurate via the inverse mouse transform, and
-    // don't display a misleading unrotated brush outline.
+  if (m_rotatingView) {
+    // During the R rotation gesture, hide the drawing cursor as
+    // with the hand/pan tool. At other angles BrushPreview now draws
+    // its mask silhouette in a rotated screen-space cursor layer.
     m_brushPreview.hide();
     ui::set_mouse_cursor(kCrosshairCursor);
     return;

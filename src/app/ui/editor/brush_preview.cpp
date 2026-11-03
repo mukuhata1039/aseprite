@@ -39,6 +39,7 @@
 #include "doc/image.h"
 #include "doc/layer.h"
 #include "doc/primitives.h"
+#include "gfx/matrix.h"
 #include "os/surface.h"
 #include "os/system.h"
 #include "os/window.h"
@@ -49,6 +50,8 @@
 #include "ui/system.h"
 
 #include <array>
+#include <cmath>
+#include <exception>
 
 namespace app {
 
@@ -153,6 +156,11 @@ void BrushPreview::show(const gfx::Point& screenPos)
 {
   if (m_onScreen)
     hide();
+
+  if (m_editor->viewRotation() != 0.0) {
+    showRotated(screenPos);
+    return;
+  }
 
   Doc* document = m_editor->document();
   Sprite* sprite = m_editor->sprite();
@@ -533,6 +541,161 @@ void BrushPreview::show(const gfx::Point& screenPos)
 
   m_lastLayer = site.layer();
   m_lastTilemapMode = tilemapMode;
+}
+
+// Draw the true brush-mask outline in its rotated on-screen position.
+// This is a small UI layer that follows the mouse. Re-rendering the
+// entire rotated sprite every mouse move would be unnecessarily slow,
+// while the ordinary axis-aligned BrushPreview UILayer doesn't match
+// the angled canvas and was previously disabled entirely.
+void BrushPreview::showRotated(const gfx::Point& screenPos)
+{
+  m_screenPosition = screenPos;
+  const Site site = m_editor->getSite();
+  if (!site.sprite() || !m_editor->getCurrentEditorTool())
+    return;
+
+  const auto& pref = Preferences::instance();
+  if (!m_editor->docPref().show.brushPreview()) {
+    ui::set_mouse_cursor(ui::kCrosshairCursor);
+    return;
+  }
+
+  tools::Ink* ink = m_editor->getCurrentEditorInk();
+  if (ink && (ink->isSelection() || ink->isSlice())) {
+    ui::set_mouse_cursor(ui::kCrosshairCursor);
+    return;
+  }
+
+  gfx::Point spritePos = m_editor->screenToEditor(screenPos);
+  const doc::Grid grid = site.grid();
+  const TilemapMode tilemapMode = site.tilemapMode();
+  BrushRef brush = getCurrentBrush();
+  if (!brush)
+    return;
+
+  if (tilemapMode == TilemapMode::Tiles) {
+    spritePos = grid.tileToCanvas(grid.canvasToTile(spritePos));
+  }
+  else if (pref.cursor.snapToGrid() && m_editor->docPref().grid.snap()) {
+    const gfx::Rect b = brush->bounds();
+    const gfx::Point brushCenter(b.w / 2, b.h / 2);
+    spritePos =
+      snap_to_grid(m_editor->docPref().grid.bounds(),
+                   spritePos - brushCenter,
+                   PreferSnapTo::ClosestGridVertex) +
+      brushCenter;
+  }
+
+  createBoundaries(site, spritePos);
+  m_brushBoundaries.createPathIfNeeeded();
+  if (m_brushBoundaries.isEmpty())
+    return;
+
+  // The native brush mask outline is in sprite-pixel coordinates
+  // relative to the brush anchor. First scale for the editor's zoom
+  // and pixel aspect ratio, then rotate around that anchor.
+  gfx::Path path;
+  m_brushBoundaries.path().transform(m_editor->projection().scaleMatrix(), &path);
+  gfx::Matrix rotation;
+  rotation.setRotate(float(m_editor->viewRotation()));
+  path.transform(rotation);
+
+  const gfx::RectF outlineBounds = path.bounds();
+  const gfx::PointF screenAnchor = m_editor->editorToScreenF(
+    gfx::PointF(spritePos.x, spritePos.y));
+  constexpr int pad = 3;
+  // Keep surface size independent of the moving cursor's subpixel
+  // phase; otherwise a one-pixel rounding change can force a Skia
+  // surface reallocation on almost every mouse move.
+  const double anchorX = std::floor(double(screenAnchor.x));
+  const double anchorY = std::floor(double(screenAnchor.y));
+  const double left = anchorX + std::floor(double(outlineBounds.x)) - pad;
+  const double top = anchorY + std::floor(double(outlineBounds.y)) - pad;
+  const double width =
+    std::ceil(double(outlineBounds.x2())) - std::floor(double(outlineBounds.x)) + 2 * pad + 2;
+  const double height =
+    std::ceil(double(outlineBounds.y2())) - std::floor(double(outlineBounds.y)) + 2 * pad + 2;
+
+  // Never allocate an enormous UI cursor for a very large brush at
+  // extreme zoom. Keep the crosshair available in that case.
+  if (!std::isfinite(width) || !std::isfinite(height) ||
+      width < 1 || height < 1 ||
+      width > 4096 || height > 4096 ||
+      width * height > 4.0 * 1024 * 1024) {
+    ui::set_mouse_cursor(ui::kCrosshairCursor);
+    return;
+  }
+
+  const int w = int(width);
+  const int h = int(height);
+  const gfx::Point surfacePos(int(left), int(top));
+
+  if (!m_uiLayer)
+    m_uiLayer = ui::UILayer::Make();
+
+  os::SurfaceRef surface = m_uiLayer->surface();
+  if (!surface || surface->width() != w || surface->height() != h) {
+    try {
+      surface = os::System::instance()->makeRgbaSurface(w, h);
+    }
+    catch (const std::exception&) {
+      // Like the viewport rotation buffer, cursor allocation can
+      // fail at extreme zoom. Keep the native crosshair usable.
+      ui::set_mouse_cursor(ui::kCrosshairCursor);
+      return;
+    }
+    m_uiLayer->setSurface(surface);
+  }
+  surface->clear();
+
+  // Use the same high-contrast negative-outline shader as the normal
+  // brush cursor when the configured cursor color is automatic.
+  const app::Color chosenColor = pref.cursor.cursorColor();
+  m_blackAndWhiteNegative = (chosenColor.getType() == app::Color::MaskType);
+  os::Paint paint;
+  paint.style(os::Paint::Stroke);
+  paint.color(m_blackAndWhiteNegative ?
+                gfx::rgba(255, 255, 255, 255) :
+                color_utils::color_for_ui(chosenColor));
+
+#if LAF_SKIA
+  if (m_blackAndWhiteNegative) {
+    static sk_sp<SkBlender> blender;
+    if (!blender) {
+      SkRuntimeBlendBuilder builder(make_blender(kNegativeBlackAndWhiteShaderCode));
+      blender = builder.makeBlender();
+    }
+    m_uiLayer->paint().skPaint().setBlender(blender);
+  }
+  else {
+    m_uiLayer->paint().skPaint().setBlender(nullptr);
+  }
+#endif
+
+  path.offset(float(screenAnchor.x - left), float(screenAnchor.y - top));
+  {
+    ui::Graphics graphics(surface);
+    graphics.drawPath(path, paint);
+  }
+
+  // The overlay is placed in display coordinates, independent of the
+  // rotated editor's huge scrollable bounds. Hiding/redrawing this
+  // small layer is enough to follow the mouse in real time.
+  m_editor->getDrawableRegion(m_clippingRegion, ui::Widget::kCutTopWindows);
+  m_clippingRegion.createSubtraction(m_clippingRegion, m_editor->getUpdateRegion());
+  m_uiLayer->setPosition(surfacePos);
+  m_uiLayer->setClipRegion(m_clippingRegion);
+  m_editor->display()->addLayer(m_uiLayer);
+  m_layerAdded = true;
+
+  m_type = BRUSH_BOUNDARIES;
+  m_withRealPreview = false;
+  m_onScreen = true;
+  m_editorPosition = spritePos;
+  m_lastLayer = site.layer();
+  m_lastTilemapMode = tilemapMode;
+  ui::set_mouse_cursor(ui::kCrosshairCursor);
 }
 
 // Cleans the brush cursor from the specified editor.
