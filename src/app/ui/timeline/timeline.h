@@ -519,6 +519,10 @@ private:
   public:
     FpsSlider() : ui::Slider(1, 400, 40, this) {}
 
+  protected:
+    bool onProcessMessage(ui::Message* msg) override;
+
+  public:
     // Convert to Aseprite's integer-millisecond frame duration.
     // The nearest millisecond is used; at high FPS, this necessarily
     // limits the precision of playback even if UI uses 0.3 FPS ticks.
@@ -549,6 +553,14 @@ private:
       const double fps = std::strtod(digits.c_str(), nullptr);
       return int(std::clamp(fps / 0.3 + 0.5, 1.0, 400.0));
     }
+
+    // Dragging the 400-tick value range across a ~200px slider would
+    // skip ticks. Left-click still jumps to an approximate position,
+    // but subsequent dragging changes the value 1 tick (0.3 FPS)
+    // per screen pixel instead of remapping the whole range.
+    bool m_fineLeftDrag = false;
+    int m_fineDragAnchorX = 0;
+    int m_fineDragAnchorTick = 40;
   };
 
   AlphaSlider m_layerOpacitySlider;
