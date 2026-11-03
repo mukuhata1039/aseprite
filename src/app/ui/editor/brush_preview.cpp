@@ -604,12 +604,17 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
   const gfx::PointF screenAnchor = m_editor->editorToScreenF(
     gfx::PointF(spritePos.x, spritePos.y));
   constexpr int pad = 3;
-  const double left = std::floor(double(screenAnchor.x) + outlineBounds.x) - pad;
-  const double top = std::floor(double(screenAnchor.y) + outlineBounds.y) - pad;
-  const double right = std::ceil(double(screenAnchor.x) + outlineBounds.x2()) + pad;
-  const double bottom = std::ceil(double(screenAnchor.y) + outlineBounds.y2()) + pad;
-  const double width = right - left;
-  const double height = bottom - top;
+  // Keep surface size independent of the moving cursor's subpixel
+  // phase; otherwise a one-pixel rounding change can force a Skia
+  // surface reallocation on almost every mouse move.
+  const double anchorX = std::floor(double(screenAnchor.x));
+  const double anchorY = std::floor(double(screenAnchor.y));
+  const double left = anchorX + std::floor(double(outlineBounds.x)) - pad;
+  const double top = anchorY + std::floor(double(outlineBounds.y)) - pad;
+  const double width =
+    std::ceil(double(outlineBounds.x2())) - std::floor(double(outlineBounds.x)) + 2 * pad + 2;
+  const double height =
+    std::ceil(double(outlineBounds.y2())) - std::floor(double(outlineBounds.y)) + 2 * pad + 2;
 
   // Never allocate an enormous UI cursor for a very large brush at
   // extreme zoom. Keep the crosshair available in that case.
