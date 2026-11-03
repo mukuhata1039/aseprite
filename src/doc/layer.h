@@ -43,6 +43,7 @@ enum class LayerFlags {
   Continuous = 16, // Prefer to link cels when the user copy them
   Collapsed = 32,  // Prefer to show this group layer collapsed
   Reference = 64,  // Is a reference layer
+  Clipped = 128,   // Clip this layer against the layer immediately below
 
   PersistentFlagsMask = 0xffff,
   Internal_WasVisible = 0x10000, // Was visible in the alternative state (Alt+click)
@@ -51,7 +52,7 @@ enum class LayerFlags {
 
   // Flags that change the modified flag of the document
   // (e.g. created by undoable actions).
-  StructuralFlagsMask = Background | Reference,
+  StructuralFlagsMask = Background | Reference | Clipped,
 };
 LAF_ENUM_FLAGS(LayerFlags);
 
@@ -105,6 +106,7 @@ public:
   bool isCollapsed() const { return hasFlags(LayerFlags::Collapsed); }
   bool isExpanded() const { return !hasFlags(LayerFlags::Collapsed); }
   bool isReference() const { return hasFlags(LayerFlags::Reference); }
+  bool isClipped() const { return hasFlags(LayerFlags::Clipped); }
 
   bool isVisibleHierarchy() const;
   bool isEditableHierarchy() const;
@@ -119,6 +121,7 @@ public:
   void setContinuous(bool state) { switchFlags(LayerFlags::Continuous, state); }
   void setCollapsed(bool state) { switchFlags(LayerFlags::Collapsed, state); }
   void setReference(bool state) { switchFlags(LayerFlags::Reference, state); }
+  void setClipped(bool state) { switchFlags(LayerFlags::Clipped, state); }
 
   LayerFlags flags() const { return m_flags; }
 
