@@ -273,6 +273,8 @@ void StateWithWheelBehavior::processWheelAction(Editor* editor,
         }
       }
 
+      if (editor->viewMirrored())
+        delta.x = -delta.x;
       editor->setEditorScroll(scroll + delta);
       break;
     }

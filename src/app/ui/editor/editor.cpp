@@ -635,14 +635,15 @@ void Editor::setViewRotationPivot(const gfx::Point& displayPos)
   m_viewRotationPivotOffset = displayPos - vp.origin();
   m_viewRotationPivotSet = true;
 
-  if (m_viewRotationDegrees != 0.0) {
-    // After changing the pivot, its associated image point must still
-    // be drawn at this same display location. Because rotation about
-    // the pivot maps that point to itself, solving for scroll does not
-    // require any further angular approximation.
+  if (m_viewRotationDegrees != 0.0 || m_viewMirrored) {
+    // The new rotation pivot is fixed by rotation. If mirrored, the
+    // source-space point under this pivot is reflected across the
+    // viewport center; preserve the image point under the cursor.
+    const double sourceX = (m_viewMirrored ?
+      2.0 * (vp.x + 0.5 * vp.w) - displayPos.x : displayPos.x);
     const gfx::Point scroll(
       int(std::lround(vp.x + m_padding.x +
-                      m_proj.applyX<double>(imagePoint.x) - displayPos.x)),
+                      m_proj.applyX<double>(imagePoint.x) - sourceX)),
       int(std::lround(vp.y + m_padding.y +
                       m_proj.applyY<double>(imagePoint.y) - displayPos.y)));
     setEditorScroll(scroll);
@@ -650,18 +651,41 @@ void Editor::setViewRotationPivot(const gfx::Point& displayPos)
   }
 }
 
-// Forward mapping for overlay/widget geometry; inverse for mouse input.
-// Both use the same user-selected pivot as the rotated painter.
+// Render order: horizontal mirror around the viewport center, then
+// rotate around the user-selected pivot. Inverse order for mouse input.
 gfx::PointF Editor::rotateViewPoint(const gfx::PointF& point, bool inverse) const
 {
-  if (m_renderingRotationSurface || m_viewRotationDegrees == 0.0)
+  if (m_renderingRotationSurface ||
+      (m_viewRotationDegrees == 0.0 && !m_viewMirrored))
     return point;
-  const auto center = rotationCenterInDisplay();
-  const double radians = (inverse ? -1.0 : 1.0) *
-    m_viewRotationDegrees * 3.14159265358979323846 / 180.0;
-  const double cs = std::cos(radians), sn = std::sin(radians);
-  const double x = point.x - center.x, y = point.y - center.y;
-  return gfx::PointF(center.x + cs*x - sn*y, center.y + sn*x + cs*y);
+
+  gfx::PointF result = point;
+  const auto rotate = [&](double angle) {
+    const auto center = rotationCenterInDisplay();
+    const double radians = angle * 3.14159265358979323846 / 180.0;
+    const double cs = std::cos(radians), sn = std::sin(radians);
+    const double x = result.x - center.x, y = result.y - center.y;
+    result = gfx::PointF(center.x + cs*x - sn*y,
+                         center.y + sn*x + cs*y);
+  };
+  const auto mirror = [&] {
+    const auto vp = View::getView(this)->viewportBounds();
+    result.x = 2.0 * (vp.x + 0.5 * vp.w) - result.x;
+  };
+
+  if (inverse) {
+    if (m_viewRotationDegrees != 0.0)
+      rotate(-m_viewRotationDegrees);
+    if (m_viewMirrored)
+      mirror();
+  }
+  else {
+    if (m_viewMirrored)
+      mirror();
+    if (m_viewRotationDegrees != 0.0)
+      rotate(m_viewRotationDegrees);
+  }
+  return result;
 }
 
 bool Editor::isRotateViewShortcutPressed() const
@@ -683,9 +707,23 @@ void Editor::setViewRotation(double degrees)
 
   m_brushPreview.hide();
   m_viewRotationDegrees = degrees;
-  if (degrees == 0.0)
+  if (degrees == 0.0 && !m_viewMirrored)
     m_rotationSurface.reset();
   invalidate();
+}
+
+void Editor::setViewMirrored(bool mirrored)
+{
+  if (m_viewMirrored == mirrored)
+    return;
+
+  m_brushPreview.hide();
+  m_viewMirrored = mirrored;
+  if (!mirrored && m_viewRotationDegrees == 0.0)
+    m_rotationSurface.reset();
+  invalidate();
+  if (hasMouse())
+    setCursor(mousePosInDisplay());
 }
 
 void Editor::updateEditor(const bool restoreScrollPos)
@@ -1177,7 +1215,7 @@ void Editor::drawSpriteUnclippedRect(ui::Graphics* g, const gfx::Rect& _rc)
 
 void Editor::drawSpriteClipped(const gfx::Region& updateRegion)
 {
-  if (m_viewRotationDegrees != 0.0) {
+  if (m_viewRotationDegrees != 0.0 || m_viewMirrored) {
     // A document exposure callback can happen during a rotated paint.
     // Avoid scheduling the same paint recursively in that case.
     if (!m_renderingRotationSurface)
@@ -1239,7 +1277,7 @@ void Editor::drawMaskBoundaries(ui::Graphics* g, doc::MaskBoundaries& segs, cons
 
 void Editor::drawMaskSafe()
 {
-  if (m_viewRotationDegrees != 0.0) {
+  if (m_viewRotationDegrees != 0.0 || m_viewMirrored) {
     // A document exposure callback can happen during a rotated paint.
     // Avoid scheduling the same paint recursively in that case.
     if (!m_renderingRotationSurface)
@@ -1759,7 +1797,11 @@ gfx::Point Editor::screenToEditor(const gfx::Point& pt) const
   const auto view = View::getView(this);
   const auto vp = view->viewportBounds();
   const auto scroll = view->viewScroll();
-  const auto unrotated = rotateViewPoint(gfx::PointF(pt.x, pt.y), true);
+  // Sample the physical mouse pixel's center when reflected, otherwise
+  // the leftmost displayed pixel would map one sprite pixel too far.
+  const auto unrotated = rotateViewPoint(
+    gfx::PointF(pt.x + (m_viewMirrored ? 0.5 : 0.0),
+                pt.y + (m_viewMirrored ? 0.5 : 0.0)), true);
   return gfx::Point(
     m_proj.removeX(int(std::floor(unrotated.x)) - vp.x + scroll.x - m_padding.x),
     m_proj.removeY(int(std::floor(unrotated.y)) - vp.y + scroll.y - m_padding.y));
@@ -1812,7 +1854,8 @@ gfx::PointF Editor::editorToScreenF(const gfx::PointF& pt) const
 
 Rect Editor::screenToEditor(const Rect& rc) const
 {
-  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+  if ((m_viewRotationDegrees == 0.0 && !m_viewMirrored) ||
+      m_renderingRotationSurface)
     return gfx::Rect(screenToEditor(rc.origin()), screenToEditorCeiling(rc.point2()));
 
   const auto a = screenToEditorF(rc.origin());
@@ -1828,7 +1871,8 @@ Rect Editor::screenToEditor(const Rect& rc) const
 
 Rect Editor::editorToScreen(const Rect& rc) const
 {
-  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+  if ((m_viewRotationDegrees == 0.0 && !m_viewMirrored) ||
+      m_renderingRotationSurface)
     return gfx::Rect(editorToScreen(rc.origin()), editorToScreen(rc.point2()));
 
   const auto a = editorToScreenF(gfx::PointF(rc.x, rc.y));
@@ -1844,7 +1888,8 @@ Rect Editor::editorToScreen(const Rect& rc) const
 
 gfx::RectF Editor::editorToScreenF(const gfx::RectF& rc) const
 {
-  if (m_viewRotationDegrees == 0.0 || m_renderingRotationSurface)
+  if ((m_viewRotationDegrees == 0.0 && !m_viewMirrored) ||
+      m_renderingRotationSurface)
     return gfx::RectF(editorToScreenF(rc.origin()), editorToScreenF(rc.point2()));
 
   const auto a = editorToScreenF(rc.origin());
@@ -2784,8 +2829,9 @@ void Editor::drawRotatedView(ui::Graphics* g)
   constexpr int margin = 4;
   const double side =
     std::ceil(std::hypot(double(vp.w), double(vp.h))) + margin;
-  const double width = side;
-  const double height = side;
+  // Mirroring without rotation needs only a padded viewport rectangle.
+  const double width = (m_viewRotationDegrees == 0.0 ? vp.w + margin : side);
+  const double height = (m_viewRotationDegrees == 0.0 ? vp.h + margin : side);
 
   // Protect against unusually large desktop/viewports and failures
   // inside Skia's bitmap allocation. The fallback restores the
@@ -2867,6 +2913,15 @@ void Editor::drawRotatedView(ui::Graphics* g)
   paint.blendMode(os::BlendMode::Src);
   g->save();
   g->concat(transform);
+  if (m_viewMirrored) {
+    // Graphics uses local coordinates including its internal delta.
+    // Concat order is rotation * translation * reflection, matching
+    // rotateViewPoint() for both drawing and pointer hit tests.
+    const double mirrorCenterX =
+      vp.x + 0.5 * vp.w - bounds().x + g->getInternalDeltaX();
+    g->concat(gfx::Matrix::MakeTrans(float(2.0 * mirrorCenterX), 0.0f));
+    g->concat(gfx::Matrix::MakeScale(-1.0f, 1.0f));
+  }
   g->drawSurface(
     m_rotationSurface.get(),
     gfx::Rect(0, 0, surfaceW, surfaceH),
@@ -2912,7 +2967,7 @@ void Editor::onPaint(ui::PaintEvent& ev)
       // entire scene (including selection/grid/guide decorations)
       // is rendered once into a padded surface and rotated.
       renderChrono.reset();
-      if (m_viewRotationDegrees == 0.0) {
+      if (m_viewRotationDegrees == 0.0 && !m_viewMirrored) {
         drawBackground(g);
         drawSpriteUnclippedRect(g, m_sprite->bounds());
       }
@@ -2943,7 +2998,7 @@ void Editor::onPaint(ui::PaintEvent& ev)
       // Mask boundaries are already part of the rotated offscreen
       // scene. Do not draw them again with unrotated coordinates.
       if (m_document->hasMaskBoundaries()) {
-        if (m_viewRotationDegrees == 0.0)
+        if (m_viewRotationDegrees == 0.0 && !m_viewMirrored)
           drawMask(g);
         m_antsTimer.start();
       }
@@ -3272,7 +3327,7 @@ void Editor::setZoomAndCenterInMouse(const Zoom& zoom,
   // point below the cursor drifts on each wheel step. Preserve the
   // exact sprite-space point, then solve the inverse rotation for
   // the scroll needed to keep that point at the same screen pixel.
-  if (m_viewRotationDegrees != 0.0) {
+  if (m_viewRotationDegrees != 0.0 || m_viewMirrored) {
     const gfx::Point screenAnchor =
       (zoomBehavior == ZoomBehavior::CENTER ? vp.center() : mousePos);
     const gfx::PointF spriteAnchor = screenToEditorF(screenAnchor);

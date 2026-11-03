@@ -110,7 +110,7 @@ void EditorView::onScrollRegion(ui::ScrollRegionEvent& ev)
   Editor* editor = this->editor();
   ASSERT(editor);
   if (editor) {
-    if (editor->viewRotation() != 0.0) {
+    if (editor->viewRotation() != 0.0 || editor->viewMirrored()) {
       // ui::View normally reuses old screen pixels by translating
       // them during scrolling. A rotated editor has no axis-aligned
       // 1:1 scroll translation, so the reused pixels appear as torn

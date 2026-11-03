@@ -143,6 +143,7 @@
       <!-- View -->
       <key command="Refresh" shortcut="F5" />
       <key command="TogglePreview" shortcut="F7" />
+      <key command="ToggleMirrorView" shortcut="Ctrl+Shift+M" mac="Cmd+Shift+M" />
       <key command="FullscreenPreview" shortcut="F8" />
       <key command="FullscreenMode" shortcut="F11" mac="Cmd+Ctrl+F" />
       <key command="ShowGrid" shortcut="Ctrl+'" mac="Cmd+'" />
@@ -1052,6 +1053,7 @@
           </item>
         </menu>
         <item command="SymmetryMode" text="@.view_symmetry_options" group="view_canvas_helpers" />
+        <item command="ToggleMirrorView" text="@.view_mirror_view" />
         <separator />
         <item command="SetLoopSection" text="@.view_set_loop_section" />
         <item command="ShowOnionSkin" text="@.view_show_onion_skin" group="view_animation_helpers" />

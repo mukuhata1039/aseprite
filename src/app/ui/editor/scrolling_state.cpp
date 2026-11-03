@@ -60,7 +60,7 @@ bool ScrollingState::onMouseMove(Editor* editor, MouseMessage* msg)
 
   const gfx::Point delta = newPos - m_oldPos;
   m_oldPos = newPos;
-  if (editor->viewRotation() == 0.0) {
+  if (editor->viewRotation() == 0.0 && !editor->viewMirrored()) {
     scroll -= delta;
   }
   else {
@@ -69,7 +69,9 @@ bool ScrollingState::onMouseMove(Editor* editor, MouseMessage* msg)
     const double a = -editor->viewRotation() *
       3.14159265358979323846 / 180.0;
     const double cs = std::cos(a), sn = std::sin(a);
-    m_viewRotationScrollResidual.x += cs * delta.x - sn * delta.y;
+    m_viewRotationScrollResidual.x +=
+      (editor->viewMirrored() ? -1.0 : 1.0) *
+      (cs * delta.x - sn * delta.y);
     m_viewRotationScrollResidual.y += sn * delta.x + cs * delta.y;
     const gfx::Point step(int(std::round(m_viewRotationScrollResidual.x)),
                           int(std::round(m_viewRotationScrollResidual.y)));

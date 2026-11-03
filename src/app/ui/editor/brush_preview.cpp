@@ -157,7 +157,7 @@ void BrushPreview::show(const gfx::Point& screenPos)
   if (m_onScreen)
     hide();
 
-  if (m_editor->viewRotation() != 0.0) {
+  if (m_editor->viewRotation() != 0.0 || m_editor->viewMirrored()) {
     showRotated(screenPos);
     return;
   }
@@ -597,6 +597,8 @@ void BrushPreview::showRotated(const gfx::Point& screenPos)
   // and pixel aspect ratio, then rotate around that anchor.
   gfx::Path path;
   m_brushBoundaries.path().transform(m_editor->projection().scaleMatrix(), &path);
+  if (m_editor->viewMirrored())
+    path.transform(gfx::Matrix::MakeScale(-1.0f, 1.0f));
   gfx::Matrix rotation;
   rotation.setRotate(float(m_editor->viewRotation()));
   path.transform(rotation);

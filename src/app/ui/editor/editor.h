@@ -170,6 +170,9 @@ public:
   // Rotates only the editor display; never changes sprite pixels.
   double viewRotation() const { return m_viewRotationDegrees; }
   void setViewRotation(double degrees);
+  // Horizontal reflection of this editor's view only (no sprite mutation).
+  bool viewMirrored() const { return m_viewMirrored; }
+  void setViewMirrored(bool mirrored);
 
   // Updates the Editor's view.
   void updateEditor(const bool restoreScrollPos);
@@ -477,6 +480,7 @@ private:
 
   // Per-editor canvas view angle / rotation gesture.
   double m_viewRotationDegrees = 0.0;
+  bool m_viewMirrored = false;
   bool m_rotatingView = false;
   // Offset relative to the viewport, not the zoom-scaled editor
   // widget: scrolling and zooming must not move the rotation axis.
